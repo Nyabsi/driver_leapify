@@ -51,7 +51,7 @@ target_link_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/JSL/x64)
 target_link_libraries(${PROJECT_NAME} PRIVATE LeapC JoyShockLibrary)
 
 if (WIN32)
-	add_custom_command(TARGET driver_leap
+	add_custom_command(TARGET ${PROJECT_NAME}
 		POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different
 			"$<TARGET_FILE:driver_leap>"
