@@ -1,10 +1,2 @@
-Debug
-Release
-*.user
-ipch
-*.sdf
-.vs
-*.opensdf
-*.opendb
-*.VC.db
-bin
+build
+out
