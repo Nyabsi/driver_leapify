@@ -383,9 +383,9 @@ void CLeapIndexController::UpdatePose(const CLeapHand *p_hand)
 
         // Positon
         glm::vec4 l_posePosition = l_mat * g_zeroPoint;
-        m_pose.vecPosition[0] = l_posePosition.x + -p_hand->GetOffset().x;
-        m_pose.vecPosition[1] = l_posePosition.y + -p_hand->GetOffset().y;
-        m_pose.vecPosition[2] = l_posePosition.z + -p_hand->GetOffset().z;
+        m_pose.vecPosition[0] = l_posePosition.x + p_hand->GetOffset().x;
+        m_pose.vecPosition[1] = l_posePosition.y + p_hand->GetOffset().y;
+        m_pose.vecPosition[2] = l_posePosition.z + p_hand->GetOffset().z;
 
         m_pose.result = vr::TrackingResult_Running_OK;
     }

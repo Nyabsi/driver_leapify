@@ -106,10 +106,9 @@ void CLeapHand::Update(const LEAP_HAND & p_hand)
     m_rotation = glm::normalize(m_rotation);
 
     // This is used to calculate the actual arm length, this makes the controller position *feel* more correct.
-    float zOffset = (-0.001f * p_hand.arm.prev_joint.z - -0.001f * p_hand.arm.next_joint.z);
     float yOffset = (-0.001f * p_hand.arm.prev_joint.y - -0.001f * p_hand.arm.next_joint.y);
     
-    m_handOffset = glm::vec3(0.05f, -zOffset, -yOffset);
+    m_handOffset = glm::vec3(0.0f, 0.0f, -yOffset);
 
     // Bends
     for(size_t i = 0U; i < 5U; i++)
