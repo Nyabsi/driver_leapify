@@ -10,10 +10,16 @@ project(driver_leap)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+option(USE_GEMINI_SDK "Build driver_leap with Gemini SDK instead of Hyperion to support older devices (and Linux)" OFF)
+
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(VENDOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/vendor)
 
 add_definitions(-DGLM_ENABLE_EXPERIMENTAL) # Enable GLM's GTX functions
+
+if (USE_GEMINI_SDK)
+	add_definitions(-DLEGACY_GEMINI_SDK)
+endif()
 
 add_library(${PROJECT_NAME} SHARED
 	${SRC_DIR}/main.cpp
