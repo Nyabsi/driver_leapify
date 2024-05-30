@@ -1,16 +1,23 @@
-﻿#include <Windows.h>
+﻿#include <memory>
+#include <string.h>
 
-#include "Core/CServerDriver.h"
+#include <openvr_driver.h>
+#include <core/CServerDriver.h>
+
+#ifdef _WIN32
+#define EXPORT_FUNC extern "C" __declspec(dllexport)
+#else
+#define EXPORT_FUNC extern "C"
+#endif
 
 CServerDriver g_serverDriver;
 
-extern "C" __declspec(dllexport) void* HmdDriverFactory(const char *pInterfaceName, int *pReturnCode)
+EXPORT_FUNC void* HmdDriverFactory(const char* pInterfaceName, int* pReturnCode)
 {
-    void *l_result = nullptr;
-    if(!strcmp(vr::IServerTrackedDeviceProvider_Version, pInterfaceName)) l_result = dynamic_cast<vr::IServerTrackedDeviceProvider*>(&g_serverDriver);
-    else
-    {
-        if(pReturnCode) *pReturnCode = vr::VRInitError_Init_InterfaceNotFound;
+    if (strcmp(vr::IServerTrackedDeviceProvider_Version, pInterfaceName) == 0) {
+        return dynamic_cast<vr::IServerTrackedDeviceProvider*>(&g_serverDriver);
     }
-    return l_result;
+
+    *pReturnCode = vr::VRInitError_Init_InterfaceNotFound;
+    return nullptr;
 }
