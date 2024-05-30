@@ -129,6 +129,16 @@ void CLeapPoller::OnDeviceEvent(const LEAP_DEVICE_EVENT* p_event)
     if(LeapOpenDevice(p_event->device, &l_device) != eLeapRS_Success)
         return;
 
+    const char* hints[] = {
+        LEAP_HINT_ULTRA_PERFORMANCE_MODE,
+        LEAP_HINT_FAST_HAND_MOTION,
+        LEAP_HINT_HAND_ON_OBJECT,
+        LEAP_HINT_APP_IMMERSIVE,
+        NULL
+    };
+
+    LeapSetDeviceHints(m_connection, l_device, hints);
+
     m_devicesCount++;
 }
 
