@@ -22,6 +22,6 @@ fork of driver_leap with improvements for my personal-use.
 ## TODO
 
 - [x] Convert buildsystem from VCXProj to CMake
-- [ ] Multi-platform support (Linux)
+- [x] Multi-platform support (Linux)
 - [ ] Support other types of input devices (IE. DualShock or Xbox Controller)
 - [x] Support older Leapmotion Controllers
