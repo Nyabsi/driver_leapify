@@ -95,14 +95,18 @@ void CServerDriver::RunFrame()
     if(m_connectionState && m_leapPoller->GetFrame(m_leapFrame->GetEvent()))
         m_leapFrame->Update();
 
+    if (m_joyconInput->IsConnected())
+    {
+        m_joyconInput->Update(m_leftController, m_rightController);
+    }
+    else
+    {
+        m_joyconInput->Reconnect();
+    }
+
     // Update devices
     m_leftController->RunFrame(m_leapFrame->GetLeftHand());
     m_rightController->RunFrame(m_leapFrame->GetRightHand());
-
-    if (m_joyconInput->IsConnected())
-        m_joyconInput->Update(m_leftController, m_rightController);
-    else 
-        m_joyconInput->Reconnect();
 }
 
 bool CServerDriver::ShouldBlockStandbyMode()
