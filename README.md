@@ -1,6 +1,6 @@
 # Driver Leap
 
-fork of driver_leap with Joycon and Linux support.
+fork of driver_leap with Controller and Linux support.
 
 ## Installation (for users)
 
@@ -16,18 +16,18 @@ fork of driver_leap with Joycon and Linux support.
 
 ## Features
 
-This driver has few differences compared to the [upstream driver](https://github.com/SDraw/driver_leap).
+This driver has few differences compared to the [upstream driver](https://github.com/SDraw/driver_leap)
 
-- Support for Joycons instead of using SteamVR overlay, making input more natural
-- Support for Linux, so you can use this on your Linux system!
-- Changes to mathematical behaviour, there is pre-applied offset that is irrevocable which sets the position controllers to more natural position
+- Support for Controllers (Joycons, DualShock) instead of using SteamVR overlay, making input more natural
+- Support for Linux, so you can use this on your Linux system
+- Automatically set offset hand offset relative to your arm length
 - Switching from Visual Studio project to CMake project for broader platform compatibility
-- And potentially much more to come!
+- And other tweaks in future
 
 ## TODO
 
 - [x] Convert buildsystem from VCXProj to CMake
 - [x] Multi-platform support (Linux)
-- [ ] Support other types of input devices (IE. DualShock or Xbox Controller)
+- [x] Support other types of input devices (IE. DualShock or Xbox Controller)
 - [x] Support older Leapmotion Controllers
 - [ ] Automated CI for driver builds
