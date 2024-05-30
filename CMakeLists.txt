@@ -51,9 +51,11 @@ target_link_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/JSL/x64)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE LeapC JoyShockLibrary)
 
-add_custom_command(TARGET driver_leap
-    POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "$<TARGET_FILE:driver_leap>"
-        "C:/Program Files (x86)/Steam/steamapps/common/SteamVR/drivers/leap/bin/win64/$<TARGET_FILE_NAME:driver_leap>"
-)
+if (WIN32)
+	add_custom_command(TARGET driver_leap
+		POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different
+			"$<TARGET_FILE:driver_leap>"
+			"C:/Program Files (x86)/Steam/steamapps/common/SteamVR/drivers/leap/bin/win64/$<TARGET_FILE_NAME:driver_leap>"
+	)
+endif()
