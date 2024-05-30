@@ -88,7 +88,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <CompileAsWinRT>false</CompileAsWinRT>
-      <AdditionalIncludeDirectories>./;../vendor/LeapSDK/include;../vendor/openvr/headers;../vendor/glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;../vendor/LeapSDK/include;../vendor/openvr/headers;../vendor/glm;../vendor/JSL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>GLM_ENABLE_EXPERIMENTAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -96,8 +96,8 @@
       <SubSystem>Windows</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalLibraryDirectories>../vendor/LeapSDK/lib/x64;../vendor/openvr/lib/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>openvr_api.lib;LeapC.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../vendor/LeapSDK/lib/x64;../vendor/openvr/lib/win64;../vendor/JSL/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>openvr_api.lib;LeapC.lib;JoyShockLibrary.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <CustomBuildStep>
@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Controller\CControllerButton.h" />
+    <ClInclude Include="Controller\CJoyconInput.h" />
     <ClInclude Include="Controller\CLeapIndexController.h" />
     <ClInclude Include="Core\CServerDriver.h" />
     <ClInclude Include="Leap\CLeapFrame.h" />
@@ -143,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Controller\CControllerButton.cpp" />
+    <ClCompile Include="Controller\CJoyconInput.cpp" />
     <ClCompile Include="Controller\CLeapIndexController.cpp" />
     <ClCompile Include="Core\CServerDriver.cpp" />
     <ClCompile Include="dllmain.cpp" />

@@ -6,6 +6,8 @@
 #include <Controller/CLeapIndexController.h>
 #include <Utils/Utils.h>
 
+#include <Controller/CJoyconInput.h>
+
 extern char g_modulePath[];
 
 const char* const CServerDriver::ms_interfaces[]
@@ -22,6 +24,7 @@ CServerDriver::CServerDriver()
     m_connectionState = false;
     m_leftController = nullptr;
     m_rightController = nullptr;
+    m_joyconInput = nullptr;
 }
 
 CServerDriver::~CServerDriver()
@@ -35,6 +38,8 @@ vr::EVRInitError CServerDriver::Init(vr::IVRDriverContext *pDriverContext)
 
     m_leftController = new CLeapIndexController(true);
     m_rightController = new CLeapIndexController(false);
+
+    m_joyconInput = new CJoyconInput();
 
     vr::VRServerDriverHost()->TrackedDeviceAdded(m_leftController->GetSerialNumber().c_str(), vr::TrackedDeviceClass_Controller, m_leftController);
     vr::VRServerDriverHost()->TrackedDeviceAdded(m_rightController->GetSerialNumber().c_str(), vr::TrackedDeviceClass_Controller, m_rightController);
@@ -93,6 +98,11 @@ void CServerDriver::RunFrame()
     // Update devices
     m_leftController->RunFrame(m_leapFrame->GetLeftHand());
     m_rightController->RunFrame(m_leapFrame->GetRightHand());
+
+    if (m_joyconInput->IsConnected())
+        m_joyconInput->Update(m_leftController, m_rightController);
+    else 
+        m_joyconInput->Reconnect();
 }
 
 bool CServerDriver::ShouldBlockStandbyMode()

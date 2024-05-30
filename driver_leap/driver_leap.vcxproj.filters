@@ -23,6 +23,9 @@
     <ClCompile Include="Controller\CLeapIndexController.cpp">
       <Filter>Controller</Filter>
     </ClCompile>
+    <ClCompile Include="Controller\CJoyconInput.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils\Utils.h">
@@ -44,6 +47,9 @@
       <Filter>Controller</Filter>
     </ClInclude>
     <ClInclude Include="Controller\CLeapIndexController.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\CJoyconInput.h">
       <Filter>Controller</Filter>
     </ClInclude>
   </ItemGroup>
