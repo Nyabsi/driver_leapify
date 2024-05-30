@@ -39,7 +39,7 @@ vr::EVRInitError CServerDriver::Init(vr::IVRDriverContext *pDriverContext)
     m_leftController = new CLeapIndexController(true);
     m_rightController = new CLeapIndexController(false);
 
-    m_joyconInput = new CJoyconInput();
+    m_joyconInput = new CControllerInput();
 
     vr::VRServerDriverHost()->TrackedDeviceAdded(m_leftController->GetSerialNumber().c_str(), vr::TrackedDeviceClass_Controller, m_leftController);
     vr::VRServerDriverHost()->TrackedDeviceAdded(m_rightController->GetSerialNumber().c_str(), vr::TrackedDeviceClass_Controller, m_rightController);

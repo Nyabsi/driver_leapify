@@ -4,17 +4,20 @@
 
 #include <controller/CLeapIndexController.h>
 
-class CJoyconInput {
-	struct Joycon {
+class CControllerInput {
+	struct ControllerState {
 		bool connected;
 		int id;
 	};
 
-	Joycon m_joycons[2];
+	ControllerState m_joycons[2];
+	ControllerState m_dualShock;
+
 	int32_t m_deviceCount;
+	bool m_anyActiveControllers;
 public:
-	explicit CJoyconInput();
-	~CJoyconInput();
+	explicit CControllerInput();
+	~CControllerInput();
 
 	bool IsConnected();
 	void Reconnect();

@@ -6,7 +6,7 @@
 class CLeapPoller;
 class CLeapFrame;
 class CLeapIndexController;
-class CJoyconInput;
+class CControllerInput;
 
 class CServerDriver final : public vr::IServerTrackedDeviceProvider
 {
@@ -17,7 +17,7 @@ class CServerDriver final : public vr::IServerTrackedDeviceProvider
     CLeapFrame *m_leapFrame;
     CLeapIndexController *m_leftController;
     CLeapIndexController *m_rightController;
-    CJoyconInput *m_joyconInput;
+    CControllerInput *m_joyconInput;
 
     CServerDriver(const CServerDriver &that) = delete;
     CServerDriver& operator=(const CServerDriver &that) = delete;
