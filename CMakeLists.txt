@@ -37,13 +37,12 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_DIR})
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/openvr/headers)
 target_include_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/glm)
+target_include_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/LeapSDK/include)
 
 if (WIN32)
-	target_include_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/LeapSDK/include)
-	target_link_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/LeapSDK/lib/x64)
+	target_link_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/LeapSDK/lib/win32)
 else()
-	target_include_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/LeapSDK_Linux/include)
-	target_link_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/LeapSDK_Linux/lib/x64)
+	target_link_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/LeapSDK/lib/linux64)
 endif()
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/JSL)
