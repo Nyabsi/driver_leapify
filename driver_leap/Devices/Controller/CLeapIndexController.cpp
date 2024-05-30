@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Devices/Controller/CLeapIndexController.h"
 #include "Devices/Controller/CControllerButton.h"
-#include "Core/CDriverConfig.h"
 #include "Leap/CLeapHand.h"
 #include "Utils/Utils.h"
 
@@ -262,7 +261,7 @@ vr::EVRInitError CLeapIndexController::Activate(uint32_t unObjectId)
         vr::VRDriverInput()->CreateScalarComponent(m_propertyContainer, "/input/finger/pinky", &m_buttons[IB_FingerPinky]->GetHandleRef(), vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedOneSided);
         m_buttons[IB_FingerPinky]->SetInputType(CControllerButton::IT_Float);
 
-        const vr::EVRSkeletalTrackingLevel l_trackingLevel = ((CDriverConfig::GetTrackingLevel() == CDriverConfig::TL_Partial) ? vr::VRSkeletalTracking_Partial : vr::VRSkeletalTracking_Full);
+        const vr::EVRSkeletalTrackingLevel l_trackingLevel = vr::VRSkeletalTracking_Full;
         if(m_isLeft)
             vr::VRDriverInput()->CreateSkeletonComponent(m_propertyContainer, "/input/skeleton/left", "/skeleton/hand/left", "/pose/raw", l_trackingLevel, nullptr, 0U, &m_skeletonHandle);
         else
@@ -350,30 +349,20 @@ void CLeapIndexController::UpdatePose(const CLeapHand *p_hand)
         // Root represents Leap Motion mount point on HMD
         // Root offset
         glm::quat l_headRot(ms_headRotation.w, ms_headRotation.x, ms_headRotation.y, ms_headRotation.z);
-        glm::vec3 l_globalOffset = l_headRot * CDriverConfig::GetRootOffset();
+        glm::vec3 l_globalOffset = l_headRot * glm::vec3(0.0f, 0.0f, 0.0f);
 
         m_pose.vecWorldFromDriverTranslation[0] += l_globalOffset.x;
         m_pose.vecWorldFromDriverTranslation[1] += l_globalOffset.y;
         m_pose.vecWorldFromDriverTranslation[2] += l_globalOffset.z;
 
         // Root angle
-        glm::quat l_globalRot = l_headRot * glm::quat(glm::radians(CDriverConfig::GetRootAngle()));
+        glm::quat l_globalRot = l_headRot * glm::quat(glm::radians(glm::vec3(0.0f, 0.0f, 0.0f)));
         ConvertQuaternion(l_globalRot, m_pose.qWorldFromDriverRotation);
 
-        // Velocity
-        if(CDriverConfig::IsVelocityUsed())
-        {
-            glm::vec3 l_resultVelocity = l_globalRot * p_hand->GetVelocity();
-            m_pose.vecVelocity[0] = l_resultVelocity.x;
-            m_pose.vecVelocity[1] = l_resultVelocity.y;
-            m_pose.vecVelocity[2] = l_resultVelocity.z;
-        }
-        else
-        {
-            m_pose.vecVelocity[0] = 0.f;
-            m_pose.vecVelocity[1] = 0.f;
-            m_pose.vecVelocity[2] = 0.f;
-        }
+        glm::vec3 l_resultVelocity = l_globalRot * p_hand->GetVelocity();
+        m_pose.vecVelocity[0] = l_resultVelocity.x;
+        m_pose.vecVelocity[1] = l_resultVelocity.y;
+        m_pose.vecVelocity[2] = l_resultVelocity.z;
 
         // Local transformation of device
         // Rotation
@@ -399,12 +388,8 @@ void CLeapIndexController::UpdatePose(const CLeapHand *p_hand)
         for(size_t i = 0U; i < 3U; i++)
             m_pose.vecVelocity[i] = .0;
 
-        if(CDriverConfig::IsHandsResetEnabled()) m_pose.result = vr::TrackingResult_Running_OutOfRange;
-        else
-        {
-            m_pose.result = vr::TrackingResult_Running_OK;
-            m_pose.poseIsValid = true;
-        }
+        m_pose.result = vr::TrackingResult_Running_OK;
+        m_pose.poseIsValid = true;
     }
 
     vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_trackedDevice, m_pose, sizeof(vr::DriverPose_t));

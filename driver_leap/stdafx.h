@@ -26,5 +26,3 @@
 #include "glm/gtc/quaternion.hpp"
 #include "glm/gtx/norm.hpp"
 #include "glm/gtx/intersect.hpp"
-
-#include "pugixml.hpp"

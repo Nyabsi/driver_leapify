@@ -3,19 +3,10 @@
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="..\vendor\pugixml\src\pugixml.cpp">
-      <Filter>vendor\pugixml</Filter>
-    </ClCompile>
     <ClCompile Include="Utils\Utils.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Devices\CLeapStation.cpp">
-      <Filter>Devices</Filter>
-    </ClCompile>
     <ClCompile Include="Core\CServerDriver.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\CDriverConfig.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Leap\CLeapFrame.cpp">
@@ -28,10 +19,10 @@
       <Filter>Leap</Filter>
     </ClCompile>
     <ClCompile Include="Devices\Controller\CControllerButton.cpp">
-      <Filter>Devices\Controller</Filter>
+      <Filter>Controller</Filter>
     </ClCompile>
     <ClCompile Include="Devices\Controller\CLeapIndexController.cpp">
-      <Filter>Devices\Controller</Filter>
+      <Filter>Controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -39,13 +30,7 @@
     <ClInclude Include="Utils\Utils.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Devices\CLeapStation.h">
-      <Filter>Devices</Filter>
-    </ClInclude>
     <ClInclude Include="Core\CServerDriver.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\CDriverConfig.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Leap\CLeapFrame.h">
@@ -58,33 +43,24 @@
       <Filter>Leap</Filter>
     </ClInclude>
     <ClInclude Include="Devices\Controller\CControllerButton.h">
-      <Filter>Devices\Controller</Filter>
+      <Filter>Controller</Filter>
     </ClInclude>
     <ClInclude Include="Devices\Controller\CLeapIndexController.h">
-      <Filter>Devices\Controller</Filter>
+      <Filter>Controller</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="vendor">
-      <UniqueIdentifier>{4dd100d6-5318-4ebc-a9eb-9ef27f1ae76b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="vendor\pugixml">
-      <UniqueIdentifier>{21c081d3-867d-441e-90d0-ef26e9d05cae}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{839b3e7e-6f9e-49a2-b8e7-c8c40d0cd982}</UniqueIdentifier>
     </Filter>
     <Filter Include="Utils">
       <UniqueIdentifier>{b03c9f12-ff59-41c2-addf-e0d1c366d73a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Devices">
-      <UniqueIdentifier>{5709dbc5-cf75-4243-a691-22f7d553f0da}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Leap">
       <UniqueIdentifier>{32d26d56-e07f-41de-aa44-3e0d88c9f835}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Devices\Controller">
-      <UniqueIdentifier>{82e3a6c5-9886-457e-8308-b6c62ec7ce03}</UniqueIdentifier>
+    <Filter Include="Controller">
+      <UniqueIdentifier>{5709dbc5-cf75-4243-a691-22f7d553f0da}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
