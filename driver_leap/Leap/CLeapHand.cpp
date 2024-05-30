@@ -1,6 +1,7 @@
-#include "stdafx.h"
-#include "Leap/CLeapHand.h"
-#include "Utils/Utils.h"
+#include "CLeapHand.h"
+
+#include <Utils/Utils.h>
+#include <glm/gtx/quaternion.hpp>
 
 const glm::quat g_hmdRotation(0.f, 0.f, 0.70106769f, -0.70106769f);
 const glm::mat4 g_identityMat4(1.f);

@@ -86,10 +86,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalIncludeDirectories>./;../vendor/LeapSDK/include;../vendor/openvr/headers;../vendor/glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>GLM_ENABLE_EXPERIMENTAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -132,27 +133,22 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Controller\CControllerButton.h" />
+    <ClInclude Include="Controller\CLeapIndexController.h" />
     <ClInclude Include="Core\CServerDriver.h" />
-    <ClInclude Include="Devices\Controller\CControllerButton.h" />
-    <ClInclude Include="Devices\Controller\CLeapIndexController.h" />
     <ClInclude Include="Leap\CLeapFrame.h" />
     <ClInclude Include="Leap\CLeapHand.h" />
     <ClInclude Include="Leap\CLeapPoller.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="Utils\Utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Controller\CControllerButton.cpp" />
+    <ClCompile Include="Controller\CLeapIndexController.cpp" />
     <ClCompile Include="Core\CServerDriver.cpp" />
-    <ClCompile Include="Devices\Controller\CControllerButton.cpp" />
-    <ClCompile Include="Devices\Controller\CLeapIndexController.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Leap\CLeapFrame.cpp" />
     <ClCompile Include="Leap\CLeapHand.cpp" />
     <ClCompile Include="Leap\CLeapPoller.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="Utils\Utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

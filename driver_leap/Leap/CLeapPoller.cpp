@@ -1,5 +1,6 @@
-#include "stdafx.h"
-#include "Leap/CLeapPoller.h"
+#include "CLeapPoller.h"
+
+#include <LeapC.h>
 
 CLeapPoller::CLeapPoller()
 {

@@ -1,5 +1,10 @@
 #pragma once
 
+#include <string>
+
+#include "glm/glm.hpp"
+#include "openvr_driver.h"
+
 void ConvertMatrix(const vr::HmdMatrix34_t &p_matVR, glm::mat4 &p_mat);
 template<class T, class U> void ConvertQuaternion(const T &p_src, U &p_dst)
 {

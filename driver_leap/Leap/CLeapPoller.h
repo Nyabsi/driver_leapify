@@ -1,5 +1,11 @@
 #pragma once
 
+#include <atomic>
+#include <mutex>
+#include <thread>
+
+#include <LeapC.h>
+
 class CLeapPoller
 {
     std::atomic<bool> m_isRunning;

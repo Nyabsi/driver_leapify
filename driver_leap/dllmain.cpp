@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+﻿#include <Windows.h>
 
 #include "Core/CServerDriver.h"
 

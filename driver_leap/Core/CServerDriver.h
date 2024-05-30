@@ -1,5 +1,8 @@
 #pragma once
 
+#include <openvr_driver.h>
+#include <LeapC.h>
+
 class CLeapPoller;
 class CLeapFrame;
 class CLeapIndexController;

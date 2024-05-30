@@ -1,5 +1,7 @@
 #pragma once
 
+#include <openvr_driver.h>
+
 class CControllerButton final
 {
     vr::VRInputComponentHandle_t m_handle;

@@ -1,6 +1,11 @@
-#include "stdafx.h"
-
 #include "Utils/Utils.h"
+
+#include <string>
+#include <sstream>
+#include <array>
+
+#include "glm/glm.hpp"
+#include "openvr_driver.h"
 
 extern const glm::mat4 g_identityMatrix(1.f);
 extern const glm::vec4 g_zeroPoint(0.f, 0.f, 0.f, 1.f);

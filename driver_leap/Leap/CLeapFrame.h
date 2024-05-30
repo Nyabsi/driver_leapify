@@ -1,5 +1,7 @@
 #pragma once
 
+#include <LeapC.h>
+
 class CLeapHand;
 class CLeapFrame
 {

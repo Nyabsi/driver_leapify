@@ -1,5 +1,12 @@
 #pragma once
 
+#include <array>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+
+#include <LeapC.h>
+
 class CLeapHand final
 {
     bool m_isLeft;

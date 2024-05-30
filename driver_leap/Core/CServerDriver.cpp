@@ -1,12 +1,10 @@
-#include "stdafx.h"
-
 #include "Core/CServerDriver.h"
-#include "Leap/CLeapPoller.h"
-#include "Leap/CLeapFrame.h"
-#include "Devices/Controller/CLeapIndexController.h"
-#include "Devices/CLeapStation.h"
 
-#include "Utils/Utils.h"
+#include <Leap/CLeapPoller.h>
+#include <Leap/CLeapFrame.h>
+
+#include <Controller/CLeapIndexController.h>
+#include <Utils/Utils.h>
 
 extern char g_modulePath[];
 

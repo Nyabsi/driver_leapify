@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Utils\Utils.cpp">
       <Filter>Utils</Filter>
@@ -18,15 +17,14 @@
     <ClCompile Include="Leap\CLeapPoller.cpp">
       <Filter>Leap</Filter>
     </ClCompile>
-    <ClCompile Include="Devices\Controller\CControllerButton.cpp">
+    <ClCompile Include="Controller\CControllerButton.cpp">
       <Filter>Controller</Filter>
     </ClCompile>
-    <ClCompile Include="Devices\Controller\CLeapIndexController.cpp">
+    <ClCompile Include="Controller\CLeapIndexController.cpp">
       <Filter>Controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="Utils\Utils.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -42,10 +40,10 @@
     <ClInclude Include="Leap\CLeapPoller.h">
       <Filter>Leap</Filter>
     </ClInclude>
-    <ClInclude Include="Devices\Controller\CControllerButton.h">
+    <ClInclude Include="Controller\CControllerButton.h">
       <Filter>Controller</Filter>
     </ClInclude>
-    <ClInclude Include="Devices\Controller\CLeapIndexController.h">
+    <ClInclude Include="Controller\CLeapIndexController.h">
       <Filter>Controller</Filter>
     </ClInclude>
   </ItemGroup>

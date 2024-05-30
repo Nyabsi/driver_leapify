@@ -1,6 +1,5 @@
-#include "stdafx.h"
-#include "Leap/CLeapFrame.h"
-#include "Leap/CLeapHand.h"
+#include "CLeapFrame.h"
+#include "CLeapHand.h"
 
 CLeapFrame::CLeapFrame()
 {

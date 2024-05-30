@@ -1,8 +1,12 @@
-#include "stdafx.h"
-#include "Devices/Controller/CLeapIndexController.h"
-#include "Devices/Controller/CControllerButton.h"
-#include "Leap/CLeapHand.h"
-#include "Utils/Utils.h"
+#include "CLeapIndexController.h"
+#include "CControllerButton.h"
+
+#include <Leap/CLeapHand.h>
+#include <Utils/Utils.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/norm.hpp>
 
 extern const std::array<vr::VRBoneTransform_t, 31U> g_openHandGesture;
 extern const glm::mat4 g_identityMatrix;

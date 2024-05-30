@@ -1,6 +1,4 @@
-#include "stdafx.h"
-
-#include "Devices/Controller/CControllerButton.h"
+#include "CControllerButton.h"
 
 CControllerButton::CControllerButton()
 {
