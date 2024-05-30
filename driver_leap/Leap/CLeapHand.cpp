@@ -41,6 +41,11 @@ const glm::vec3 & CLeapHand::GetVelocity() const
     return m_velocity;
 }
 
+const float& CLeapHand::GetOffset() const
+{
+    return m_handOffset;
+}
+
 const glm::vec3 & CLeapHand::GetFingerBonePosition(size_t p_finger, size_t p_bone) const
 {
     if((p_finger >= 5U) || (p_bone >= 4U))
@@ -98,6 +103,9 @@ void CLeapHand::Update(const LEAP_HAND & p_hand)
     ConvertPosition(p_hand.palm.velocity, m_velocity);
     ConvertRotation(p_hand.palm.orientation, m_rotation);
     m_rotation = glm::normalize(m_rotation);
+
+    // This is used to calculate the actual arm length, this makes the controller position *feel* more correct.
+    m_handOffset = (-0.001f * p_hand.arm.prev_joint.y - -0.001f * p_hand.arm.next_joint.y);
 
     // Bends
     for(size_t i = 0U; i < 5U; i++)

@@ -7,6 +7,7 @@ class CLeapHand final
     glm::vec3 m_position;
     glm::quat m_rotation;
     glm::vec3 m_velocity;
+    float m_handOffset;
     std::array<glm::vec3, 20U> m_bonesPositions;
     std::array<glm::quat, 20U> m_bonesRotations;
     std::array<float, 5U> m_fingersBends;
@@ -36,6 +37,7 @@ public:
     const glm::vec3& GetPosition() const;
     const glm::quat& GetRotation() const;
     const glm::vec3& GetVelocity() const;
+    const float& GetOffset() const;
 
     const glm::vec3& GetFingerBonePosition(size_t p_finger, size_t p_bone) const;
     const glm::quat& GetFingerBoneRotation(size_t p_finger, size_t p_bone) const;
