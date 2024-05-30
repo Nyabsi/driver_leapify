@@ -24,7 +24,7 @@ CServerDriver::CServerDriver()
     m_connectionState = false;
     m_leftController = nullptr;
     m_rightController = nullptr;
-    m_joyconInput = nullptr;
+    m_controllerInput = nullptr;
 }
 
 CServerDriver::~CServerDriver()
@@ -39,7 +39,7 @@ vr::EVRInitError CServerDriver::Init(vr::IVRDriverContext *pDriverContext)
     m_leftController = new CLeapIndexController(true);
     m_rightController = new CLeapIndexController(false);
 
-    m_joyconInput = new CControllerInput();
+    m_controllerInput = new CControllerInput();
 
     vr::VRServerDriverHost()->TrackedDeviceAdded(m_leftController->GetSerialNumber().c_str(), vr::TrackedDeviceClass_Controller, m_leftController);
     vr::VRServerDriverHost()->TrackedDeviceAdded(m_rightController->GetSerialNumber().c_str(), vr::TrackedDeviceClass_Controller, m_rightController);
@@ -68,6 +68,9 @@ void CServerDriver::Cleanup()
     delete m_leapFrame;
     m_leapFrame = nullptr;
 
+    delete m_controllerInput;
+    m_controllerInput = nullptr;
+
     m_connectionState = false;
 
     VR_CLEANUP_SERVER_DRIVER_CONTEXT();
@@ -95,13 +98,13 @@ void CServerDriver::RunFrame()
     if(m_connectionState && m_leapPoller->GetFrame(m_leapFrame->GetEvent()))
         m_leapFrame->Update();
 
-    if (m_joyconInput->IsConnected())
+    if (m_controllerInput->IsConnected())
     {
-        m_joyconInput->Update(m_leftController, m_rightController);
+        m_controllerInput->Update(m_leftController, m_rightController);
     }
     else
     {
-        m_joyconInput->Reconnect();
+        m_controllerInput->Reconnect();
     }
 
     // Update devices
