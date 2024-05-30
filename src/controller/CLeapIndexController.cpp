@@ -8,6 +8,8 @@
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/norm.hpp>
 
+#include <string.h>
+
 extern const std::array<vr::VRBoneTransform_t, 31U> g_openHandGesture;
 extern const glm::mat4 g_identityMatrix;
 extern const glm::vec4 g_zeroPoint;
@@ -347,8 +349,8 @@ void CLeapIndexController::UpdatePose(const CLeapHand *p_hand)
 
     if(m_pose.poseIsValid)
     {
-        std::memcpy(m_pose.vecWorldFromDriverTranslation, ms_headPosition, sizeof(double) * 3U);
-        std::memcpy(&m_pose.qWorldFromDriverRotation, &ms_headRotation, sizeof(vr::HmdQuaternion_t));
+        memcpy(m_pose.vecWorldFromDriverTranslation, ms_headPosition, sizeof(double) * 3U);
+        memcpy(&m_pose.qWorldFromDriverRotation, &ms_headRotation, sizeof(vr::HmdQuaternion_t));
 
         // Root represents Leap Motion mount point on HMD
         // Root offset

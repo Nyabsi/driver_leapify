@@ -1,5 +1,7 @@
 #include "CLeapPoller.h"
 
+#include <string.h>
+
 #include <LeapC.h>
 
 CLeapPoller::CLeapPoller()
@@ -59,7 +61,7 @@ bool CLeapPoller::GetFrame(LEAP_TRACKING_EVENT *p_target)
     if(!m_frameLock.try_lock())
         return false;
 
-    std::memcpy(p_target, m_frame, sizeof(LEAP_TRACKING_EVENT));
+    memcpy(p_target, m_frame, sizeof(LEAP_TRACKING_EVENT));
     m_frameLock.unlock();
     return true;
 }
@@ -158,6 +160,6 @@ void CLeapPoller::OnDeviceLostEvent(const LEAP_DEVICE_EVENT *p_event)
 void CLeapPoller::OnTrackingEvent(const LEAP_TRACKING_EVENT *p_event)
 {
     m_frameLock.lock();
-    std::memcpy(m_frame, p_event, sizeof(LEAP_TRACKING_EVENT));
+    memcpy(m_frame, p_event, sizeof(LEAP_TRACKING_EVENT));
     m_frameLock.unlock();
 }
