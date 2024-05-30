@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-#include <Controller/CLeapIndexController.h>
+#include <controller/CLeapIndexController.h>
 
 class CJoyconInput {
 	struct Joycon {

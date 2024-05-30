@@ -1,12 +1,12 @@
-#include "Core/CServerDriver.h"
+#include "CServerDriver.h"
 
-#include <Leap/CLeapPoller.h>
-#include <Leap/CLeapFrame.h>
+#include <leap/CLeapPoller.h>
+#include <leap/CLeapFrame.h>
 
-#include <Controller/CLeapIndexController.h>
-#include <Utils/Utils.h>
+#include <controller/CLeapIndexController.h>
+#include <utils/Utils.h>
 
-#include <Controller/CJoyconInput.h>
+#include <controller/CJoyconInput.h>
 
 extern char g_modulePath[];
 

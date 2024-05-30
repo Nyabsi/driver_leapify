@@ -1,6 +1,6 @@
 #include "CLeapHand.h"
 
-#include <Utils/Utils.h>
+#include <utils/Utils.h>
 #include <glm/gtx/quaternion.hpp>
 
 const glm::quat g_hmdRotation(0.f, 0.f, 0.70106769f, -0.70106769f);

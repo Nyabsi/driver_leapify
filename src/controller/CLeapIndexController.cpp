@@ -1,8 +1,8 @@
 #include "CLeapIndexController.h"
 #include "CControllerButton.h"
 
-#include <Leap/CLeapHand.h>
-#include <Utils/Utils.h>
+#include <leap/CLeapHand.h>
+#include <utils/Utils.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
