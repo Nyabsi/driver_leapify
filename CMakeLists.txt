@@ -26,7 +26,7 @@ add_library(${PROJECT_NAME} SHARED
 	${SRC_DIR}/core/CServerDriver.cpp
 	${SRC_DIR}/controller/CLeapIndexController.cpp
 	${SRC_DIR}/controller/CControllerButton.cpp
-	${SRC_DIR}/controller/CJoyconInput.cpp
+	${SRC_DIR}/controller/CControllerInput.cpp
 	${SRC_DIR}/leap/CLeapFrame.cpp
 	${SRC_DIR}/leap/CLeapHand.cpp
 	${SRC_DIR}/leap/CLeapPoller.cpp

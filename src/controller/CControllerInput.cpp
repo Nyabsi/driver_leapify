@@ -1,4 +1,4 @@
-#include "CJoyconInput.h"
+#include "CControllerInput.h"
 
 #include <thread>
 

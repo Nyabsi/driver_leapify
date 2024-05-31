@@ -6,7 +6,7 @@
 #include <controller/CLeapIndexController.h>
 #include <utils/Utils.h>
 
-#include <controller/CJoyconInput.h>
+#include <controller/CControllerInput.h>
 
 extern char g_modulePath[];
 
