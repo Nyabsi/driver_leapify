@@ -102,10 +102,6 @@ void CServerDriver::RunFrame()
     {
         m_controllerInput->Update(m_leftController, m_rightController);
     }
-    else
-    {
-        m_controllerInput->Reconnect();
-    }
 
     // Update devices
     m_leftController->RunFrame(m_leapFrame->GetLeftHand());
