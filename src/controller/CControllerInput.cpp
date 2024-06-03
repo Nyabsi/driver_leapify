@@ -4,7 +4,7 @@
 
 CControllerInput::CControllerInput()
 {
-    m_deviceCount = JslConnectDevices();
+    m_deviceCount = -1;
 }
 
 CControllerInput::~CControllerInput()
@@ -15,39 +15,31 @@ CControllerInput::~CControllerInput()
 bool CControllerInput::IsConnected()
 {
     // NOTE: Joycons work as a pair, so we check if both are still alive, otherwise this check will fail.
-    if (m_devices[ControllerType::CONTROLLER_JOYCON_LEFT].connected &&
-        m_devices[ControllerType::CONTROLLER_JOYCON_RIGHT].connected ||
+    if ((m_devices[ControllerType::CONTROLLER_JOYCON_LEFT].connected &&
+        m_devices[ControllerType::CONTROLLER_JOYCON_RIGHT].connected) ||
         m_devices[ControllerType::CONTROLLER_JOYCON_DS4].connected)
     {
         return true;
     }
 
-    int* handles = new int[m_deviceCount];
-    JslGetConnectedDeviceHandles(handles, m_deviceCount);
+    m_deviceCount = JslConnectDevices();
 
-    for (size_t i = 0U; i < m_deviceCount; i++)
+    std::vector<int> handles(m_deviceCount);
+    JslGetConnectedDeviceHandles(handles.data(), m_deviceCount);
+
+    for (auto handle : handles)
     {
-        int handle = handles[i];
         int type = JslGetControllerType(handle);
-
-        switch (type)
-        {
-        case ControllerType::CONTROLLER_JOYCON_LEFT:
-            m_devices[ControllerType::CONTROLLER_JOYCON_LEFT].connected = true;
-            m_devices[ControllerType::CONTROLLER_JOYCON_LEFT].handle = handle;
-            break;
-        case ControllerType::CONTROLLER_JOYCON_RIGHT:
-            m_devices[ControllerType::CONTROLLER_JOYCON_RIGHT].connected = true;
-            m_devices[ControllerType::CONTROLLER_JOYCON_RIGHT].handle = handle;
-            break;
-        case ControllerType::CONTROLLER_JOYCON_DS4:
-            m_devices[ControllerType::CONTROLLER_JOYCON_DS4].connected = true;
-            m_devices[ControllerType::CONTROLLER_JOYCON_DS4].handle = handle;
-            break;
-        }
+        m_devices[type].connected = true;
+        m_devices[type].handle = handle;
     }
 
-    return m_deviceCount >= 1;
+    // For other controllers, just one of them is enough
+    if (m_devices[ControllerType::CONTROLLER_JOYCON_DS4].connected)
+        return true;
+
+    // For joycons, we need both of them connected
+    return m_devices[ControllerType::CONTROLLER_JOYCON_LEFT].connected && m_devices[ControllerType::CONTROLLER_JOYCON_RIGHT].connected;
 }
 
 void CControllerInput::Update(CLeapIndexController* left, CLeapIndexController* right)
@@ -175,15 +167,8 @@ void CControllerInput::Update(CLeapIndexController* left, CLeapIndexController* 
         right->SetButtonValue(CLeapIndexController::IndexButton::IB_GripForce, state.buttons & 0x00200 ? 1.0f : 0.0f);
     }
 
-    // We should only update device "connected" state when one *or* more devices disconnects.
-    int connectedDevices = JslConnectDevices();
-    if (m_deviceCount > connectedDevices)
+    for (size_t i = 0U; i < m_devices.size(); i++)
     {
-        for (size_t i = 0U; i < m_devices.size(); i++)
-        {
-            m_devices[i].connected = false;
-        }
-
-        m_deviceCount = connectedDevices;
+        m_devices[i].connected = JslStillConnected(m_devices[i].handle);
     }
 }
