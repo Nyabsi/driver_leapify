@@ -83,8 +83,6 @@ const char* const* CServerDriver::GetInterfaceVersions()
 
 void CServerDriver::RunFrame()
 {
-    CLeapIndexController::UpdateHMDCoordinates();
-
     if(m_connectionState != m_leapPoller->IsConnected())
     {
         m_connectionState = m_leapPoller->IsConnected();

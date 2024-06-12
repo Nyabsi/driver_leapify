@@ -2,6 +2,7 @@
 
 #include <utils/Utils.h>
 #include <glm/gtx/quaternion.hpp>
+#include <controller/CLeapIndexController.h>
 
 const glm::quat g_hmdRotation(0.f, 0.f, 0.70106769f, -0.70106769f);
 const glm::mat4 g_identityMat4(1.f);
@@ -141,6 +142,8 @@ void CLeapHand::Update(const LEAP_HAND & p_hand)
             ConvertRotation(p_hand.digits[i].bones[j].rotation, m_bonesRotations[l_index]);
         }
     }
+
+    CLeapIndexController::UpdateHMDCoordinates();
 }
 
 void CLeapHand::Update()
