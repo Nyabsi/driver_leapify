@@ -167,8 +167,6 @@ void CControllerInput::Update(CLeapIndexController* left, CLeapIndexController* 
         right->SetButtonValue(CLeapIndexController::IndexButton::IB_GripForce, state.buttons & 0x00200 ? 1.0f : 0.0f);
     }
 
-    for (size_t i = 0U; i < m_devices.size(); i++)
-    {
-        m_devices[i].connected = JslStillConnected(m_devices[i].handle);
-    }
+    for (auto& device : m_devices)
+        m_devices[device.first].connected = JslStillConnected(m_devices[device.first].handle);
 }
