@@ -10,16 +10,10 @@ project(driver_leap)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-option(USE_GEMINI_SDK "Build driver_leap with Gemini SDK instead of Hyperion to support older devices (and Linux)" OFF)
-
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(VENDOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/vendor)
 
-add_definitions(-DGLM_ENABLE_EXPERIMENTAL) # Enable GLM's GTX functions
-
-if (USE_GEMINI_SDK)
-	add_definitions(-DLEGACY_GEMINI_SDK)
-endif()
+add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
 
 add_library(${PROJECT_NAME} SHARED
 	${SRC_DIR}/main.cpp
@@ -38,6 +32,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_DIR})
 target_include_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/openvr/headers)
 target_include_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/glm)
 target_include_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/LeapSDK/include)
+target_include_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/JSL/include)
 
 if (WIN32)
 	target_link_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/LeapSDK/lib/win32)
@@ -45,8 +40,11 @@ else()
 	target_link_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/LeapSDK/lib/linux64)
 endif()
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/JSL)
-target_link_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/JSL/x64)
+if (WIN32)
+	target_link_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/JSL/lib/win32)
+else()
+	target_link_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/JSL/lib/linux64)
+endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE LeapC JoyShockLibrary)
 
@@ -57,4 +55,6 @@ if (WIN32)
 			"$<TARGET_FILE:driver_leap>"
 			"C:/Program Files (x86)/Steam/steamapps/common/SteamVR/drivers/leap/bin/win64/$<TARGET_FILE_NAME:driver_leap>"
 	)
+else()
+	# TODO Linux path
 endif()
