@@ -74,6 +74,10 @@ void CControllerInput::Update(CLeapIndexController* left, CLeapIndexController* 
         left->SetButtonState(CLeapIndexController::IndexButton::IB_GripTouch, state.buttons & 0x00100);
         left->SetButtonValue(CLeapIndexController::IndexButton::IB_GripValue, state.buttons & 0x00100 ? 1.0f : 0.0f);
         left->SetButtonValue(CLeapIndexController::IndexButton::IB_GripForce, state.buttons & 0x00100 ? 1.0f : 0.0f);
+
+        // Trackpad
+        left->SetButtonState(CLeapIndexController::IndexButton::IB_TrackpadTouch, state.buttons & 0x40000);
+        left->SetButtonState(CLeapIndexController::IndexButton::IB_TrackpadForce, state.buttons & 0x40000 ? 1.0f : 0.0f);
     }
 
     if (m_devices[ControllerType::CONTROLLER_JOYCON_RIGHT].connected)
@@ -106,6 +110,10 @@ void CControllerInput::Update(CLeapIndexController* left, CLeapIndexController* 
         right->SetButtonState(CLeapIndexController::IndexButton::IB_GripTouch, state.buttons & 0x00200);
         right->SetButtonValue(CLeapIndexController::IndexButton::IB_GripValue, state.buttons & 0x00200 ? 1.0f : 0.0f);
         right->SetButtonValue(CLeapIndexController::IndexButton::IB_GripForce, state.buttons & 0x00200 ? 1.0f : 0.0f);
+
+        // Trackpad
+        right->SetButtonState(CLeapIndexController::IndexButton::IB_TrackpadTouch, state.buttons & 0x80000);
+        right->SetButtonState(CLeapIndexController::IndexButton::IB_TrackpadForce, state.buttons & 0x80000 ? 1.0f : 0.0f);
     }
 
     if (m_devices[ControllerType::CONTROLLER_JOYCON_DS4].connected)
