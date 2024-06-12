@@ -85,8 +85,6 @@ class CLeapIndexController : public vr::ITrackedDeviceServerDriver
     void FixThumbBone(glm::quat &p_rot) const;
     void FixMetacarpalBone(glm::quat &p_rot) const;
 
-    void ProcessExternalInput(const char *p_message);
-
     static void ChangeAuxTransformation(glm::vec3 &p_pos, glm::quat &p_rot);
     static size_t GetFingerBoneIndex(size_t p_id);
 
