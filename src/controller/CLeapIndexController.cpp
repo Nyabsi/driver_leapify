@@ -65,7 +65,7 @@ const std::vector<std::string> g_stateNames =
 CLeapIndexController::CLeapIndexController(bool p_left)
 {
     m_isLeft = p_left;
-    m_serialNumber.assign(m_isLeft ? "LHR-E217CD00" : "LHR-E217CD01");
+    m_serialNumber.assign(m_isLeft ? "Leap_Left_Hand" : "Leap_Right_Hand");
 
     m_trackedDevice = vr::k_unTrackedDeviceIndexInvalid;
     m_propertyContainer = vr::k_ulInvalidPropertyContainer;
@@ -128,60 +128,42 @@ CLeapIndexController::~CLeapIndexController()
         delete l_button;
 }
 
-// vr::ITrackedDeviceServerDriver
 vr::EVRInitError CLeapIndexController::Activate(uint32_t unObjectId)
 {
-    vr::EVRInitError l_resultError = vr::VRInitError_Driver_Failed;
+    vr::EVRInitError result = vr::VRInitError_Driver_Failed;
 
-    if(m_trackedDevice == vr::k_unTrackedDeviceIndexInvalid)
+    if (m_trackedDevice == vr::k_unTrackedDeviceIndexInvalid)
     {
         m_trackedDevice = unObjectId;
         m_propertyContainer = vr::VRProperties()->TrackedDeviceToPropertyContainer(m_trackedDevice);
 
-        vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_TrackingSystemName_String, "lighthouse");
+        vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_ManufacturerName_String, "Ultraleap");
+        vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_TrackingSystemName_String, "leapmotion");
         vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_SerialNumber_String, m_serialNumber.c_str());
+
+        vr::VRProperties()->SetInt32Property(m_propertyContainer, vr::Prop_DeviceClass_Int32, vr::TrackedDeviceClass_Controller);
+        vr::VRProperties()->SetInt32Property(m_propertyContainer, vr::Prop_ControllerHandSelectionPriority_Int32, 999);
+        vr::VRProperties()->SetInt32Property(m_propertyContainer, vr::Prop_ControllerRoleHint_Int32, m_isLeft ? vr::TrackedControllerRole_LeftHand : vr::TrackedControllerRole_RightHand);
+
         vr::VRProperties()->SetBoolProperty(m_propertyContainer, vr::Prop_WillDriftInYaw_Bool, false);
         vr::VRProperties()->SetBoolProperty(m_propertyContainer, vr::Prop_DeviceIsWireless_Bool, true);
-        vr::VRProperties()->SetBoolProperty(m_propertyContainer, vr::Prop_DeviceIsCharging_Bool, false);
-        vr::VRProperties()->SetFloatProperty(m_propertyContainer, vr::Prop_DeviceBatteryPercentage_Float, 1.f); // Always charged
-
-        vr::HmdMatrix34_t l_matrix = { -1.f, 0.f, 0.f, 0.f, 0.f, 0.f, -1.f, 0.f, 0.f, -1.f, 0.f, 0.f };
-        vr::VRProperties()->SetProperty(m_propertyContainer, vr::Prop_StatusDisplayTransform_Matrix34, &l_matrix, sizeof(vr::HmdMatrix34_t), vr::k_unHmdMatrix34PropertyTag);
-
-        vr::VRProperties()->SetBoolProperty(m_propertyContainer, vr::Prop_Firmware_UpdateAvailable_Bool, false);
-        vr::VRProperties()->SetBoolProperty(m_propertyContainer, vr::Prop_Firmware_ManualUpdate_Bool, false);
-        vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_Firmware_ManualUpdateURL_String, "https://developer.valvesoftware.com/wiki/SteamVR/HowTo_Update_Firmware");
-        vr::VRProperties()->SetBoolProperty(m_propertyContainer, vr::Prop_DeviceProvidesBatteryStatus_Bool, true);
         vr::VRProperties()->SetBoolProperty(m_propertyContainer, vr::Prop_DeviceCanPowerOff_Bool, true);
-        vr::VRProperties()->SetInt32Property(m_propertyContainer, vr::Prop_DeviceClass_Int32, vr::TrackedDeviceClass_Controller);
-        vr::VRProperties()->SetBoolProperty(m_propertyContainer, vr::Prop_Firmware_ForceUpdateRequired_Bool, false);
         vr::VRProperties()->SetBoolProperty(m_propertyContainer, vr::Prop_Identifiable_Bool, true);
-        vr::VRProperties()->SetBoolProperty(m_propertyContainer, vr::Prop_Firmware_RemindUpdate_Bool, false);
+
+        vr::VRProperties()->SetBoolProperty(m_propertyContainer, vr::Prop_DeviceIsCharging_Bool, false);
+        vr::VRProperties()->SetBoolProperty(m_propertyContainer, vr::Prop_DeviceProvidesBatteryStatus_Bool, true);
+        vr::VRProperties()->SetFloatProperty(m_propertyContainer, vr::Prop_DeviceBatteryPercentage_Float, 1.0f); // TODO: read controller battery information.
+
         vr::VRProperties()->SetInt32Property(m_propertyContainer, vr::Prop_Axis0Type_Int32, vr::k_eControllerAxis_TrackPad);
         vr::VRProperties()->SetInt32Property(m_propertyContainer, vr::Prop_Axis1Type_Int32, vr::k_eControllerAxis_Trigger);
-        vr::VRProperties()->SetInt32Property(m_propertyContainer, vr::Prop_ControllerRoleHint_Int32, m_isLeft ? vr::TrackedControllerRole_LeftHand : vr::TrackedControllerRole_RightHand);
-        vr::VRProperties()->SetBoolProperty(m_propertyContainer, vr::Prop_HasDisplayComponent_Bool, false);
-        vr::VRProperties()->SetBoolProperty(m_propertyContainer, vr::Prop_HasCameraComponent_Bool, false);
-        vr::VRProperties()->SetBoolProperty(m_propertyContainer, vr::Prop_HasDriverDirectModeComponent_Bool, false);
-        vr::VRProperties()->SetBoolProperty(m_propertyContainer, vr::Prop_HasVirtualDisplayComponent_Bool, false);
-        vr::VRProperties()->SetInt32Property(m_propertyContainer, vr::Prop_ControllerHandSelectionPriority_Int32, 0);
-        vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_ModelNumber_String, m_isLeft ? "Knuckles Left" : "Knuckles Right");
-        vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_RenderModelName_String, m_isLeft ? "{indexcontroller}valve_controller_knu_1_0_left" : "{indexcontroller}valve_controller_knu_1_0_right");
-        vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_ManufacturerName_String, "Valve");
-        vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_TrackingFirmwareVersion_String, "1562916277 watchman@ValveBuilder02 2019-07-12 FPGA 538(2.26/10/2) BL 0 VRC 1562916277 Radio 1562882729");
-        vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_HardwareRevision_String, "product 17 rev 14.1.9 lot 2019/4/20 0");
-        vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_ConnectedWirelessDongle_String, "C2F75F5986-DIY"); // Changed
-        vr::VRProperties()->SetUint64Property(m_propertyContainer, vr::Prop_HardwareRevision_Uint64, 286130441U);
-        vr::VRProperties()->SetUint64Property(m_propertyContainer, vr::Prop_FirmwareVersion_Uint64, 1562916277U);
-        vr::VRProperties()->SetUint64Property(m_propertyContainer, vr::Prop_FPGAVersion_Uint64, 538U);
-        vr::VRProperties()->SetUint64Property(m_propertyContainer, vr::Prop_VRCVersion_Uint64, 1562916277U);
-        vr::VRProperties()->SetUint64Property(m_propertyContainer, vr::Prop_RadioVersion_Uint64, 1562882729U);
-        vr::VRProperties()->SetUint64Property(m_propertyContainer, vr::Prop_DongleVersion_Uint64, 1558748372U);
-        vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_Firmware_ProgrammingTarget_String, m_isLeft ? "LHR-E217CD00" : "LHR-E217CD01"); // Changed
-        vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_ResourceRoot_String, "indexcontroller");
-        vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_RegisteredDeviceType_String, m_isLeft ? "valve/index_controllerLHR-E217CD00" : "valve/index_controllerLHR-E217CD01"); // Changed
-        vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_InputProfilePath_String, "{indexcontroller}/input/index_controller_profile.json");
         vr::VRProperties()->SetInt32Property(m_propertyContainer, vr::Prop_Axis2Type_Int32, vr::k_eControllerAxis_Trigger);
+
+        vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_ModelNumber_String, "Leap_Hand");
+        vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_ControllerType_String, "knuckles"); // TODO: remove on VRChat implements Skeletal Input
+        
+        vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_ResourceRoot_String, "indexcontroller");
+        vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_InputProfilePath_String, "{indexcontroller}/input/index_controller_profile.json");
+        vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_RenderModelName_String, m_isLeft ? "{indexcontroller}valve_controller_knu_1_0_left" : "{indexcontroller}valve_controller_knu_1_0_right");
         vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_NamedIconPathDeviceOff_String, m_isLeft ? "{indexcontroller}/icons/left_controller_status_off.png" : "{indexcontroller}/icons/right_controller_status_off.png");
         vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_NamedIconPathDeviceSearching_String, m_isLeft ? "{indexcontroller}/icons/left_controller_status_searching.gif" : "{indexcontroller}/icons/right_controller_status_searching.gif");
         vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_NamedIconPathDeviceSearchingAlert_String, m_isLeft ? "{indexcontroller}/icons/left_controller_status_searching_alert.gif" : "{indexcontroller}/icons//right_controller_status_searching_alert.gif");
@@ -190,9 +172,8 @@ vr::EVRInitError CLeapIndexController::Activate(uint32_t unObjectId)
         vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_NamedIconPathDeviceNotReady_String, m_isLeft ? "{indexcontroller}/icons/left_controller_status_error.png" : "{indexcontroller}/icons//right_controller_status_error.png");
         vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_NamedIconPathDeviceStandby_String, m_isLeft ? "{indexcontroller}/icons/left_controller_status_off.png" : "{indexcontroller}/icons//right_controller_status_off.png");
         vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_NamedIconPathDeviceAlertLow_String, m_isLeft ? "{indexcontroller}/icons/left_controller_status_ready_low.png" : "{indexcontroller}/icons//right_controller_status_ready_low.png");
-        vr::VRProperties()->SetStringProperty(m_propertyContainer, vr::Prop_ControllerType_String, "knuckles");
 
-        for(size_t i = 0U; i < IB_Count; i++)
+        for (size_t i = 0; i < IB_Count; i++)
             m_buttons.push_back(new CControllerButton());
 
         vr::VRDriverInput()->CreateBooleanComponent(m_propertyContainer, "/input/system/click", &m_buttons[IB_SystemClick]->GetHandleRef());
@@ -267,18 +248,17 @@ vr::EVRInitError CLeapIndexController::Activate(uint32_t unObjectId)
         vr::VRDriverInput()->CreateScalarComponent(m_propertyContainer, "/input/finger/pinky", &m_buttons[IB_FingerPinky]->GetHandleRef(), vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedOneSided);
         m_buttons[IB_FingerPinky]->SetInputType(CControllerButton::IT_Float);
 
-        const vr::EVRSkeletalTrackingLevel l_trackingLevel = vr::VRSkeletalTracking_Full;
-        if(m_isLeft)
-            vr::VRDriverInput()->CreateSkeletonComponent(m_propertyContainer, "/input/skeleton/left", "/skeleton/hand/left", "/pose/raw", l_trackingLevel, nullptr, 0U, &m_skeletonHandle);
+        if (m_isLeft)
+            vr::VRDriverInput()->CreateSkeletonComponent(m_propertyContainer, "/input/skeleton/left", "/skeleton/hand/left", "/pose/raw", vr::VRSkeletalTracking_Full, nullptr, 0U, &m_skeletonHandle);
         else
-            vr::VRDriverInput()->CreateSkeletonComponent(m_propertyContainer, "/input/skeleton/right", "/skeleton/hand/right", "/pose/raw", l_trackingLevel, nullptr, 0U, &m_skeletonHandle);
+            vr::VRDriverInput()->CreateSkeletonComponent(m_propertyContainer, "/input/skeleton/right", "/skeleton/hand/right", "/pose/raw", vr::VRSkeletalTracking_Full, nullptr, 0U, &m_skeletonHandle);
 
         vr::VRDriverInput()->CreateHapticComponent(m_propertyContainer, "/output/haptic", &m_haptic);
 
-        l_resultError = vr::VRInitError_None;
+        result = vr::VRInitError_None;
     }
 
-    return l_resultError;
+    return result;
 }
 
 void CLeapIndexController::Deactivate()
@@ -294,14 +274,14 @@ void CLeapIndexController::EnterStandby()
 void* CLeapIndexController::GetComponent(const char* pchComponentNameAndVersion)
 {
     void *l_result = nullptr;
-    if(!strcmp(pchComponentNameAndVersion, vr::ITrackedDeviceServerDriver_Version)) l_result = dynamic_cast<vr::ITrackedDeviceServerDriver*>(this);
+    if (!strcmp(pchComponentNameAndVersion, vr::ITrackedDeviceServerDriver_Version)) 
+        l_result = dynamic_cast<vr::ITrackedDeviceServerDriver*>(this);
     return l_result;
 }
 
 void CLeapIndexController::DebugRequest(const char* pchRequest, char* pchResponseBuffer, uint32_t unResponseBufferSize)
 {
-    if(m_trackedDevice != vr::k_unTrackedDeviceIndexInvalid)
-        ProcessExternalInput(pchRequest);
+
 }
 
 vr::DriverPose_t CLeapIndexController::GetPose()
@@ -433,21 +413,45 @@ void CLeapIndexController::UpdateSkeletalInput(const CLeapHand *p_hand)
     for(size_t i = 0U; i < 5U; i++)
     {
         size_t l_indexFinger = GetFingerBoneIndex(i);
-        for(size_t j = 0U; j < ((i == 0U) ? 3U : 4U); j++)
+
+        if (i == 0U)
         {
-            glm::quat l_rot;
-            p_hand->GetFingerBoneLocalRotation(i, (i == 0U) ? (j + 1U) : j, l_rot);
-            ChangeBoneOrientation(l_rot);
-
-            if(j == 0U) // Metacarpal
+            for (size_t j = 0U; j < 3U; j++)
             {
-                if(i == 0U)
-                    FixThumbBone(l_rot);
-                else
-                    FixMetacarpalBone(l_rot);
-            }
+                glm::quat l_rot;
+                glm::vec3 l_pos;
 
-            ConvertQuaternion(l_rot, m_boneTransform[l_indexFinger + j].orientation);
+                p_hand->GetThumbBoneLocalRotation(i, j + 1U, l_rot);
+                p_hand->GetFingerBoneLocalPosition(i, j + 1U, l_pos);
+
+                ChangeBoneOrientation(l_rot);
+                if (j == 0U) FixMetacarpalBone(l_rot, false);
+                ChangeBonePosition(l_pos);
+
+                ConvertQuaternion(l_rot, m_boneTransform[l_indexFinger + j].orientation);
+                if (j > 0U) ConvertVector3(l_pos, m_boneTransform[l_indexFinger + j].position);
+            }
+        }
+        else
+        {
+            for (size_t j = 0U; j < 4U; j++)
+            {
+                glm::quat l_rot;
+                glm::vec3 l_pos;
+
+                p_hand->GetFingerBoneLocalRotation(i, j, l_rot);
+                p_hand->GetFingerBoneLocalPosition(i, j, l_pos);
+
+                ChangeBoneOrientation(l_rot);
+                if (j == 0U)
+                {
+                    FixMetacarpalBone(l_rot, i == 0);
+                }
+                ChangeBonePosition(l_pos);
+
+                ConvertQuaternion(l_rot, m_boneTransform[l_indexFinger + j].orientation);
+                if (j > 0U) ConvertVector3(l_pos, m_boneTransform[l_indexFinger + j].position);
+            }
         }
     }
 
@@ -476,7 +480,6 @@ void CLeapIndexController::UpdateSkeletalInput(const CLeapHand *p_hand)
         ConvertQuaternion(l_rotation, m_boneTransform[SB_Aux_Thumb + i].orientation);
     }
 
-    vr::VRDriverInput()->UpdateSkeletonComponent(m_skeletonHandle, vr::VRSkeletalMotionRange_WithController, m_boneTransform, SB_Count);
     vr::VRDriverInput()->UpdateSkeletonComponent(m_skeletonHandle, vr::VRSkeletalMotionRange_WithoutController, m_boneTransform, SB_Count);
 }
 
@@ -502,6 +505,18 @@ void CLeapIndexController::ChangeBoneOrientation(glm::quat &p_rot) const
     }
 }
 
+void CLeapIndexController::ChangeBonePosition(glm::vec3& p_pos) const
+{
+    std::swap(p_pos.x, p_pos.z);
+    p_pos.z *= -1.f;
+
+    if (m_isLeft)
+    {
+        p_pos.x *= -1.f;
+        p_pos.y *= 1.f;
+    }
+}
+
 void CLeapIndexController::FixThumbBone(glm::quat & p_rot) const
 {
     p_rot = g_thumbOffset * p_rot;
@@ -509,10 +524,13 @@ void CLeapIndexController::FixThumbBone(glm::quat & p_rot) const
         p_rot = g_mirroringOffset * p_rot;
 }
 
-void CLeapIndexController::FixMetacarpalBone(glm::quat & p_rot) const
+void CLeapIndexController::FixMetacarpalBone(glm::quat& p_rot, bool p_thumb) const
 {
-    p_rot = g_metacarpalOffset * p_rot;
-    if(m_isLeft)
+    if (p_thumb)
+        p_rot = g_thumbOffset * p_rot;
+    else
+        p_rot = g_metacarpalOffset * p_rot;
+    if (m_isLeft)
         p_rot = g_mirroringOffset * p_rot;
 }
 
