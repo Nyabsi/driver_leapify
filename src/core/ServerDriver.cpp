@@ -1,23 +1,24 @@
-#include "CServerDriver.h"
+#include "ServerDriver.h"
 
-#include <leap/CLeapPoller.h>
-#include <leap/CLeapFrame.h>
+#include <leap/LeapPoller.h>
+#include <leap/LeapFrame.h>
+#include <leap/LeapHand.h>
 
-#include <controller/CLeapIndexController.h>
+#include <controller/LeapController.h>
 #include <utils/Utils.h>
 
-#include <controller/CControllerInput.h>
+#include <controller/ControllerInput.h>
 
 extern char g_modulePath[];
 
-const char* const CServerDriver::ms_interfaces[]
+const char* const ServerDriver::ms_interfaces[]
 {
     vr::ITrackedDeviceServerDriver_Version,
-        vr::IServerTrackedDeviceProvider_Version,
-        nullptr
+    vr::IServerTrackedDeviceProvider_Version,
+    nullptr
 };
 
-CServerDriver::CServerDriver()
+ServerDriver::ServerDriver()
 {
     m_leapPoller = nullptr;
     m_leapFrame = nullptr;
@@ -27,25 +28,24 @@ CServerDriver::CServerDriver()
     m_controllerInput = nullptr;
 }
 
-CServerDriver::~CServerDriver()
+ServerDriver::~ServerDriver()
 {
 }
 
-// vr::IServerTrackedDeviceProvider
-vr::EVRInitError CServerDriver::Init(vr::IVRDriverContext *pDriverContext)
+vr::EVRInitError ServerDriver::Init(vr::IVRDriverContext *pDriverContext)
 {
     VR_INIT_SERVER_DRIVER_CONTEXT(pDriverContext);
 
-    m_leftController = new CLeapIndexController(true);
-    m_rightController = new CLeapIndexController(false);
+    m_leftController = new LeapController(true);
+    m_rightController = new LeapController(false);
 
-    m_controllerInput = new CControllerInput();
+    m_controllerInput = new ControllerInput();
 
     vr::VRServerDriverHost()->TrackedDeviceAdded(m_leftController->GetSerialNumber().c_str(), vr::TrackedDeviceClass_Controller, m_leftController);
     vr::VRServerDriverHost()->TrackedDeviceAdded(m_rightController->GetSerialNumber().c_str(), vr::TrackedDeviceClass_Controller, m_rightController);
 
-    m_leapFrame = new CLeapFrame();
-    m_leapPoller = new CLeapPoller();
+    m_leapFrame = new LeapFrame();
+    m_leapPoller = new LeapPoller();
     m_leapPoller->Start();
     m_leapPoller->SetTrackingMode(_eLeapTrackingMode::eLeapTrackingMode_HMD);
     m_leapPoller->SetPolicy(eLeapPolicyFlag::eLeapPolicyFlag_OptimizeHMD, eLeapPolicyFlag::eLeapPolicyFlag_OptimizeScreenTop);
@@ -53,7 +53,7 @@ vr::EVRInitError CServerDriver::Init(vr::IVRDriverContext *pDriverContext)
     return vr::VRInitError_None;
 }
 
-void CServerDriver::Cleanup()
+void ServerDriver::Cleanup()
 {
     delete m_leftController;
     m_leftController = nullptr;
@@ -76,14 +76,14 @@ void CServerDriver::Cleanup()
     VR_CLEANUP_SERVER_DRIVER_CONTEXT();
 }
 
-const char* const* CServerDriver::GetInterfaceVersions()
+const char* const* ServerDriver::GetInterfaceVersions()
 {
     return ms_interfaces;
 }
 
-void CServerDriver::RunFrame()
+void ServerDriver::RunFrame()
 {
-    if(m_connectionState != m_leapPoller->IsConnected())
+    if (m_connectionState != m_leapPoller->IsConnected())
     {
         m_connectionState = m_leapPoller->IsConnected();
         m_leftController->SetEnabled(m_connectionState);
@@ -93,28 +93,26 @@ void CServerDriver::RunFrame()
         m_leapPoller->SetPolicy(eLeapPolicyFlag::eLeapPolicyFlag_OptimizeHMD, eLeapPolicyFlag::eLeapPolicyFlag_OptimizeScreenTop);
     }
 
-    if(m_connectionState && m_leapPoller->GetFrame(m_leapFrame->GetEvent()))
+    if (m_connectionState && m_leapPoller->GetFrame(m_leapFrame->GetEvent()))
         m_leapFrame->Update();
 
     if (m_controllerInput->IsConnected())
-    {
         m_controllerInput->Update(m_leftController, m_rightController);
-    }
 
     // Update devices
     m_leftController->RunFrame(m_leapFrame->GetLeftHand());
     m_rightController->RunFrame(m_leapFrame->GetRightHand());
 }
 
-bool CServerDriver::ShouldBlockStandbyMode()
+bool ServerDriver::ShouldBlockStandbyMode()
 {
     return false;
 }
 
-void CServerDriver::EnterStandby()
+void ServerDriver::EnterStandby()
 {
 }
 
-void CServerDriver::LeaveStandby()
+void ServerDriver::LeaveStandby()
 {
 }

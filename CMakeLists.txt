@@ -17,13 +17,13 @@ add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
 
 add_library(${PROJECT_NAME} SHARED
 	${SRC_DIR}/main.cpp
-	${SRC_DIR}/core/CServerDriver.cpp
-	${SRC_DIR}/controller/CLeapIndexController.cpp
-	${SRC_DIR}/controller/CControllerButton.cpp
-	${SRC_DIR}/controller/CControllerInput.cpp
-	${SRC_DIR}/leap/CLeapFrame.cpp
-	${SRC_DIR}/leap/CLeapHand.cpp
-	${SRC_DIR}/leap/CLeapPoller.cpp
+	${SRC_DIR}/core/ServerDriver.cpp
+	${SRC_DIR}/controller/LeapController.cpp
+	${SRC_DIR}/controller/ControllerButton.cpp
+	${SRC_DIR}/controller/ControllerInput.cpp
+	${SRC_DIR}/leap/LeapFrame.cpp
+	${SRC_DIR}/leap/LeapHand.cpp
+	${SRC_DIR}/leap/LeapPoller.cpp
 	${SRC_DIR}/utils/Utils.cpp
 )
 

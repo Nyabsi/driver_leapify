@@ -1,8 +1,8 @@
-#include "CLeapHand.h"
+#include "LeapHand.h"
 
 #include <utils/Utils.h>
 #include <glm/gtx/quaternion.hpp>
-#include <controller/CLeapIndexController.h>
+#include <controller/LeapController.h>
 
 const glm::quat g_hmdRotation(0.f, 0.f, 0.70106769f, -0.70106769f);
 const glm::mat4 g_identityMat4(1.f);
@@ -13,42 +13,51 @@ const float g_piHalf = g_pi * 0.5f;
 const float g_piQuarter = g_pi * 0.25f;
 extern const glm::vec4 g_zeroPoint;
 
-CLeapHand::CLeapHand(bool p_left)
+LeapHand::LeapHand(bool p_left)
 {
     m_isLeft = p_left;
+    m_visible = false;
+    m_position = { 0, 0, 0 };
+    m_rotation = { 0, 0, 0, 0 };
+    m_velocity = { 0, 0, 0 };
+    m_handOffset = { 0, 0, 0 };
+    m_bonesPositions = {};
+    m_bonesRotations = {};
+    m_fingersBends = {};
+    m_grabValue = 0.0f;
 }
 
-bool CLeapHand::IsLeft() const
+bool LeapHand::IsLeft() const
 {
     return m_isLeft;
 }
 
-bool CLeapHand::IsVisible() const
+bool LeapHand::IsVisible() const
 {
     return m_visible;
 }
 
-const glm::vec3 & CLeapHand::GetPosition() const
+const glm::vec3 & LeapHand::GetPosition() const
 {
     return m_position;
 }
 
-const glm::quat & CLeapHand::GetRotation() const
+const glm::quat & LeapHand::GetRotation() const
 {
     return m_rotation;
 }
 
-const glm::vec3 & CLeapHand::GetVelocity() const
+const glm::vec3 & LeapHand::GetVelocity() const
 {
     return m_velocity;
 }
 
-const glm::vec3& CLeapHand::GetOffset() const
+const glm::vec3& LeapHand::GetOffset() const
 {
     return m_handOffset;
 }
 
-const glm::vec3 & CLeapHand::GetFingerBonePosition(size_t p_finger, size_t p_bone) const
+const glm::vec3 & LeapHand::GetFingerBonePosition(size_t p_finger, size_t p_bone) const
 {
     if((p_finger >= 5U) || (p_bone >= 4U))
         return g_emptyVec3;
@@ -56,7 +65,7 @@ const glm::vec3 & CLeapHand::GetFingerBonePosition(size_t p_finger, size_t p_bon
     return m_bonesPositions[p_finger * 4U + p_bone];
 }
 
-const glm::quat & CLeapHand::GetFingerBoneRotation(size_t p_finger, size_t p_bone) const
+const glm::quat & LeapHand::GetFingerBoneRotation(size_t p_finger, size_t p_bone) const
 {
     if((p_finger >= 5U) || (p_bone >= 4U))
         return g_identityQuat;
@@ -64,7 +73,7 @@ const glm::quat & CLeapHand::GetFingerBoneRotation(size_t p_finger, size_t p_bon
     return m_bonesRotations[p_finger * 4U + p_bone];
 }
 
-void CLeapHand::GetFingerBoneLocalPosition(size_t p_finger, size_t p_bone, glm::vec3 &l_result) const
+void LeapHand::GetFingerBoneLocalPosition(size_t p_finger, size_t p_bone, glm::vec3 &l_result) const
 {
     if((p_finger >= 5U) || (p_bone >= 4U))
         return;
@@ -78,7 +87,7 @@ void CLeapHand::GetFingerBoneLocalPosition(size_t p_finger, size_t p_bone, glm::
     l_result = l_childLocal * g_zeroPoint;
 }
 
-void CLeapHand::GetFingerBoneLocalRotation(size_t p_finger, size_t p_bone, glm::quat & l_result) const
+void LeapHand::GetFingerBoneLocalRotation(size_t p_finger, size_t p_bone, glm::quat & l_result) const
 {
     if((p_finger >= 5U) || (p_bone >= 4U))
         return;
@@ -87,7 +96,7 @@ void CLeapHand::GetFingerBoneLocalRotation(size_t p_finger, size_t p_bone, glm::
     l_result = glm::inverse((p_bone == 0U) ? m_rotation : m_bonesRotations[l_index - 1U]) * m_bonesRotations[l_index];
 }
 
-void CLeapHand::GetThumbBoneLocalRotation(size_t p_finger, size_t p_bone, glm::quat& l_result) const
+void LeapHand::GetThumbBoneLocalRotation(size_t p_finger, size_t p_bone, glm::quat& l_result) const
 {
     if ((p_finger != 0u) || (p_bone >= 4U))
         return;
@@ -96,29 +105,26 @@ void CLeapHand::GetThumbBoneLocalRotation(size_t p_finger, size_t p_bone, glm::q
     l_result = glm::inverse((p_bone == 1U) ? m_rotation : m_bonesRotations[l_index - 1U]) * m_bonesRotations[l_index];
 }
 
-float CLeapHand::GetFingerBend(size_t p_finger) const
+float LeapHand::GetFingerBend(size_t p_finger) const
 {
     return ((p_finger >= 5U) ? 0.f : m_fingersBends[p_finger]);
 }
 
-float CLeapHand::GetGrabValue() const
+float LeapHand::GetGrabValue() const
 {
     return m_grabValue;
 }
 
-void CLeapHand::Update(const LEAP_HAND & p_hand)
+void LeapHand::Update(const LEAP_HAND & p_hand)
 {
     m_visible = true;
 
-    ConvertPosition(p_hand.palm.position, m_position);
+    ConvertPosition(p_hand.arm.next_joint, m_position);
     ConvertPosition(p_hand.palm.velocity, m_velocity);
     ConvertRotation(p_hand.palm.orientation, m_rotation);
     m_rotation = glm::normalize(m_rotation);
 
-    // This is used to calculate the actual arm length, this makes the controller position *feel* more correct.
-    float yOffset = (-0.001f * p_hand.arm.prev_joint.y - -0.001f * p_hand.arm.next_joint.y);
-    
-    m_handOffset = glm::vec3(0.0f, 0.0f, -yOffset);
+    m_handOffset = glm::vec3(0.0f, 0.0f, -(-0.001f * p_hand.arm.prev_joint.y - -0.001f * p_hand.arm.next_joint.y));
 
     // Bends
     for(size_t i = 0U; i < 5U; i++)
@@ -152,15 +158,15 @@ void CLeapHand::Update(const LEAP_HAND & p_hand)
         }
     }
 
-    CLeapIndexController::UpdateHMDCoordinates();
+    LeapController::UpdateHMDCoordinates();
 }
 
-void CLeapHand::Update()
+void LeapHand::Update()
 {
     m_visible = false;
 }
 
-void CLeapHand::ConvertPosition(const LEAP_VECTOR & p_src, glm::vec3 & p_dst)
+void LeapHand::ConvertPosition(const LEAP_VECTOR & p_src, glm::vec3 & p_dst)
 {
     // In desktop mode: +X - right, +Y - up, -Z - forward (as OpenGL)
     // In HMD mode: +X - left, +Y - forward, +Z - down (same basis, just rotated)
@@ -169,7 +175,7 @@ void CLeapHand::ConvertPosition(const LEAP_VECTOR & p_src, glm::vec3 & p_dst)
     p_dst.z = -0.001f * p_src.y;
 }
 
-void CLeapHand::ConvertRotation(const LEAP_QUATERNION & p_src, glm::quat & p_dst)
+void LeapHand::ConvertRotation(const LEAP_QUATERNION & p_src, glm::quat & p_dst)
 {
     // Simple rotation is enough because Leap has same basis as SteamVR
     glm::quat l_rot(p_src.w, p_src.x, p_src.y, p_src.z);

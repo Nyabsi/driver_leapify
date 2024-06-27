@@ -7,10 +7,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-class CControllerButton;
-class CLeapHand;
+class ControllerButton;
+class LeapHand;
 
-class CLeapIndexController : public vr::ITrackedDeviceServerDriver
+class LeapController : public vr::ITrackedDeviceServerDriver
 {
     enum SkeletonBone : size_t
     {
@@ -71,14 +71,14 @@ class CLeapIndexController : public vr::ITrackedDeviceServerDriver
 
     bool m_isLeft;
     std::string m_serialNumber;
-    std::vector<CControllerButton*> m_buttons;
+    std::vector<ControllerButton*> m_buttons;
 
-    CLeapIndexController(const CLeapIndexController &that) = delete;
-    CLeapIndexController& operator=(const CLeapIndexController &that) = delete;
+    LeapController(const LeapController &that) = delete;
+    LeapController& operator=(const LeapController &that) = delete;
 
-    void UpdatePose(const CLeapHand *p_hand);
-    void UpdateSkeletalInput(const CLeapHand *p_hand);
-    void UpdateInput(const CLeapHand *p_hand);
+    void UpdatePose(const LeapHand *p_hand);
+    void UpdateSkeletalInput(const LeapHand *p_hand);
+    void UpdateInput(const LeapHand *p_hand);
 
     void ResetControls();
     void ChangeBoneOrientation(glm::quat &p_rot) const;
@@ -127,10 +127,10 @@ public:
         IB_Count
     };
 
-    explicit CLeapIndexController(bool p_left);
-    ~CLeapIndexController();
+    explicit LeapController(bool p_left);
+    ~LeapController();
 
-    void RunFrame(const CLeapHand *p_hand);
+    void RunFrame(const LeapHand *p_hand);
 
     const std::string& GetSerialNumber() const;
 

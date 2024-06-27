@@ -7,7 +7,7 @@
 
 #include <LeapC.h>
 
-class CLeapHand final
+class LeapHand final
 {
     bool m_isLeft;
     bool m_visible;
@@ -36,11 +36,12 @@ public:
         Distal
     };
 
-    explicit CLeapHand(bool p_left);
-    ~CLeapHand() = default;
+    explicit LeapHand(bool p_left);
+    ~LeapHand() = default;
 
     bool IsLeft() const;
     bool IsVisible() const;
+
     const glm::vec3& GetPosition() const;
     const glm::quat& GetRotation() const;
     const glm::vec3& GetVelocity() const;

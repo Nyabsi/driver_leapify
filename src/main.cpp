@@ -2,7 +2,7 @@
 #include <string.h>
 
 #include <openvr_driver.h>
-#include <core/CServerDriver.h>
+#include <core/ServerDriver.h>
 
 #ifdef _WIN32
 #define EXPORT_FUNC extern "C" __declspec(dllexport)
@@ -10,7 +10,7 @@
 #define EXPORT_FUNC extern "C"
 #endif
 
-CServerDriver g_serverDriver;
+ServerDriver g_serverDriver;
 
 EXPORT_FUNC void* HmdDriverFactory(const char* pInterfaceName, int* pReturnCode)
 {

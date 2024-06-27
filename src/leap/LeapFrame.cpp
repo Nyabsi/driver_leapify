@@ -1,35 +1,36 @@
-#include "CLeapFrame.h"
-#include "CLeapHand.h"
+#include "LeapFrame.h"
+#include "LeapHand.h"
 
-CLeapFrame::CLeapFrame()
+LeapFrame::LeapFrame()
 {
-    m_leftHand = new CLeapHand(true);
-    m_rightHand = new CLeapHand(false);
+    m_leftHand = new LeapHand(true);
+    m_rightHand = new LeapHand(false);
     m_lastFrameId = 0U;
+    m_event = {};
 }
 
-CLeapFrame::~CLeapFrame()
+LeapFrame::~LeapFrame()
 {
     delete m_leftHand;
     delete m_rightHand;
 }
 
-LEAP_TRACKING_EVENT* CLeapFrame::GetEvent()
+LEAP_TRACKING_EVENT* LeapFrame::GetEvent()
 {
     return &m_event;
 }
 
-const CLeapHand* CLeapFrame::GetLeftHand() const
+const LeapHand* LeapFrame::GetLeftHand() const
 {
     return m_leftHand;
 }
 
-const CLeapHand* CLeapFrame::GetRightHand() const
+const LeapHand* LeapFrame::GetRightHand() const
 {
     return m_rightHand;
 }
 
-void CLeapFrame::Update()
+void LeapFrame::Update()
 {
     if(m_lastFrameId != m_event.tracking_frame_id)
     {

@@ -2,7 +2,7 @@
 
 #include <openvr_driver.h>
 
-class CControllerButton final
+class ControllerButton final
 {
     vr::VRInputComponentHandle_t m_handle;
     unsigned char m_inputType;
@@ -10,8 +10,8 @@ class CControllerButton final
     bool m_state;
     bool m_updated;
 
-    CControllerButton(const CControllerButton &that) = delete;
-    CControllerButton& operator=(const CControllerButton &that) = delete;
+    ControllerButton(const ControllerButton &that) = delete;
+    ControllerButton& operator=(const ControllerButton &that) = delete;
 public:
     enum InputType : unsigned char
     {
@@ -20,8 +20,8 @@ public:
         IT_Float
     };
 
-    CControllerButton();
-    ~CControllerButton();
+    ControllerButton();
+    ~ControllerButton();
 
     vr::VRInputComponentHandle_t GetHandle() const;
     vr::VRInputComponentHandle_t& GetHandleRef();

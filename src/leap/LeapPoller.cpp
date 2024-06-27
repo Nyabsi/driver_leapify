@@ -1,10 +1,10 @@
-#include "CLeapPoller.h"
+#include "LeapPoller.h"
 
 #include <string.h>
 
 #include <LeapC.h>
 
-CLeapPoller::CLeapPoller()
+LeapPoller::LeapPoller()
 {
     m_isRunning = false;
     m_thread = nullptr;
@@ -13,12 +13,12 @@ CLeapPoller::CLeapPoller()
     m_devicesCount = 0;
 }
 
-CLeapPoller::~CLeapPoller()
+LeapPoller::~LeapPoller()
 {
     delete m_frame;
 }
 
-void CLeapPoller::Start()
+void LeapPoller::Start()
 {
     if(m_isRunning)
         return;
@@ -28,10 +28,10 @@ void CLeapPoller::Start()
         return;
 
     m_isRunning = true;
-    m_thread = new std::thread(&CLeapPoller::PollThread, this);
+    m_thread = new std::thread(&LeapPoller::PollThread, this);
 }
 
-void CLeapPoller::Stop()
+void LeapPoller::Stop()
 {
     if(!m_isRunning)
         return;
@@ -48,12 +48,12 @@ void CLeapPoller::Stop()
     m_devicesCount = 0;
 }
 
-bool CLeapPoller::IsConnected() const
+bool LeapPoller::IsConnected() const
 {
     return (m_isRunning && (m_devicesCount > 0));
 }
 
-bool CLeapPoller::GetFrame(LEAP_TRACKING_EVENT *p_target)
+bool LeapPoller::GetFrame(LEAP_TRACKING_EVENT *p_target)
 {
     if(!m_isRunning)
         return false;
@@ -66,19 +66,19 @@ bool CLeapPoller::GetFrame(LEAP_TRACKING_EVENT *p_target)
     return true;
 }
 
-void CLeapPoller::SetTrackingMode(eLeapTrackingMode p_mode)
+void LeapPoller::SetTrackingMode(eLeapTrackingMode p_mode)
 {
     if(m_isRunning)
         LeapSetTrackingMode(m_connection, p_mode);
 }
 
-void CLeapPoller::SetPolicy(uint64_t p_set, uint64_t p_clear)
+void LeapPoller::SetPolicy(uint64_t p_set, uint64_t p_clear)
 {
     if(m_isRunning)
         LeapSetPolicyFlags(m_connection, p_set, p_clear);
 }
 
-void CLeapPoller::PollThread()
+void LeapPoller::PollThread()
 {
     while(m_isRunning)
     {
@@ -114,16 +114,16 @@ void CLeapPoller::PollThread()
     }
 }
 
-void CLeapPoller::OnConnectionEvent()
+void LeapPoller::OnConnectionEvent()
 {
 }
 
-void CLeapPoller::OnConnectionLostEvent()
+void LeapPoller::OnConnectionLostEvent()
 {
     m_devicesCount = 0U;
 }
 
-void CLeapPoller::OnDeviceEvent(const LEAP_DEVICE_EVENT* p_event)
+void LeapPoller::OnDeviceEvent(const LEAP_DEVICE_EVENT* p_event)
 {
     if(!p_event->device.handle)
         return;
@@ -135,13 +135,13 @@ void CLeapPoller::OnDeviceEvent(const LEAP_DEVICE_EVENT* p_event)
     m_devicesCount++;
 }
 
-void CLeapPoller::OnDeviceLostEvent(const LEAP_DEVICE_EVENT *p_event)
+void LeapPoller::OnDeviceLostEvent(const LEAP_DEVICE_EVENT *p_event)
 {
     // In LeapCSharp there is call for opening device, no idea why
     m_devicesCount--;
 }
 
-void CLeapPoller::OnTrackingEvent(const LEAP_TRACKING_EVENT *p_event)
+void LeapPoller::OnTrackingEvent(const LEAP_TRACKING_EVENT *p_event)
 {
     m_frameLock.lock();
     memcpy(m_frame, p_event, sizeof(LEAP_TRACKING_EVENT));

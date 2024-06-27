@@ -6,7 +6,7 @@
 
 #include <LeapC.h>
 
-class CLeapPoller
+class LeapPoller
 {
     std::atomic<bool> m_isRunning;
     std::mutex m_frameLock;
@@ -24,8 +24,8 @@ class CLeapPoller
     void OnDeviceLostEvent(const LEAP_DEVICE_EVENT *p_event);
     void OnTrackingEvent(const LEAP_TRACKING_EVENT* p_event);
 public:
-    CLeapPoller();
-    ~CLeapPoller();
+    LeapPoller();
+    ~LeapPoller();
 
     void Start();
     void Stop();
