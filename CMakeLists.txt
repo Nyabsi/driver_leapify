@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.10)
 
 if (POLICY CMP0141) # MSVC for Windows support
   cmake_policy(SET CMP0141 NEW)
@@ -6,6 +6,8 @@ if (POLICY CMP0141) # MSVC for Windows support
 endif()
 
 project(driver_leap)
+
+option(DRIVER_COPY "Automatically copies latest built driver executable to SteamVR directory (Should be disabled for CI)" ON)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -48,13 +50,13 @@ endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE LeapC JoyShockLibrary)
 
-if (WIN32)
+if (WIN32 AND DRIVER_COPY)
 	add_custom_command(TARGET ${PROJECT_NAME}
 		POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different
 			"$<TARGET_FILE:driver_leap>"
 			"C:/Program Files (x86)/Steam/steamapps/common/SteamVR/drivers/leap/bin/win64/$<TARGET_FILE_NAME:driver_leap>"
 	)
-else()
+elseif(DRIVER_COPY)
 	# TODO Linux path
 endif()
