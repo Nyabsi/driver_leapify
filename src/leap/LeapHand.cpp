@@ -124,7 +124,7 @@ void LeapHand::Update(const LEAP_HAND & p_hand)
     ConvertRotation(p_hand.palm.orientation, m_rotation);
     m_rotation = glm::normalize(m_rotation);
 
-    m_handOffset = glm::vec3(0.0f, 0.0f, -(-0.001f * p_hand.arm.prev_joint.y - -0.001f * p_hand.arm.next_joint.y));
+    m_handOffset = glm::vec3(0.0f, 0.0f, -((-0.001f * p_hand.arm.prev_joint.y - -0.001f * p_hand.arm.next_joint.y) - (-0.001f * p_hand.palm.position.y - -0.001f * p_hand.arm.next_joint.y)));
 
     // Bends
     for(size_t i = 0U; i < 5U; i++)
