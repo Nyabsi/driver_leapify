@@ -53,3 +53,38 @@ jobs:
 
     - name: Build
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+
+    - name: Create distributable
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        mkdir -p ${{ github.workspace }}/dist/bin/linux64
+        cp ${{ steps.strings.outputs.build-output-dir }}/libdriver_leap.so ${{ github.workspace }}/dist/bin/linux64
+        cp ${{ github.workspace }}/vendor/LeapSDK/lib/linux64/*.so ${{ github.workspace }}/dist/bin/linux64
+        cp ${{ github.workspace }}/vendor/JSL/lib/linux64/*.so ${{ github.workspace }}/dist/bin/linux64
+
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v4.3.4
+      if: matrix.os == 'ubuntu-latest'
+      with:
+        name: driver_leap_linux
+        path: ${{ github.workspace }}/dist/*
+        if-no-files-found: error
+        retention-days: 7
+
+
+    - name: Create distributable
+      if: matrix.os == 'windows-latest'
+      run: |
+        mkdir -p ${{ github.workspace }}/dist/bin/win64
+        cp ${{ steps.strings.outputs.build-output-dir }}/Release/driver_leap.dll ${{ github.workspace }}/dist/bin/win64
+        cp ${{ github.workspace }}/vendor/LeapSDK/lib/win32/*.dll ${{ github.workspace }}/dist/bin/win64
+        cp ${{ github.workspace }}/vendor/JSL/lib/win32/*.dll ${{ github.workspace }}/dist/bin/win64
+
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v4.3.4
+      if: matrix.os == 'windows-latest'
+      with:
+        name: driver_leap_windows
+        path: ${{ github.workspace }}/dist/*
+        if-no-files-found: error
+        retention-days: 7
