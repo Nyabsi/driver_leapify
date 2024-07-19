@@ -5,7 +5,7 @@
 #include <utils/Utils.h>
 
 #include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/norm.hpp>
 
 #include <string.h>
