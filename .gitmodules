@@ -1,3 +1,6 @@
 [submodule "external/openvr"]
 	path = external/openvr
 	url = https://github.com/ValveSoftware/openvr.git
+[submodule "external/rcmp"]
+	path = external/rcmp
+	url = https://github.com/Smertig/rcmp.git

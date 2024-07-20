@@ -1,0 +1,15 @@
+#pragma once
+
+#include <openvr_driver.h>
+#include <vector>
+
+class InterfaceHook
+{
+public:
+    explicit InterfaceHook() { }
+    ~InterfaceHook() { }
+    void Init(vr::IVRDriverContext* pDriverContext);
+private:
+    void GetGenericInterface(void* interfacePtr, const char* pchInterfaceVersion);
+    bool m_IVRServerDriverHostHooked_006 { false };
+};
