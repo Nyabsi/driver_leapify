@@ -1,33 +1,51 @@
-# Driver Leap
+# Leapify
 
-fork of driver_leap with Controller and Linux support.
+SteamVR for Leapmotion Controller 1 & 2 (*And other compatible controllers*) which strives for seamless co-existing with controllers.
 
-## Installation (for users)
+## Installation
 
-* Install [latest Ultraleap Software](https://developer.leapmotion.com/tracking-software-download) for your device (Gemini *or* Hyperion)
+### Step 1
 
-* Extract [latest release archive](../../releases/latest) to `<SteamVR_folder>/drivers`
+Install [Ultraleap Software](https://developer.leapmotion.com/tracking-software-download) for your device (use Gemini for LMC 1, Hyperion for LMC2)
 
-* Add the line below in the `steamvr` section at  `<Steam_folder>/config/steamvr.vrsettings` (unless it already exists, OpenVR-SpaceCalibrator would automatically set this)
+### Step 2
 
-```json
-"activateMultipleDrivers": true,
-```
+Download [the driver]([../../releases/latest](https://github.com/Nyabsi/driver_leap/releases)) and extract it to `C:\\Program Files (x86)\\Steam\\steamapps\\common\\SteamVR\\drivers\\driver_leapify` 
+
+(NOTE: this path may vary from your Steam installation location, or choise of operating system)
+
+### Step 3
+
+Start SteamVR and it should be working.
 
 ## Features
 
-This driver has few differences compared to the [upstream driver](https://github.com/SDraw/driver_leap)
-
-- Support for Controllers (Joycons, DualShock) instead of using SteamVR overlay, making input more natural
-- Support for Linux, so you can use this on your Linux system
-- Automatically set offset hand offset relative to your arm length
-- Switching from Visual Studio project to CMake project for broader platform compatibility
-- And other tweaks in future
+- Support for multiple operating systems (Windows and Linux)
+- No configuration, driver works out of box, without intrusive overlays or configuration
+- Support for Joycons and Dualshock (if existing controllers are not found)
+- Estimates approximately correct hand position automatically for the user
+- Automatic CI builds for latest driver improvements through Github
 
 ## TODO
 
-- [x] Convert buildsystem from VCXProj to CMake
-- [x] Multi-platform support (Linux)
-- [x] Support other types of input devices (IE. DualShock or Xbox Controller)
-- [x] Support older Leapmotion Controllers
-- [ ] Automated CI for driver builds
+- [ ] If existing controllers are found, Leapify will use those for inputs, and forwards only hand tracking data to games
+- [ ] Refactor the driver code to improve code uniformity across files
+- [ ] Support for Xbox Controllers
+
+## Building
+
+This project is built with CMake and Visual Studio 2022 on Windows. For Linux, you can use instructions below for building on Linux.
+
+```sh
+git submodule init && git submodule update
+cmake -B build .
+cmake --build build
+```
+
+## Credit
+
+- thanks to @SDraw for making the original `driver_leap` which this project is built upon.
+
+## License
+
+The code is licensed under `MIT` you can view the full license [here](LICENSE.md)
