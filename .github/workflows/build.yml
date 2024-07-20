@@ -1,0 +1,84 @@
+name: Build project driver_leapify
+
+on:
+  push:
+    branches: [ "master", "leapify" ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        build_type: [Release]
+        c_compiler: [gcc, cl]
+        include:
+          - os: windows-latest
+            c_compiler: cl
+            cpp_compiler: cl
+          - os: ubuntu-latest
+            c_compiler: gcc
+            cpp_compiler: g++
+        exclude:
+          - os: windows-latest
+            c_compiler: gcc
+          - os: ubuntu-latest
+            c_compiler: cl
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set reusable strings
+      id: strings
+      shell: bash
+      run: |
+        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+    - name: Initialize submodules
+      run: git submodule init && git submodule update
+
+    - name: Configure CMake
+      run: >
+        cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -DDRIVER_COPY=OFF
+        -S ${{ github.workspace }}
+
+    - name: Build
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+
+    - name: Create distributable
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        mkdir -p ${{ github.workspace }}/dist/leapify/bin/linux64
+        cp ${{ steps.strings.outputs.build-output-dir }}/libdriver_leapify.so ${{ github.workspace }}/dist/leapify/bin/linux64
+
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v4.3.4
+      if: matrix.os == 'ubuntu-latest'
+      with:
+        name: driver_leap_linux
+        path: ${{ github.workspace }}/dist/*
+        if-no-files-found: error
+        retention-days: 7
+
+
+    - name: Create distributable
+      if: matrix.os == 'windows-latest'
+      run: |
+        mkdir -p ${{ github.workspace }}/dist/leapify/bin/win64
+        cp ${{ steps.strings.outputs.build-output-dir }}/Release/driver_leapify.dll ${{ github.workspace }}/dist/leapify/bin/win64
+
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v4.3.4
+      if: matrix.os == 'windows-latest'
+      with:
+        name: driver_leap_windows
+        path: ${{ github.workspace }}/dist/*
+        if-no-files-found: error
+        retention-days: 7
