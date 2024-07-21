@@ -52,12 +52,43 @@ vr::EVRInitError TrackedController::Activate(uint32_t unObjectId)
         vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceAlertLow_String, m_role == vr::TrackedControllerRole_LeftHand ? "{indexcontroller}/icons/left_controller_status_ready_low.png" : "{indexcontroller}/icons//right_controller_status_ready_low.png");
 
         vr::VRDriverInput()->CreateBooleanComponent(props, "/input/system/click", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 0 : 1).getOverride());
-        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/a/click", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 2 : 3).getOverride());
-        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/b/click", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 4 : 5).getOverride());
-        vr::VRDriverInput()->CreateScalarComponent(props, "/input/thumbstick/x", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 6 : 7).getOverride(), vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedTwoSided);
-        vr::VRDriverInput()->CreateScalarComponent(props, "/input/thumbstick/y", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 8 : 9).getOverride(), vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedTwoSided);
-        vr::VRDriverInput()->CreateScalarComponent(props, "/input/trigger/value", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 10 : 11).getOverride(), vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedOneSided);
-	    
+        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/system/touch", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 2 : 3).getOverride());
+
+        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/trigger/click", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 4 : 5).getOverride());
+        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/trigger/touch", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 6 : 7).getOverride());
+        vr::VRDriverInput()->CreateScalarComponent(props, "/input/trigger/value", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 8 : 9).getOverride(), vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedOneSided);
+
+        vr::VRDriverInput()->CreateScalarComponent(props, "/input/trackpad/x", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 10 : 11).getOverride(), vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedTwoSided);
+        vr::VRDriverInput()->CreateScalarComponent(props, "/input/trackpad/y", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 12 : 13).getOverride(), vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedTwoSided);
+        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/trackpad/touch", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 14 : 15).getOverride());
+        vr::VRDriverInput()->CreateScalarComponent(props, "/input/trackpad/force", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 16 : 17).getOverride(), vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedOneSided);
+
+        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/grip/touch", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 18 : 19).getOverride());
+        vr::VRDriverInput()->CreateScalarComponent(props, "/input/grip/force", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 20 : 21).getOverride(), vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedOneSided);
+        vr::VRDriverInput()->CreateScalarComponent(props, "/input/grip/value", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 22 : 23).getOverride(), vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedOneSided);
+
+        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/thumbstick/click", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 24 : 25).getOverride());
+        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/thumbstick/touch", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 26 : 27).getOverride());
+        vr::VRDriverInput()->CreateScalarComponent(props, "/input/thumbstick/x", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 28 : 29).getOverride(), vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedTwoSided);
+        vr::VRDriverInput()->CreateScalarComponent(props, "/input/thumbstick/y", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 30 : 31).getOverride(), vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedTwoSided);
+
+        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/a/click", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 32 : 33).getOverride());
+        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/a/touch", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 34 : 35).getOverride());
+        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/b/click", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 36 : 37).getOverride());
+        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/b/touch", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 38 : 39).getOverride());
+
+        vr::VRDriverInput()->CreateScalarComponent(props, "/input/finger/index", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 40 : 41).getOverride(), vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedOneSided);
+        vr::VRDriverInput()->CreateScalarComponent(props, "/input/finger/middle", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 42 : 43).getOverride(), vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedOneSided);
+        vr::VRDriverInput()->CreateScalarComponent(props, "/input/finger/ring", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 44 : 45).getOverride(), vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedOneSided);
+        vr::VRDriverInput()->CreateScalarComponent(props, "/input/finger/pinky", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 46 : 47).getOverride(), vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedOneSided);
+
+        if (m_role == vr::TrackedControllerRole_LeftHand)
+            vr::VRDriverInput()->CreateSkeletonComponent(props, "/input/skeleton/left", "/skeleton/hand/left", "/pose/raw", vr::VRSkeletalTracking_Full, nullptr, 0U, &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 48 : 49).getOverride());
+        else
+            vr::VRDriverInput()->CreateSkeletonComponent(props, "/input/skeleton/right", "/skeleton/hand/right", "/pose/raw", vr::VRSkeletalTracking_Full, nullptr, 0U, &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 50 : 51).getOverride());
+
+        vr::VRDriverInput()->CreateHapticComponent(props, "/output/haptic", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 52 : 53).getOverride());
+  
         result = vr::VRInitError_None;
     }
 

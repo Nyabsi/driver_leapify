@@ -24,7 +24,7 @@ void DeviceController::UpdateControllerPose(vr::ETrackedControllerRole role, vr:
 	}
 }
 
-void DeviceController::UpdateController(vr::ETrackedControllerRole role, uint32_t objectId, const std::string& serial)
+void DeviceController::UpdateController(vr::ETrackedControllerRole role, uint32_t objectId, const std::string& serial, const std::string& manufacturer)
 {
 	for (int i = 0; i < 2; i++)
 	{
@@ -32,6 +32,7 @@ void DeviceController::UpdateController(vr::ETrackedControllerRole role, uint32_
 		{
 			m_controllers[i].m_objectId = objectId;
 			m_controllers[i].m_serial = serial;
+			m_controllers[i].m_manufacturer = manufacturer;
 		}
 	}
 }

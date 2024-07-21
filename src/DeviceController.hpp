@@ -13,6 +13,7 @@ struct Controller {
 	vr::ETrackedControllerRole m_role { vr::ETrackedControllerRole::TrackedControllerRole_Invalid };
 	vr::DriverPose_t m_pose { 0 };
 	std::string m_serial { "" };
+	std::string m_manufacturer { "" };
 };
 
 struct Component {
@@ -30,7 +31,7 @@ public:
 	bool areControllersAvailable() const { return m_areControllersAvailable; }
 
 	void UpdateControllerPose(vr::ETrackedControllerRole role, vr::DriverPose_t pose);
-	void UpdateController(vr::ETrackedControllerRole role, uint32_t objectId, const std::string& serial);
+	void UpdateController(vr::ETrackedControllerRole role, uint32_t objectId, const std::string& serial, const std::string& manufacturer);
 	Controller GetController(vr::ETrackedControllerRole role);
 
 	Component& getComponent(std::string serial, int index);
