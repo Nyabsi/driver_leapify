@@ -12,6 +12,7 @@ struct Controller {
 	uint32_t m_objectId { 999 };
 	vr::ETrackedControllerRole m_role { vr::ETrackedControllerRole::TrackedControllerRole_Invalid };
 	vr::DriverPose_t m_pose { 0 };
+	std::string m_serial { "" };
 };
 
 struct Component {
@@ -29,14 +30,17 @@ public:
 	bool areControllersAvailable() const { return m_areControllersAvailable; }
 
 	void UpdateControllerPose(vr::ETrackedControllerRole role, vr::DriverPose_t pose);
-	void UpdateControllerId(vr::ETrackedControllerRole role, uint32_t objectId);
+	void UpdateController(vr::ETrackedControllerRole role, uint32_t objectId, const std::string& serial);
 	Controller GetController(vr::ETrackedControllerRole role);
 
-	Component& getComponent(int index);
-	std::map<int, Component> GetComponents() { return m_components; }
+	Component& getComponent(std::string serial, int index);
+	Component& getComponentOverride(int index);
+
+	std::map<std::string, std::map<int, Component>> GetComponents() { return m_components; }
 private:
 	bool m_isHandTrackingEnabled { false };
 	bool m_areControllersAvailable { false };
 	std::array<Controller, 2> m_controllers;
-	std::map<int, Component> m_components;
+	std::map<std::string, std::map<int, Component>> m_components;
+	std::map<int, Component> m_componentOverrides;
 };

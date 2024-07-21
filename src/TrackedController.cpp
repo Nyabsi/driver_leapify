@@ -51,7 +51,12 @@ vr::EVRInitError TrackedController::Activate(uint32_t unObjectId)
         vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceStandby_String, m_role == vr::TrackedControllerRole_LeftHand ? "{indexcontroller}/icons/left_controller_status_off.png" : "{indexcontroller}/icons//right_controller_status_off.png");
         vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceAlertLow_String, m_role == vr::TrackedControllerRole_LeftHand ? "{indexcontroller}/icons/left_controller_status_ready_low.png" : "{indexcontroller}/icons//right_controller_status_ready_low.png");
 
-        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/system/click", &DeviceController::get().getComponent(m_role == vr::TrackedControllerRole_LeftHand ? 0 : 1).getOverride());
+        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/system/click", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 0 : 1).getOverride());
+        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/a/click", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 2 : 3).getOverride());
+        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/b/click", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 4 : 5).getOverride());
+        vr::VRDriverInput()->CreateScalarComponent(props, "/input/thumbstick/x", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 6 : 7).getOverride(), vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedTwoSided);
+        vr::VRDriverInput()->CreateScalarComponent(props, "/input/thumbstick/y", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 8 : 9).getOverride(), vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedTwoSided);
+        vr::VRDriverInput()->CreateScalarComponent(props, "/input/trigger/value", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 10 : 11).getOverride(), vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedOneSided);
 	    
         result = vr::VRInitError_None;
     }

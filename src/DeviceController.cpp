@@ -24,13 +24,14 @@ void DeviceController::UpdateControllerPose(vr::ETrackedControllerRole role, vr:
 	}
 }
 
-void DeviceController::UpdateControllerId(vr::ETrackedControllerRole role, uint32_t objectId)
+void DeviceController::UpdateController(vr::ETrackedControllerRole role, uint32_t objectId, const std::string& serial)
 {
 	for (int i = 0; i < 2; i++)
 	{
 		if (m_controllers[i].m_role == role)
 		{
 			m_controllers[i].m_objectId = objectId;
+			m_controllers[i].m_serial = serial;
 		}
 	}
 }
@@ -48,7 +49,13 @@ Controller DeviceController::GetController(vr::ETrackedControllerRole role)
 	return Controller();
 }
 
-Component& DeviceController::getComponent(int index)
+
+Component& DeviceController::getComponent(std::string serial, int index)
 {
-	return m_components[index];
+	return m_components[serial][index];
+}
+
+Component& DeviceController::getComponentOverride(int index)
+{
+	return m_componentOverrides[index];
 }
