@@ -30,28 +30,35 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
 
        if (!m_IVRServerDriverHostHooked_006)
        {
-           rcmp::hook_indirect_function<bool(void* self, const char* pchDeviceSerialNumber, vr::ETrackedDeviceClass eDeviceClass, void* pDriver)>(vtable + 0, [this](auto orig, void* self, const char* pchDeviceSerialNumber, vr::ETrackedDeviceClass eDeviceClass, void* pDriver) -> bool
-           {
-               if (eDeviceClass == vr::ETrackedDeviceClass::TrackedDeviceClass_Controller)
-               {
-                   std::string serial(pchDeviceSerialNumber);
-
-                   if (serial != "Leap_Hand_Left" && serial != "Leap_Hand_Right")
-                   {
-                       DeviceController::get().AddController(pchDeviceSerialNumber);
-                   }
-               }
-
-               return orig(self, pchDeviceSerialNumber, eDeviceClass, pDriver);
-           });
-
            rcmp::hook_indirect_function<void(*)(void* self, uint32_t unWhichDevice, const vr::DriverPose_t& newPose, uint32_t unPoseStructSize)>(vtable + 1, [](auto orig, void* self, uint32_t unWhichDevice, const vr::DriverPose_t& newPose, uint32_t unPoseStructSize) -> void 
            {
                auto pose = newPose;
-               if (DeviceController::get().isValidController(unWhichDevice))
+
+               auto props = vr::VRProperties()->TrackedDeviceToPropertyContainer(unWhichDevice);
+
+               auto deviceClass = vr::VRProperties()->GetInt32Property(props, vr::ETrackedDeviceProperty::Prop_DeviceClass_Int32);
+               auto deviceRole = static_cast<vr::ETrackedControllerRole>(vr::VRProperties()->GetInt32Property(props, vr::ETrackedDeviceProperty::Prop_ControllerRoleHint_Int32));
+
+               if (deviceClass == vr::TrackedDeviceClass_Controller && unWhichDevice > 2)
                {
-                   DeviceController::get().UpdateControllerPose(unWhichDevice, newPose);
-                   pose.deviceIsConnected = !DeviceController::get().isHandTrackingEnabled();
+                   if (pose.deviceIsConnected && pose.poseIsValid && pose.vecPosition[0] != 0 && pose.vecPosition[1] != 0 && pose.vecPosition[2] != 0)
+                   {
+                       if (DeviceController::get().GetController(deviceRole).m_objectId == 999)
+                       {
+                           DeviceController::get().UpdateControllerId(deviceRole, unWhichDevice);
+                       }
+                       else 
+                       {
+                           if (DeviceController::get().GetController(deviceRole).m_objectId == unWhichDevice)
+                           {
+                               DeviceController::get().UpdateControllerPose(deviceRole, pose);
+                               pose.poseIsValid = false;
+                           }
+                       }
+                   }
+                   else {
+                       DeviceController::get().UpdateControllerId(deviceRole, 999);
+                   }
                }
 
                orig(self, unWhichDevice, pose, unPoseStructSize);
