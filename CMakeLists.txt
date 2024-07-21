@@ -21,6 +21,7 @@ add_library(${PROJECT_NAME} SHARED
 	${SRC_DIR}/main.cpp
 	${SRC_DIR}/TrackedDeviceProvider.cpp
     ${SRC_DIR}/InterfaceHook.cpp
+	${SRC_DIR}/DeviceController.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_DIR})
