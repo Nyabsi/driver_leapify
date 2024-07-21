@@ -56,8 +56,12 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                            }
                        }
                    }
-                   else {
-                       DeviceController::get().UpdateControllerId(deviceRole, 999);
+                   else 
+                   {
+                       if (DeviceController::get().GetController(deviceRole).m_objectId == unWhichDevice) 
+                       {
+                           DeviceController::get().UpdateControllerId(deviceRole, 999);
+                       }
                    }
                }
 
