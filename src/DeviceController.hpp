@@ -24,7 +24,7 @@ public:
 
 	void AddController(const std::string& serial);
 	void SetControllerIdAndRole(const std::string& serial, uint32_t objectId, vr::ETrackedControllerRole role);
-	void UpdateControllerPose(uint32_t objectId, const vr::DriverPose_t& pose);
+	void UpdateControllerPose(uint32_t objectId, vr::DriverPose_t pose);
 
 	Controller GetController(vr::ETrackedControllerRole role);
 	bool isValidController(uint32_t objectId);

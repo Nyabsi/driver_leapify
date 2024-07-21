@@ -7,6 +7,8 @@
 #include <openvr_driver.h>
 #include <rcmp.hpp>
 
+#include <Windows.h>
+
 void InterfaceHook::Init(vr::IVRDriverContext* pDriverContext)
 {
     void** vtable = *((void***)pDriverContext);
@@ -32,7 +34,12 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
            {
                if (eDeviceClass == vr::ETrackedDeviceClass::TrackedDeviceClass_Controller)
                {
-                   DeviceController::get().AddController(pchDeviceSerialNumber);
+                   std::string serial(pchDeviceSerialNumber);
+
+                   if (serial != "Leap_Hand_Left" && serial != "Leap_Hand_Right")
+                   {
+                       DeviceController::get().AddController(pchDeviceSerialNumber);
+                   }
                }
 
                return orig(self, pchDeviceSerialNumber, eDeviceClass, pDriver);
@@ -51,28 +58,6 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
            });
 
            m_IVRServerDriverHostHooked_006 = true;
-       }
-   }
-
-   if (interfaceName == "ITrackedDeviceServerDriver_005")
-   {
-       void** vtable = *((void***)interfacePtr);
-
-       if (!m_ITrackedDeviceServerDriverHooked_005)
-       {
-           rcmp::hook_indirect_function<vr::EVRInitError(void* self, uint32_t unObjectId)>(vtable + 0, [](auto orig, void* self, uint32_t unObjectId) -> vr::EVRInitError {
-               auto result = orig(self, unObjectId);
-
-               auto props = vr::VRProperties()->TrackedDeviceToPropertyContainer(unObjectId);
-               auto serial = vr::VRProperties()->GetStringProperty(props, vr::ETrackedDeviceProperty::Prop_SerialNumber_String);
-               auto role = vr::VRProperties()->GetInt32Property(props, vr::ETrackedDeviceProperty::Prop_ControllerRoleHint_Int32);
-
-               DeviceController::get().SetControllerIdAndRole(serial, unObjectId, static_cast<vr::ETrackedControllerRole>(role));
-
-               return result;
-           });
-
-           m_ITrackedDeviceServerDriverHooked_005 = true;
        }
    }
 }

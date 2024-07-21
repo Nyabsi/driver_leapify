@@ -1,10 +1,14 @@
 #pragma once
 
+#include <TrackedController.hpp> 
+
 #include <openvr_driver.h>
 
 class TrackedDeviceProvider : public vr::IServerTrackedDeviceProvider 
 {
 public:
+    ~TrackedDeviceProvider() { }
+
     vr::EVRInitError Init(vr::IVRDriverContext* pDriverContext);
 
     void Cleanup();
@@ -18,4 +22,7 @@ public:
     void EnterStandby() { }
     
     void LeaveStandby() { }
+private:
+    TrackedController m_Left { vr::ETrackedControllerRole::TrackedControllerRole_LeftHand };
+    TrackedController m_Right { vr::ETrackedControllerRole::TrackedControllerRole_RightHand };
 };
