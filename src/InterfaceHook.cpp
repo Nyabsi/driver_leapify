@@ -174,23 +174,45 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                    result = orig(self, ulContainer, pchName, pHandle, eType, eUnits);
 
                    auto deviceSerial = vr::VRProperties()->GetStringProperty(ulContainer, vr::ETrackedDeviceProperty::Prop_SerialNumber_String);
+                   auto manufacturerName = vr::VRProperties()->GetStringProperty(ulContainer, vr::ETrackedDeviceProperty::Prop_ManufacturerName_String);
                    auto deviceRole = vr::VRProperties()->GetInt32Property(ulContainer, vr::ETrackedDeviceProperty::Prop_ControllerRoleHint_Int32);
                    std::string inputName(pchName);
 
-                   if (inputName == "/input/thumbstick/x")
+                   if (manufacturerName == "Oculus")
                    {
-                       if (deviceRole == vr::TrackedControllerRole_LeftHand)
-                           DeviceController::get().getComponent(deviceSerial, 6).m_orig = *pHandle;
-                       if (deviceRole == vr::TrackedControllerRole_RightHand)
-                           DeviceController::get().getComponent(deviceSerial, 7).m_orig = *pHandle;
-                   }
+                       if (inputName == "/input/joystick/x")
+                       {
+                           if (deviceRole == vr::TrackedControllerRole_LeftHand)
+                               DeviceController::get().getComponent(deviceSerial, 6).m_orig = *pHandle;
+                           if (deviceRole == vr::TrackedControllerRole_RightHand)
+                               DeviceController::get().getComponent(deviceSerial, 7).m_orig = *pHandle;
+                       }
 
-                   if (inputName == "/input/thumbstick/y")
+                       if (inputName == "/input/joystick/y")
+                       {
+                           if (deviceRole == vr::TrackedControllerRole_LeftHand)
+                               DeviceController::get().getComponent(deviceSerial, 8).m_orig = *pHandle;
+                           if (deviceRole == vr::TrackedControllerRole_RightHand)
+                               DeviceController::get().getComponent(deviceSerial, 9).m_orig = *pHandle;
+                       }
+                   }
+                   else
                    {
-                       if (deviceRole == vr::TrackedControllerRole_LeftHand)
-                           DeviceController::get().getComponent(deviceSerial, 8).m_orig = *pHandle;
-                       if (deviceRole == vr::TrackedControllerRole_RightHand)
-                           DeviceController::get().getComponent(deviceSerial, 9).m_orig = *pHandle;
+                       if (inputName == "/input/thumbstick/x")
+                       {
+                           if (deviceRole == vr::TrackedControllerRole_LeftHand)
+                               DeviceController::get().getComponent(deviceSerial, 6).m_orig = *pHandle;
+                           if (deviceRole == vr::TrackedControllerRole_RightHand)
+                               DeviceController::get().getComponent(deviceSerial, 7).m_orig = *pHandle;
+                       }
+
+                       if (inputName == "/input/thumbstick/y")
+                       {
+                           if (deviceRole == vr::TrackedControllerRole_LeftHand)
+                               DeviceController::get().getComponent(deviceSerial, 8).m_orig = *pHandle;
+                           if (deviceRole == vr::TrackedControllerRole_RightHand)
+                               DeviceController::get().getComponent(deviceSerial, 9).m_orig = *pHandle;
+                       }
                    }
 
                    if (inputName == "/input/trigger/value")
