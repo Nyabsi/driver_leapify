@@ -50,6 +50,8 @@ vr::EVRInitError TrackedController::Activate(uint32_t unObjectId)
         vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceNotReady_String, m_role == vr::TrackedControllerRole_LeftHand ? "{indexcontroller}/icons/left_controller_status_error.png" : "{indexcontroller}/icons//right_controller_status_error.png");
         vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceStandby_String, m_role == vr::TrackedControllerRole_LeftHand ? "{indexcontroller}/icons/left_controller_status_off.png" : "{indexcontroller}/icons//right_controller_status_off.png");
         vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceAlertLow_String, m_role == vr::TrackedControllerRole_LeftHand ? "{indexcontroller}/icons/left_controller_status_ready_low.png" : "{indexcontroller}/icons//right_controller_status_ready_low.png");
+
+        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/system/click", &DeviceController::get().getComponent(m_role == vr::TrackedControllerRole_LeftHand ? 0 : 1).getOverride());
 	    
         result = vr::VRInitError_None;
     }

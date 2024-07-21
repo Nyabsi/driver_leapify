@@ -17,5 +17,5 @@ public:
 private:
 	vr::ETrackedControllerRole m_role { vr::ETrackedControllerRole::TrackedControllerRole_Invalid };
 	uint32_t m_objectId { 999 };
-	vr::DriverPose_t m_lastPose{ 0 };
+	vr::DriverPose_t m_lastPose { 0 };
 };

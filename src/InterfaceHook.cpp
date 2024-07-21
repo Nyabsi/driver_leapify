@@ -46,8 +46,9 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
 
                auto deviceClass = vr::VRProperties()->GetInt32Property(props, vr::ETrackedDeviceProperty::Prop_DeviceClass_Int32);
                auto deviceRole = static_cast<vr::ETrackedControllerRole>(vr::VRProperties()->GetInt32Property(props, vr::ETrackedDeviceProperty::Prop_ControllerRoleHint_Int32));
+               auto deviceSerial = vr::VRProperties()->GetStringProperty(props, vr::ETrackedDeviceProperty::Prop_SerialNumber_String);
 
-               if (deviceClass == vr::TrackedDeviceClass_Controller && unWhichDevice > 2)
+               if (deviceClass == vr::TrackedDeviceClass_Controller && deviceSerial.find("Leap_Hand") == -1)
                {
                    if (pose.deviceIsConnected && pose.poseIsValid && pose.vecPosition[0] != 0 && pose.vecPosition[1] != 0 && pose.vecPosition[2] != 0)
                    {
@@ -77,6 +78,48 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
            });
 
            m_IVRServerDriverHostHooked_006 = true;
+       }
+   }
+
+   if (interfaceName == "IVRDriverInput_003")
+   {
+       void** vtable = *((void***)interfacePtr);
+
+       if (!m_IVRDriverInputHooked_003)
+       {
+           rcmp::hook_indirect_function<vr::EVRInputError(void* self, vr::PropertyContainerHandle_t ulContainer, const char* pchName, vr::VRInputComponentHandle_t* pHandle)>(vtable + 0 + vtable_offset, [](auto orig, void* self,vr::PropertyContainerHandle_t ulContainer, const char* pchName, vr::VRInputComponentHandle_t* pHandle) -> vr::EVRInputError
+           {
+               vr::EVRInputError result;
+               result = orig(self, ulContainer, pchName, pHandle);
+
+               std::string inputName(pchName);
+               if (inputName == "/input/system/click")
+               {
+                   auto deviceRole = vr::VRProperties()->GetInt32Property(ulContainer, vr::ETrackedDeviceProperty::Prop_ControllerRoleHint_Int32);
+
+                   if (deviceRole == vr::TrackedControllerRole_LeftHand)
+                       DeviceController::get().getComponent(0).m_orig = *pHandle;
+                   if (deviceRole == vr::TrackedControllerRole_RightHand)
+                       DeviceController::get().getComponent(1).m_orig = *pHandle;
+               }
+
+               return result;
+           });
+
+           rcmp::hook_indirect_function<vr::EVRInputError(void* self, vr::VRInputComponentHandle_t ulComponent, bool bNewValue, double fTimeOffset)>(vtable + 1 + vtable_offset, [](auto orig, void* self, vr::VRInputComponentHandle_t ulComponent, bool bNewValue, double fTimeOffset) -> vr::EVRInputError
+           {
+               for (auto component : DeviceController::get().GetComponents())
+               {
+                   if (component.second.m_orig == ulComponent)
+                   {
+                       return orig(self, component.second.m_override, bNewValue, fTimeOffset);
+                   }
+               }
+
+               return orig(self, ulComponent, bNewValue, fTimeOffset);
+           });
+
+           m_IVRDriverInputHooked_003 = true;
        }
    }
 }

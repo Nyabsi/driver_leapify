@@ -12,5 +12,5 @@ public:
 private:
     void GetGenericInterface(void* interfacePtr, const char* pchInterfaceVersion);
     bool m_IVRServerDriverHostHooked_006 { false };
-    bool m_ITrackedDeviceServerDriverHooked_005 { false };
+    bool m_IVRDriverInputHooked_003 { false };
 };

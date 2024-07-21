@@ -47,3 +47,8 @@ Controller DeviceController::GetController(vr::ETrackedControllerRole role)
 
 	return Controller();
 }
+
+Component& DeviceController::getComponent(int index)
+{
+	return m_components[index];
+}
