@@ -52,7 +52,7 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                     {
                         if (DeviceController::get().GetController(role).objectId == 999)
                         {
-                            DeviceController::get().UpdateController(role, unWhichDevice, serial, type == "knuckles");
+                            DeviceController::get().UpdateController(role, unWhichDevice, serial, type == "knuckles"); // TODO: parse profile configuration
                         }
                         else
                         {
@@ -104,9 +104,9 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                     {
                         for (auto& inputs : component.second)
                         {
-                            if (inputs.second.m_orig == ulComponent)
+                            if (inputs.second.orig == ulComponent)
                             {
-                                return orig(self, DeviceController::get().getComponentOverride(inputs.first).m_override, bNewValue, 0);
+                                return orig(self, DeviceController::get().getComponent(inputs.first).override, bNewValue, 0);
                             }
                         }
                     }
@@ -134,20 +134,20 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                     {
                         for (auto& inputs : component.second)
                         {
-                            if (inputs.second.m_orig == ulComponent)
+                            if (inputs.second.orig == ulComponent)
                             {
                                 if (left.hasCurl == false)
                                 {
                                     if (inputs.first == 8)
                                     {
-                                        orig(self, DeviceController::get().getComponentOverride(40).m_override, fNewValue, 0);
+                                        orig(self, DeviceController::get().getComponent(40).override, fNewValue, 0);
                                     }
 
                                     if (inputs.first == 22)
                                     {
-                                        orig(self, DeviceController::get().getComponentOverride(42).m_override, fNewValue, 0);
-                                        orig(self, DeviceController::get().getComponentOverride(44).m_override, fNewValue, 0);
-                                        orig(self, DeviceController::get().getComponentOverride(46).m_override, fNewValue, 0);
+                                        orig(self, DeviceController::get().getComponent(42).override, fNewValue, 0);
+                                        orig(self, DeviceController::get().getComponent(44).override, fNewValue, 0);
+                                        orig(self, DeviceController::get().getComponent(46).override, fNewValue, 0);
                                     }
                                 }
 
@@ -155,18 +155,18 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                                 {
                                     if (inputs.first == 9)
                                     {
-                                        orig(self, DeviceController::get().getComponentOverride(41).m_override, fNewValue, 0);
+                                        orig(self, DeviceController::get().getComponent(41).override, fNewValue, 0);
                                     }
 
                                     if (inputs.first == 23)
                                     {
-                                        orig(self, DeviceController::get().getComponentOverride(43).m_override, fNewValue, 0);
-                                        orig(self, DeviceController::get().getComponentOverride(45).m_override, fNewValue, 0);
-                                        orig(self, DeviceController::get().getComponentOverride(47).m_override, fNewValue, 0);
+                                        orig(self, DeviceController::get().getComponent(43).override, fNewValue, 0);
+                                        orig(self, DeviceController::get().getComponent(45).override, fNewValue, 0);
+                                        orig(self, DeviceController::get().getComponent(47).override, fNewValue, 0);
                                     }
                                 }
 
-                                return orig(self, DeviceController::get().getComponentOverride(inputs.first).m_override, fNewValue, 0);
+                                return orig(self, DeviceController::get().getComponent(inputs.first).override, fNewValue, 0);
                             }
                         }
                     }
@@ -189,162 +189,162 @@ void InterfaceHook::CreateBooleanComponent(vr::PropertyContainerHandle_t ulConta
     if (input == "/input/system/click")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 0).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 0).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 1).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 1).orig = *pHandle;
     }
 
     if (input == "/input/system/touch")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 2).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 2).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 3).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 3).orig = *pHandle;
     }
 
     if (input == "/input/trigger/click")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 4).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 4).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 5).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 5).orig = *pHandle;
     }
 
     if (input == "/input/trigger/touch")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 6).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 6).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 7).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 7).orig = *pHandle;
     }
 
     if (input == "/input/a/click")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 32).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 32).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 33).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 33).orig = *pHandle;
     }
 
     if (input == "/input/b/click")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 34).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 34).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 35).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 35).orig = *pHandle;
     }
 
     if (input == "/input/a/touch")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 34).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 34).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 35).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 35).orig = *pHandle;
     }
 
     if (input == "/input/b/touch")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 38).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 38).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 39).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 39).orig = *pHandle;
     }
 
     if (input == "/input/thumbstick/click")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 24).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 24).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 25).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 25).orig = *pHandle;
     }
 
     if (input == "/input/thumbstick/touch")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 26).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 26).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 27).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 27).orig = *pHandle;
     }
 
     if (input == "/input/x/click")
     {
-        DeviceController::get().getComponent(serial, 32).m_orig = *pHandle;
+        DeviceController::get().getComponent(serial, 32).orig = *pHandle;
     }
 
     if (input == "/input/a/click")
     {
-        DeviceController::get().getComponent(serial, 33).m_orig = *pHandle;
+        DeviceController::get().getComponent(serial, 33).orig = *pHandle;
     }
 
     if (input == "/input/y/click")
     {
-        DeviceController::get().getComponent(serial, 36).m_orig = *pHandle;
+        DeviceController::get().getComponent(serial, 36).orig = *pHandle;
     }
 
     if (input == "/input/b/click")
     {
-        DeviceController::get().getComponent(serial, 37).m_orig = *pHandle;
+        DeviceController::get().getComponent(serial, 37).orig = *pHandle;
     }
 
     if (input == "/input/x/touch")
     {
-        DeviceController::get().getComponent(serial, 34).m_orig = *pHandle;
+        DeviceController::get().getComponent(serial, 34).orig = *pHandle;
     }
 
     if (input == "/input/a/touch")
     {
-        DeviceController::get().getComponent(serial, 35).m_orig = *pHandle;
+        DeviceController::get().getComponent(serial, 35).orig = *pHandle;
     }
 
     if (input == "/input/y/touch")
     {
-        DeviceController::get().getComponent(serial, 38).m_orig = *pHandle;
+        DeviceController::get().getComponent(serial, 38).orig = *pHandle;
     }
 
     if (input == "/input/b/touch")
     {
-        DeviceController::get().getComponent(serial, 39).m_orig = *pHandle;
+        DeviceController::get().getComponent(serial, 39).orig = *pHandle;
     }
 
     if (input == "/input/joystick/click")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 24).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 24).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 25).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 25).orig = *pHandle;
     }
 
     if (input == "/input/joystick/touch")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 26).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 26).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 27).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 27).orig = *pHandle;
     }
 
 
     if (input == "/input/grip/touch")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 18).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 18).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 19).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 19).orig = *pHandle;
     }
 
     if (input == "/input/trackpad/touch")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 14).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 14).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 15).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 15).orig = *pHandle;
     }
 
     if (input == "/input/trackpad/force")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 16).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 16).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 17).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 17).orig = *pHandle;
     }
 }
 
@@ -358,104 +358,104 @@ void InterfaceHook::CreateScalarComponent(vr::PropertyContainerHandle_t ulContai
     if (input == "/input/joystick/x")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 28).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 28).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 29).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 29).orig = *pHandle;
     }
 
     if (input == "/input/joystick/y")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 30).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 30).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 31).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 31).orig = *pHandle;
     }
 
     if (input == "/input/thumbstick/x")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 28).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 28).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 29).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 29).orig = *pHandle;
     }
 
     if (input == "/input/thumbstick/y")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 30).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 30).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 31).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 31).orig = *pHandle;
     }
 
     if (input == "/input/trigger/value")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 8).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 8).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 9).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 9).orig = *pHandle;
     }
 
     if (input == "/input/grip/force")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 20).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 20).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 21).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 21).orig = *pHandle;
     }
 
     if (input == "/input/grip/value")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 22).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 22).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 23).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 23).orig = *pHandle;
     }
 
     if (input == "/input/finger/index")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 40).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 40).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 41).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 41).orig = *pHandle;
     }
 
     if (input == "/input/finger/middle")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 42).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 42).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 43).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 43).orig = *pHandle;
     }
 
     if (input == "/input/finger/ring")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 44).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 44).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 45).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 45).orig = *pHandle;
     }
 
     if (input == "/input/finger/pinky")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 46).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 46).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 47).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 47).orig = *pHandle;
     }
 
     if (input == "/input/trackpad/x")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 10).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 10).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 11).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 11).orig = *pHandle;
     }
 
     if (input == "/input/trackpad/y")
     {
         if (role == vr::TrackedControllerRole_LeftHand)
-            DeviceController::get().getComponent(serial, 12).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 12).orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
-            DeviceController::get().getComponent(serial, 13).m_orig = *pHandle;
+            DeviceController::get().getComponent(serial, 13).orig = *pHandle;
     }
 }

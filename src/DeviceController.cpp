@@ -54,7 +54,7 @@ Component& DeviceController::getComponent(std::string serial, int index)
 	return m_components[serial][index];
 }
 
-Component& DeviceController::getComponentOverride(int index)
+Component& DeviceController::getComponent(int index)
 {
 	return m_componentOverrides[index];
 }
