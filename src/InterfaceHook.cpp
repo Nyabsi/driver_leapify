@@ -330,6 +330,22 @@ void InterfaceHook::CreateBooleanComponent(vr::PropertyContainerHandle_t ulConta
         if (role == vr::TrackedControllerRole_RightHand)
             DeviceController::get().getComponent(serial, 19).m_orig = *pHandle;
     }
+
+    if (input == "/input/trackpad/touch")
+    {
+        if (role == vr::TrackedControllerRole_LeftHand)
+            DeviceController::get().getComponent(serial, 14).m_orig = *pHandle;
+        if (role == vr::TrackedControllerRole_RightHand)
+            DeviceController::get().getComponent(serial, 15).m_orig = *pHandle;
+    }
+
+    if (input == "/input/trackpad/force")
+    {
+        if (role == vr::TrackedControllerRole_LeftHand)
+            DeviceController::get().getComponent(serial, 16).m_orig = *pHandle;
+        if (role == vr::TrackedControllerRole_RightHand)
+            DeviceController::get().getComponent(serial, 17).m_orig = *pHandle;
+    }
 }
 
 void InterfaceHook::CreateScalarComponent(vr::PropertyContainerHandle_t ulContainer, const char* pchName, vr::VRInputComponentHandle_t* pHandle)
@@ -393,5 +409,53 @@ void InterfaceHook::CreateScalarComponent(vr::PropertyContainerHandle_t ulContai
             DeviceController::get().getComponent(serial, 22).m_orig = *pHandle;
         if (role == vr::TrackedControllerRole_RightHand)
             DeviceController::get().getComponent(serial, 23).m_orig = *pHandle;
+    }
+
+    if (input == "/input/finger/index")
+    {
+        if (role == vr::TrackedControllerRole_LeftHand)
+            DeviceController::get().getComponent(serial, 40).m_orig = *pHandle;
+        if (role == vr::TrackedControllerRole_RightHand)
+            DeviceController::get().getComponent(serial, 41).m_orig = *pHandle;
+    }
+
+    if (input == "/input/finger/middle")
+    {
+        if (role == vr::TrackedControllerRole_LeftHand)
+            DeviceController::get().getComponent(serial, 42).m_orig = *pHandle;
+        if (role == vr::TrackedControllerRole_RightHand)
+            DeviceController::get().getComponent(serial, 43).m_orig = *pHandle;
+    }
+
+    if (input == "/input/finger/ring")
+    {
+        if (role == vr::TrackedControllerRole_LeftHand)
+            DeviceController::get().getComponent(serial, 44).m_orig = *pHandle;
+        if (role == vr::TrackedControllerRole_RightHand)
+            DeviceController::get().getComponent(serial, 45).m_orig = *pHandle;
+    }
+
+    if (input == "/input/finger/pinky")
+    {
+        if (role == vr::TrackedControllerRole_LeftHand)
+            DeviceController::get().getComponent(serial, 46).m_orig = *pHandle;
+        if (role == vr::TrackedControllerRole_RightHand)
+            DeviceController::get().getComponent(serial, 47).m_orig = *pHandle;
+    }
+
+    if (input == "/input/trackpad/x")
+    {
+        if (role == vr::TrackedControllerRole_LeftHand)
+            DeviceController::get().getComponent(serial, 10).m_orig = *pHandle;
+        if (role == vr::TrackedControllerRole_RightHand)
+            DeviceController::get().getComponent(serial, 11).m_orig = *pHandle;
+    }
+
+    if (input == "/input/trackpad/y")
+    {
+        if (role == vr::TrackedControllerRole_LeftHand)
+            DeviceController::get().getComponent(serial, 12).m_orig = *pHandle;
+        if (role == vr::TrackedControllerRole_RightHand)
+            DeviceController::get().getComponent(serial, 13).m_orig = *pHandle;
     }
 }
