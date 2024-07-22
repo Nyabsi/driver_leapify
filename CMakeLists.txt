@@ -12,6 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(EXTERNAL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external)
+set(VENDOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/vendor)
 
 if (UNIX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
@@ -23,11 +24,20 @@ add_library(${PROJECT_NAME} SHARED
     ${SRC_DIR}/InterfaceHook.cpp
 	${SRC_DIR}/DeviceController.cpp
 	${SRC_DIR}/TrackedController.cpp
+	${SRC_DIR}/LeapConnection.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/LeapSDK/include)
 target_include_directories(${PROJECT_NAME} PRIVATE ${EXTERNAL_DIR}/openvr/headers)
 target_include_directories(${PROJECT_NAME} PRIVATE ${EXTERNAL_DIR}/rcmp/include)
 
+if (WIN32)
+	target_link_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/LeapSDK/lib/x64)
+else()
+	message(FATAL_ERROR "Linux not supported yet...")
+endif()
+
 add_subdirectory(${EXTERNAL_DIR}/rcmp)
-target_link_libraries(${PROJECT_NAME} PRIVATE rcmp)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE rcmp LeapC)
