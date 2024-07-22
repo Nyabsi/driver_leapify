@@ -88,7 +88,7 @@ vr::EVRInitError TrackedController::Activate(uint32_t unObjectId)
             vr::VRDriverInput()->CreateSkeletonComponent(props, "/input/skeleton/right", "/skeleton/hand/right", "/pose/raw", vr::VRSkeletalTracking_Full, nullptr, 0U, &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 50 : 51).getOverride());
 
         vr::VRDriverInput()->CreateHapticComponent(props, "/output/haptic", &DeviceController::get().getComponentOverride(m_role == vr::TrackedControllerRole_LeftHand ? 52 : 53).getOverride());
-  
+
         result = vr::VRInitError_None;
     }
 
@@ -114,15 +114,14 @@ void TrackedController::DebugRequest(const char* pchRequest, char* pchResponseBu
 
 vr::DriverPose_t TrackedController::GetPose()
 {
-    return m_lastPose;
+    auto controller = DeviceController::get().GetController(m_role);
+    return controller.pose;
 }
 
 void TrackedController::Update()
 {
     if (m_objectId != 999)
     {
-        auto controller = DeviceController::get().GetController(m_role);
-        m_lastPose = controller.m_pose;
-        vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, controller.m_pose, sizeof(vr::DriverPose_t));
+        vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
     }
 }

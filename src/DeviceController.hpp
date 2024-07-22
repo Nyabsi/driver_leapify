@@ -9,11 +9,11 @@
 #include <openvr_driver.h>
 
 struct Controller {
-	uint32_t m_objectId { 999 };
-	vr::ETrackedControllerRole m_role { vr::ETrackedControllerRole::TrackedControllerRole_Invalid };
-	vr::DriverPose_t m_pose { 0 };
-	std::string m_serial { "" };
-	std::string m_manufacturer { "" };
+	uint32_t objectId { 999 };
+	vr::ETrackedControllerRole role { vr::ETrackedControllerRole::TrackedControllerRole_Invalid };
+	vr::DriverPose_t pose { 0 };
+	std::string serial { "" };
+	bool hasCurl { false };
 };
 
 struct Component {
@@ -31,7 +31,7 @@ public:
 	bool areControllersAvailable() const { return m_areControllersAvailable; }
 
 	void UpdateControllerPose(vr::ETrackedControllerRole role, vr::DriverPose_t pose);
-	void UpdateController(vr::ETrackedControllerRole role, uint32_t objectId, const std::string& serial, const std::string& manufacturer);
+	void UpdateController(vr::ETrackedControllerRole role, uint32_t objectId, const std::string& serial, bool hasCurl);
 	Controller GetController(vr::ETrackedControllerRole role);
 
 	Component& getComponent(std::string serial, int index);

@@ -4,47 +4,45 @@
 
 DeviceController::DeviceController()
 {
-	m_controllers[0].m_objectId = 999;
-	m_controllers[0].m_role = vr::TrackedControllerRole_LeftHand;
-	m_controllers[0].m_pose = { 0 };
+	m_controllers[0].objectId = 999;
+	m_controllers[0].role = vr::TrackedControllerRole_LeftHand;
+	m_controllers[0].pose = { 0 };
 
-	m_controllers[1].m_objectId = 999;
-	m_controllers[1].m_role = vr::TrackedControllerRole_RightHand;
-	m_controllers[1].m_pose = { 0 };
+	m_controllers[1].objectId = 999;
+	m_controllers[1].role = vr::TrackedControllerRole_RightHand;
+	m_controllers[1].pose = { 0 };
 }
 
 void DeviceController::UpdateControllerPose(vr::ETrackedControllerRole role, vr::DriverPose_t pose)
 {
-	for (int i = 0; i < 2; i++)
+	for (auto& controller : m_controllers)
 	{
-		if (m_controllers[i].m_role == role)
+		if (controller.role == role)
 		{
-			m_controllers[i].m_pose = pose;
+			controller.pose = pose;
 		}
 	}
 }
 
-void DeviceController::UpdateController(vr::ETrackedControllerRole role, uint32_t objectId, const std::string& serial, const std::string& manufacturer)
+void DeviceController::UpdateController(vr::ETrackedControllerRole role, uint32_t objectId, const std::string& serial, bool hasCurl)
 {
-	for (int i = 0; i < 2; i++)
+	for (auto& controller : m_controllers)
 	{
-		if (m_controllers[i].m_role == role)
+		if (controller.role == role)
 		{
-			m_controllers[i].m_objectId = objectId;
-			m_controllers[i].m_serial = serial;
-			m_controllers[i].m_manufacturer = manufacturer;
+			controller.objectId = objectId;
+			controller.serial = serial;
+			controller.hasCurl = hasCurl;
 		}
 	}
 }
 
 Controller DeviceController::GetController(vr::ETrackedControllerRole role)
 {
-	for (int i = 0; i < 2; i++)
+	for (auto& controller : m_controllers)
 	{
-		if (m_controllers[i].m_role == role)
-		{
-			return m_controllers[i];
-		}
+		if (controller.role == role)
+			return controller;
 	}
 
 	return Controller();
