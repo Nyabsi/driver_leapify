@@ -6,7 +6,19 @@ SteamVR for Leapmotion Controller 1 & 2 (*And other compatible controllers*) whi
 
 ## Installation
 
-You can download latest experimental builds from [actions](https://github.com/Nyabsi/driver_leapify/actions).
+### Step 1
+
+Install [Ultraleap Software](https://developer.leapmotion.com/tracking-software-download) for your device (use Gemini for LMC 1, Hyperion for LMC2)
+
+### Step 2
+
+Download [the driver](https://github.com/Nyabsi/driver_leap/releases) and extract it to `C:\\Program Files (x86)\\Steam\\steamapps\\common\\SteamVR\\drivers\\` 
+
+(NOTE: this path may vary from your Steam installation location, or choise of operating system)
+
+### Step 3
+
+Start SteamVR and it should be working.
 
 ## Features
 
