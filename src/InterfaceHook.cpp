@@ -37,7 +37,18 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
        {
            rcmp::hook_indirect_function<void(*)(void* self, uint32_t unWhichDevice, const vr::DriverPose_t& newPose, uint32_t unPoseStructSize)>(vtable + 1 + vtable_offset, [](auto orig, void* self, uint32_t unWhichDevice, const vr::DriverPose_t& newPose, uint32_t unPoseStructSize) -> void
            {
-                orig(self, unWhichDevice, newPose, unPoseStructSize);
+                    auto pose = newPose;
+                    auto props = vr::VRProperties()->TrackedDeviceToPropertyContainer(unWhichDevice);
+                    auto manufacturer = vr::VRProperties()->GetStringProperty(props, vr::ETrackedDeviceProperty::Prop_ManufacturerName_String);
+                    auto device_class = vr::VRProperties()->GetInt32Property(props, vr::ETrackedDeviceProperty::Prop_DeviceClass_Int32);
+
+                    if (device_class == vr::TrackedDeviceClass_Controller && manufacturer == "Oculus" && vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled") && vr::VRSettings()->GetBool("driver_leapify", "blockOculus"))
+                    {
+                        pose.deviceIsConnected = false;
+                        pose.poseIsValid = false;
+                    }
+
+                    orig(self, unWhichDevice, pose, unPoseStructSize);
            });
 
            m_IVRServerDriverHostHooked_006 = true;

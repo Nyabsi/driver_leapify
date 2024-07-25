@@ -1,34 +1,41 @@
 [
-    {
-        "title": "Leapify",
-        "show_without_hmd": true,
-        "values": [
-	        {
-                "name": "/settings/driver_leapify/handTrackingEnabled",
-                "control": "toggle",
-                "label": "Hand Tracking",
-                "on_label": "Enabled",
-                "off_label": "Disabled"
-            },
-            {
-                "name": "/settings/driver_leapify/automaticHandOffset",
-                "control": "toggle",
-                "label": "Automatic Hand Offset (Recommended)",
-                "on_label": "Enabled",
-                "off_label": "Disabled"
-            },
-            {
-                "name": "/settings/driver_leapify/manualHandOffset",
-                "control": "slider",
-                "label": "Manual Hand Offset (mm)",
-                "type": "float",
-                "min": 0,
-                "max": 100,
-                "decimals": 1,
-                "requires": {
-                    "/settings/driver_leapify/automaticHandOffset": false
-                }
-            }
-        ]
-    }
+  {
+    "title": "Leapify",
+    "show_without_hmd": true,
+    "values": [
+      {
+        "name": "/settings/driver_leapify/handTrackingEnabled",
+        "control": "toggle",
+        "label": "Hand Tracking",
+        "on_label": "Enabled",
+        "off_label": "Disabled"
+      },
+      {
+        "name": "/settings/driver_leapify/automaticHandOffset",
+        "control": "toggle",
+        "label": "Automatic Hand Offset (Recommended)",
+        "on_label": "Enabled",
+        "off_label": "Disabled"
+      },
+      {
+        "name": "/settings/driver_leapify/manualHandOffset",
+        "control": "slider",
+        "label": "Manual Hand Offset (mm)",
+        "type": "float",
+        "min": 0,
+        "max": 100,
+        "decimals": 1,
+        "requires": {
+          "/settings/driver_leapify/automaticHandOffset": false
+        }
+      },
+      {
+        "name": "/settings/driver_leapify/blockOculus",
+        "control": "toggle",
+        "label": "Block Meta/Oculus Controllers",
+        "on_label": "Enabled",
+        "off_label": "Disabled"
+      }
+    ]
+  }
 ]

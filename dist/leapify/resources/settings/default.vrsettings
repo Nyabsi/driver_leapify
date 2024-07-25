@@ -1,11 +1,11 @@
 {
-    "driver_leapify": 
-    {
-        "enable": true,
-        "loadPriority": 1,
-        "blocked_by_safe_mode": false,
-        "handTrackingEnabled": true,
-        "automaticHandOffset": true,
-        "manualHandOffset": 0.0
-    }
+  "driver_leapify": {
+    "enable": true,
+    "loadPriority": 10,
+    "blocked_by_safe_mode": false,
+    "handTrackingEnabled": true,
+    "automaticHandOffset": true,
+    "manualHandOffset": 0.0,
+    "blockOculus": false
+  }
 }
