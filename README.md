@@ -11,14 +11,26 @@ You can download latest experimental builds from [actions](https://github.com/Ny
 ## Features
 
 - Cross-platform (Windows, Linux)
-- Index Emulation for legacy SteamVR Input applications
 - Fallback to SteamVR controllers, if Hand Tracking is disabled
 - Hand offset estimation
 - Settings integration into SteamVR
 
+## TODO
+
+- Index Emulation for legacy SteamVR Input applications
+- System Button + Trigger
+
 ## Configuration
 
+> On Desktop
+
 Navigate to SteamVR -> Settings -> Leapify
+
+> On VR
+
+Navigate to SteamVR Settings -> Leapify
+
+![settings](https://github.com/user-attachments/assets/a0df2d1d-2461-4967-b7b0-81e69a45a591)
 
 ## Building
 
