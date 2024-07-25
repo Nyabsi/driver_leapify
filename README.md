@@ -30,6 +30,13 @@ cmake --build build
 
 - thanks to @SDraw for making the original `driver_leap` which this project uses some parts of.
 
+
+## Dependencies
+
+- [OpenVR](https://github.com/ValveSoftware/openvr) by @ValveSoftware
+- [rcmp](https://github.com/Smertig/rcmp) by @Smertig
+- [glm](https://github.com/g-truc/glm) by @g-truc
+
 ## License
 
 The code is licensed under `MIT` you can view the full license [here](LICENSE.md)
