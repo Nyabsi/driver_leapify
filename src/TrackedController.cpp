@@ -198,7 +198,7 @@ void TrackedController::UpdateHMDCoordinates()
 
 void TrackedController::UpdatePose(LeapHand hand)
 {
-    if (vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled"))
+    if (vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled") && !vr::VRSettings()->GetBool("driver_leapify", "skeletalDataPassthrough"))
     {
         if (hand.role != vr::TrackedControllerRole_Invalid)
         {
@@ -313,8 +313,10 @@ void TrackedController::UpdateSkeletalPose(LeapHand hand)
             ConvertQuaternion(rotation, m_boneTransform[SB_Aux_Thumb + i].orientation);
         }
 
-        StateManager::Get().setLeapTransform(m_boneTransform);
-        vr::VRDriverInput()->UpdateSkeletonComponent(m_skeletonHandle, vr::VRSkeletalMotionRange_WithoutController, m_boneTransform, SB_Count);
+        StateManager::Get().setLeapTransform(m_boneTransform, m_role);
+
+        if (!vr::VRSettings()->GetBool("driver_leapify", "skeletalDataPassthrough"))
+            vr::VRDriverInput()->UpdateSkeletonComponent(m_skeletonHandle, vr::VRSkeletalMotionRange_WithoutController, m_boneTransform, SB_Count);
     }
 }
 

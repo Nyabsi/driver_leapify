@@ -11,6 +11,14 @@
         "off_label": "Disabled"
       },
       {
+        "name": "/settings/driver_leapify/skeletalDataPassthrough",
+        "control": "toggle",
+        "advanced_only": true,
+        "label": "Skeletal data passthrough",
+        "on_label": "Enabled",
+        "off_label": "Disabled"
+      },
+      {
         "name": "/settings/driver_leapify/automaticHandOffset",
         "control": "toggle",
         "label": "Automatic Hand Offset (Recommended)",

@@ -4,6 +4,7 @@
     "loadPriority": 10,
     "blocked_by_safe_mode": false,
     "handTrackingEnabled": true,
+    "skeletalDataPassthrough": false,
     "automaticHandOffset": true,
     "manualHandOffset": 0.0,
     "blockOculus": false

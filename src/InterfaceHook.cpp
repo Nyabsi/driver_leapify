@@ -62,10 +62,26 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
 
        if (!m_IVRDriverInputHooked_003)
        {
+           rcmp::hook_indirect_function<vr::EVRInputError(void* self, vr::PropertyContainerHandle_t ulContainer, const char* pchName, const char* pchSkeletonPath, const char* pchBasePosePath, vr::EVRSkeletalTrackingLevel eSkeletalTrackingLevel, const vr::VRBoneTransform_t* pGripLimitTransforms, uint32_t unGripLimitTransformCount, vr::VRInputComponentHandle_t* pHandle)>(vtable + 5 + vtable_offset, [](auto orig, void* self, vr::PropertyContainerHandle_t ulContainer, const char* pchName, const char* pchSkeletonPath, const char* pchBasePosePath, vr::EVRSkeletalTrackingLevel eSkeletalTrackingLevel, const vr::VRBoneTransform_t* pGripLimitTransforms, uint32_t unGripLimitTransformCount, vr::VRInputComponentHandle_t* pHandle) -> vr::EVRInputError
+           {
+                   auto result = orig(self, ulContainer, pchName, pchSkeletonPath, pchBasePosePath, eSkeletalTrackingLevel, pGripLimitTransforms, unGripLimitTransformCount, pHandle);
+
+                   auto role = vr::VRProperties()->GetInt32Property(ulContainer, vr::ETrackedDeviceProperty::Prop_ControllerRoleHint_Int32);
+
+                   if (role == vr::TrackedControllerRole_LeftHand)
+                       StateManager::Get().addTransformHook(*pHandle, vr::TrackedControllerRole_LeftHand);
+                   if (role == vr::TrackedControllerRole_RightHand)
+                       StateManager::Get().addTransformHook(*pHandle, vr::TrackedControllerRole_RightHand);
+
+                   return result;
+           });
+           
            rcmp::hook_indirect_function<vr::EVRInputError(void* self, vr::VRInputComponentHandle_t ulComponent, vr::EVRSkeletalMotionRange eMotionRange, const vr::VRBoneTransform_t* pTransforms, uint32_t unTransformCount)>(vtable + 6 + vtable_offset, [](auto orig, void* self, vr::VRInputComponentHandle_t ulComponent, vr::EVRSkeletalMotionRange eMotionRange, const vr::VRBoneTransform_t* pTransforms, uint32_t unTransformCount) -> vr::EVRInputError
            {
-                   if (vr::VRSettings()->GetBool("driver_leapify", "skeletalDataPassthrough"))
-                        return orig(self, ulComponent, vr::VRSkeletalMotionRange_WithoutController, StateManager::Get().getLeapTransform(), 31);
+                   auto role = StateManager::Get().getTransformHookRole(ulComponent);
+
+                   if (vr::VRSettings()->GetBool("driver_leapify", "skeletalDataPassthrough") && StateManager::Get().getLeapTransform(role) != nullptr)
+                        return orig(self, ulComponent, vr::VRSkeletalMotionRange_WithoutController, StateManager::Get().getLeapTransform(role), 31);
                    else
                         return orig(self, ulComponent, eMotionRange, pTransforms, unTransformCount);
            });
