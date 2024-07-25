@@ -1,0 +1,167 @@
+{
+  "jsonid": "input_profile",
+  "controller_type": "knuckles",
+  "device_class" : "TrackedDeviceClass_Controller",
+  "resource_root" : "indexcontroller",
+  "driver_name" : "lighthouse",
+  "legacy_binding" :  "{indexcontroller}/input/legacy_bindings_index_controller.json",
+  "input_bindingui_mode" : "controller_handed",
+  "should_show_binding_errors": true,
+  "remapping" : "{indexcontroller}/input/index_controller_remapping.json",
+  "input_bindingui_left" :
+  {
+    "image": "{indexcontroller}/icons/indexcontroller_left.svg"
+  },
+  "input_bindingui_right" :
+  {
+    "image": "{indexcontroller}/icons/indexcontroller_right.svg"
+  },
+  "input_source" :
+  {
+    "/input/system" : {
+      "type" : "button",
+      "click" : true,
+      "touch" : true,
+      "binding_image_point" : [ 34,45 ],
+      "order" : 1
+    },
+    "/input/a" : {
+      "type" : "button",
+      "click" : true,
+      "touch" : true,
+      "binding_image_point" : [ 26, 42 ],
+      "order" : 6
+    },
+    "/input/b" : {
+      "type" : "button",
+      "click" : true,
+      "touch" : true,
+      "binding_image_point" : [ 18, 37  ],
+      "order" : 5
+    },
+    "/input/trigger" : {
+      "type" : "trigger",
+      "click" : true,
+      "touch" : true,
+      "value" : true,
+      "binding_image_point" : [ 11, 60 ],
+      "order" : 2
+    },
+    "/input/trackpad" : {
+      "type" : "trackpad",
+      "force" : true,
+      "touch" : true,
+      "binding_image_point" : [ 27, 37 ],
+      "order" : 3
+    },
+    "/input/grip" : {
+      "type" : "trigger",
+      "force" : true,
+      "value" : true,
+      "touch" : true,
+      "input_activity_path" : "/input/grip/force",
+      "input_activity_threshold" : 0.1,
+      "binding_image_point" : [ 47, 86 ],
+      "order" : 7
+    },
+    "/input/thumbstick" : {
+      "type" : "joystick",
+      "click" : true,
+      "touch" : true,
+      "binding_image_point" : [ 31, 26 ],
+      "order" : 4
+    },
+    "/input/pinch" : {
+      "type" : "pinch",
+      "value_source" : "/input/trigger",
+      "capsense_source" : "/input/finger/index",
+      "force_source" : "/input/trackpad",
+      "binding_image_point" : [ 27, 37 ],
+      "order" : 8
+    },
+
+    "/input/finger/index" : {
+      "type" : "trigger",
+      "visibility" : "InputValueVisibility_AvailableButHidden",
+      "binding_image_point" : [ 56, 86 ],
+      "order" : 100
+    },
+    "/input/finger/middle" : {
+      "type" : "trigger",
+      "visibility" : "InputValueVisibility_AvailableButHidden",
+      "binding_image_point" : [ 56, 86 ],
+      "order" : 101
+    },
+    "/input/finger/ring" : {
+      "type" : "trigger",
+      "visibility" : "InputValueVisibility_AvailableButHidden",
+      "binding_image_point" : [ 56, 86 ],
+      "order" : 102
+    },
+    "/input/finger/pinky" : {
+      "type" : "trigger",
+      "visibility" : "InputValueVisibility_AvailableButHidden",
+      "binding_image_point" : [ 56, 86 ],
+      "order" : 103
+    },
+
+    "/pose/raw" : {
+      "type" : "pose",
+      "binding_image_point" : [ 5, 35 ]
+    },
+    "/pose/base" : {
+      "type" : "pose",
+      "binding_image_point" : [ 65, 136 ]
+    },
+    "/pose/handgrip" : {
+      "type" : "pose",
+      "binding_image_point" : [ 56, 95 ]
+    },
+    "/pose/grip" : {
+      "type" : "pose",
+      "binding_image_point" : [ 56, 95 ]
+    },
+    "/pose/tip" : {
+      "type" : "pose",
+      "binding_image_point" : [ 5, 35 ]
+    },
+    "/pose/gdc2015" : {
+      "type" : "pose",
+      "binding_image_point" : [ 5, 35 ]
+    },
+
+    "/input/skeleton/left" : {
+      "type" : "skeleton",
+      "skeleton": "/skeleton/hand/left",
+      "side" : "left",
+      "binding_image_point" : [ 5, 35 ]
+    },
+    "/input/skeleton/right" : {
+      "type" : "skeleton",
+      "skeleton": "/skeleton/hand/right",
+      "side" : "right",
+      "binding_image_point" : [ 5, 35 ]
+    },
+
+    "/output/haptic" : {
+      "type" : "vibration",
+      "binding_image_point" : [ 5, 35 ]
+    }
+  },
+  "simulation_settings":
+  {
+	"hmd_profile": "indexhmd",
+    "left_modelnumber": "Knuckles Left",
+    "right_modelnumber": "Knuckles Right",
+    "left_serialnumber": "LHR-FFFFFFF1",
+    "right_serialnumber": "LHR-FFFFFFF2",
+    "left_rendermodel": "{indexcontroller}valve_controller_knu_1_0_left",
+    "right_rendermodel": "{indexcontroller}valve_controller_knu_1_0_right",
+	"left_registered_device_type": "valve/index_controllerLHR-FFFFFFF1",
+	"right_registered_device_type": "valve/index_controllerLHR-FFFFFFF2",
+    "tracking_system_name": "lighthouse",
+    "manufacturer_name": "Valve",
+	"legacy_buttons": [0, 1, 2, 7, 32, 33, 34],
+	"legacy_axis": [2, 3, 3, 0, 0]
+  }
+ }

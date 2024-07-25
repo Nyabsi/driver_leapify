@@ -1,0 +1,82 @@
+{
+  "to_controller_type" : "knuckles",
+  "layouts" : [
+    {
+      "priority" : 100,
+      "from_controller_type" : "oculus_touch",
+      "simulate_controller_type" : true,
+      "simulate_render_model" : true,
+      "simulate_HMD" : true,
+      "autoremappings" : [
+        {
+          "from" : "/user/hand/right/input/grip",
+          "to" : "/user/hand/right/input/grip",
+          "parameters": {
+            "click_activate_threshold": "0.2",
+            "click_deactivate_threshold": "0.1",
+            "touch_activate_threshold": "0.05",
+            "touch_deactivate_threshold": "0.02"
+          }
+        },
+        {
+          "from" : "/user/hand/right/input/joystick",
+          "to" : "/user/hand/right/input/thumbstick"
+        },
+        {
+          "from" : "/user/hand/left/input/x",
+          "to" : "/user/hand/left/input/a",
+          "mirror" : false
+        },
+        {
+          "from" : "/user/hand/left/input/y",
+          "to" : "/user/hand/left/input/b",
+          "mirror" : false
+        }
+      ]
+    },
+    {
+      "priority" : 20,
+      "from_controller_type" : "vive_controller",
+      "simulate_controller_type" : true,
+      "simulate_render_model" : true,
+      "simulate_HMD" : true,
+      "autoremappings" : [
+        {
+          "from" : "/user/hand/right/input/grip",
+          "to" : "/user/hand/right/input/grip",
+          "parameters": {
+            "click_activate_threshold": "0.2",
+            "click_deactivate_threshold": "0.1",
+            "touch_activate_threshold": "0.05",
+            "touch_deactivate_threshold": "0.02"
+          }
+        },
+        {
+          "from" : "/user/hand/right/input/trackpad",
+          "to" : ["/user/hand/right/input/thumbstick", "/user/hand/right/input/trackpad"]
+        },
+        {
+          "from" : "/user/hand/left/input/application_menu",
+          "to" : "/user/hand/left/input/a"
+        }
+      ]
+    },
+    {
+      "priority" : 10,
+      "from_controller_type" : "khr_simple_controller",
+      "simulate_controller_type" : false,
+      "simulate_render_model" : false,
+      "simulate_HMD" : false,
+      "autoremappings" : [
+        {
+          "from" : "/user/hand/right/input/select",
+          "to" : "/user/hand/right/input/trigger"
+        },
+        {
+          "from" : "/user/hand/right/input/menu",
+          "to" : "/user/hand/right/input/a"
+        }
+      ]
+    }
+  ] 
+}

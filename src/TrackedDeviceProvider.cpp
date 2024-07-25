@@ -2,7 +2,6 @@
 
 #include <TrackedController.hpp>
 #include <InterfaceHook.hpp>
-#include <DeviceController.hpp>
 #include <LeapConnection.hpp>
 
 #include <openvr_driver.h>
@@ -16,7 +15,6 @@ vr::EVRInitError TrackedDeviceProvider::Init(vr::IVRDriverContext* pDriverContex
     vr::VRServerDriverHost()->TrackedDeviceAdded("Leap_Right_Hand", vr::TrackedDeviceClass_Controller, &m_Right);
 
     bool connected = m_LeapConnection.Init();
-    DeviceController::get().isHandTrackingEnabled(connected);
 
     if (connected)
         m_LeapConnection.Begin();

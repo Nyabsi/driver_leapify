@@ -14,6 +14,8 @@ set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(EXTERNAL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external)
 set(VENDOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/vendor)
 
+add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
+
 if (UNIX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif (UNIX)
@@ -22,7 +24,6 @@ add_library(${PROJECT_NAME} SHARED
 	${SRC_DIR}/main.cpp
 	${SRC_DIR}/TrackedDeviceProvider.cpp
     ${SRC_DIR}/InterfaceHook.cpp
-	${SRC_DIR}/DeviceController.cpp
 	${SRC_DIR}/TrackedController.cpp
 	${SRC_DIR}/LeapConnection.cpp
 )
@@ -31,6 +32,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_DIR})
 target_include_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/LeapSDK/include)
 target_include_directories(${PROJECT_NAME} PRIVATE ${EXTERNAL_DIR}/openvr/headers)
 target_include_directories(${PROJECT_NAME} PRIVATE ${EXTERNAL_DIR}/rcmp/include)
+target_include_directories(${PROJECT_NAME} PRIVATE ${EXTERNAL_DIR}/glm)
 
 if (WIN32)
 	target_link_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/LeapSDK/lib/x64)
