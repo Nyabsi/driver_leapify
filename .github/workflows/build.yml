@@ -2,7 +2,7 @@ name: Build project driver_leapify
 
 on:
   push:
-    branches: [ "master", "leapify" ]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -55,14 +55,15 @@ jobs:
     - name: Create distributable
       if: matrix.os == 'ubuntu-latest'
       run: |
-        mkdir -p ${{ github.workspace }}/dist/leapify/bin/linux64
+        mkdir -p ${{ github.workspace }}/dist/bin/linux64
+        cp ${{ github.workspace }}/vendor/LeapSDK/lib/x64/*.so ${{ github.workspace }}/dist/bin/linux64
         cp ${{ steps.strings.outputs.build-output-dir }}/libdriver_leapify.so ${{ github.workspace }}/dist/leapify/bin/linux64
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4.3.4
       if: matrix.os == 'ubuntu-latest'
       with:
-        name: driver_leap_linux
+        name: driver_leapify_linux
         path: ${{ github.workspace }}/dist/*
         if-no-files-found: error
         retention-days: 7
@@ -71,14 +72,15 @@ jobs:
     - name: Create distributable
       if: matrix.os == 'windows-latest'
       run: |
-        mkdir -p ${{ github.workspace }}/dist/leapify/bin/win64
-        cp ${{ steps.strings.outputs.build-output-dir }}/Release/driver_leapify.dll ${{ github.workspace }}/dist/leapify/bin/win64
+        mkdir -p ${{ github.workspace }}/dist/bin/win64
+        cp ${{ github.workspace }}/vendor/LeapSDK/lib/x64/*.dll ${{ github.workspace }}/dist/bin/win64
+        cp ${{ steps.strings.outputs.build-output-dir }}/Release/driver_leapify.dll ${{ github.workspace }}/dist/bin/win64
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4.3.4
       if: matrix.os == 'windows-latest'
       with:
-        name: driver_leap_windows
+        name: driver_leapify_windows
         path: ${{ github.workspace }}/dist/*
         if-no-files-found: error
         retention-days: 7

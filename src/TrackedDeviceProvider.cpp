@@ -1,5 +1,4 @@
 #include <TrackedDeviceProvider.hpp>
-
 #include <TrackedController.hpp>
 #include <InterfaceHook.hpp>
 #include <LeapConnection.hpp>

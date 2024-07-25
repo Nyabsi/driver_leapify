@@ -1,5 +1,4 @@
 #include <InterfaceHook.hpp>
-#include <DeviceController.hpp>
 
 #include <stdint.h>
 #include <string>
@@ -38,7 +37,7 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
        {
            rcmp::hook_indirect_function<void(*)(void* self, uint32_t unWhichDevice, const vr::DriverPose_t& newPose, uint32_t unPoseStructSize)>(vtable + 1 + vtable_offset, [](auto orig, void* self, uint32_t unWhichDevice, const vr::DriverPose_t& newPose, uint32_t unPoseStructSize) -> void
            {
-                orig(self, unWhichDevice, pose, unPoseStructSize);
+                orig(self, unWhichDevice, newPose, unPoseStructSize);
            });
 
            m_IVRServerDriverHostHooked_006 = true;

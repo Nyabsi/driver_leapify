@@ -2,7 +2,6 @@
 
 #include <glm/vec3.hpp>
 #include <glm/gtx/quaternion.hpp>
-#include <DeviceController.hpp>
 
 #include <LeapC.h>
 

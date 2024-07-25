@@ -1,20 +1,24 @@
 # Leapify
 
+> This driver is work in progress, there may be unexpected / buggy behaviour please report it, [here](https://github.com/Nyabsi/driver_leapify/issues).
+
 SteamVR for Leapmotion Controller 1 & 2 (*And other compatible controllers*) which strives for seamless co-existing with controllers.
 
 ## Installation
 
 You can download latest experimental builds from [actions](https://github.com/Nyabsi/driver_leapify/actions).
 
-(Be adviced, the driver is currently W.I.P, and instabilities may occur since this re-writes large porpotions of the driver)
-
 ## Features
 
 - Cross-platform (Windows, Linux)
-- Seamless Hotswapping between Hand Tracking and Controllers
 - Index Emulation for legacy SteamVR Input applications
-- Support for non-SteamVR controllers, if no controllers are available
-- Hand offset estimation, to reduce amount of user configuration
+- Fallback to SteamVR controllers, if Hand Tracking is disabled
+- Hand offset estimation
+- Settings integration into SteamVR
+
+## Configuration
+
+Navigate to SteamVR -> Settings -> Leapify
 
 ## Building
 
@@ -39,4 +43,4 @@ cmake --build build
 
 ## License
 
-The code is licensed under `MIT` you can view the full license [here](LICENSE.md)
+The code is licensed under `MIT` you can view the full license [here](LICENSE)
