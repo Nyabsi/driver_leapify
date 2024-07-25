@@ -1,4 +1,5 @@
 #include <InterfaceHook.hpp>
+#include <StateManager.hpp>
 
 #include <stdint.h>
 #include <string>
@@ -52,6 +53,23 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
            });
 
            m_IVRServerDriverHostHooked_006 = true;
+       }
+   }
+
+   if (interfaceName == "IVRDriverInput_003")
+   {
+       void** vtable = *((void***)interfacePtr);
+
+       if (!m_IVRDriverInputHooked_003)
+       {
+           rcmp::hook_indirect_function<vr::EVRInputError(void* self, vr::VRInputComponentHandle_t ulComponent, vr::EVRSkeletalMotionRange eMotionRange, const vr::VRBoneTransform_t* pTransforms, uint32_t unTransformCount)>(vtable + 6 + vtable_offset, [](auto orig, void* self, vr::VRInputComponentHandle_t ulComponent, vr::EVRSkeletalMotionRange eMotionRange, const vr::VRBoneTransform_t* pTransforms, uint32_t unTransformCount) -> vr::EVRInputError
+           {
+                   if (vr::VRSettings()->GetBool("driver_leapify", "skeletalDataPassthrough"))
+                        return orig(self, ulComponent, vr::VRSkeletalMotionRange_WithoutController, StateManager::Get().getLeapTransform(), 31);
+                   else
+                        return orig(self, ulComponent, eMotionRange, pTransforms, unTransformCount);
+           });
+           m_IVRDriverInputHooked_003 = true;
        }
    }
 }

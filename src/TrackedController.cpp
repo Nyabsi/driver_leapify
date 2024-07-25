@@ -1,5 +1,5 @@
 #include <TrackedController.hpp>
-
+#include <StateManager.hpp>
 #include <Math.hpp>
 
 constexpr glm::mat4 identityMatrix = glm::mat4(1.0f);
@@ -313,6 +313,7 @@ void TrackedController::UpdateSkeletalPose(LeapHand hand)
             ConvertQuaternion(rotation, m_boneTransform[SB_Aux_Thumb + i].orientation);
         }
 
+        StateManager::Get().setLeapTransform(m_boneTransform);
         vr::VRDriverInput()->UpdateSkeletonComponent(m_skeletonHandle, vr::VRSkeletalMotionRange_WithoutController, m_boneTransform, SB_Count);
     }
 }
