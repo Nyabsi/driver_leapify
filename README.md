@@ -14,7 +14,7 @@ Install [Ultraleap Software](https://developer.leapmotion.com/tracking-software-
 
 Download [the driver](https://github.com/Nyabsi/driver_leap/releases) and extract it to `C:\\Program Files (x86)\\Steam\\steamapps\\common\\SteamVR\\drivers\\` 
 
-(NOTE: this path may vary from your Steam installation location, or choise of operating system)
+(NOTE: this path may vary from your Steam installation location, or choice of operating system)
 
 ### Step 3
 
