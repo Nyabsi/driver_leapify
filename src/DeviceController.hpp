@@ -7,6 +7,7 @@
 #include <Singleton.hpp>
 
 #include <openvr_driver.h>
+#include <glm/gtx/quaternion.hpp>
 
 struct Controller {
 	uint32_t objectId { 999 };
@@ -32,6 +33,12 @@ public:
 	bool isHandTrackingEnabled() const { return m_isHandTrackingEnabled; }
 	void isHandTrackingEnabled(bool value) { m_isHandTrackingEnabled = value; }
 
+	glm::quat getHmdRotation() const { return m_hmdRotation; }
+	void setHmdRotation(const glm::quat& rotation) { m_hmdRotation = rotation; }
+
+	glm::vec3 getHmdPosition() const { return m_hmdPosition; }
+	void setHmdPosition(const glm::vec3& position) { m_hmdPosition = position; }
+
 	void UpdateControllerPose(vr::ETrackedControllerRole role, vr::DriverPose_t pose);
 	void UpdateController(vr::ETrackedControllerRole role, uint32_t objectId, const std::string& serial, bool hasCurl);
 	Controller GetController(vr::ETrackedControllerRole role);
@@ -46,4 +53,6 @@ private:
 	std::array<Controller, 2> m_controllers;
 	std::map<std::string, std::map<int, Component>> m_components;
 	std::map<int, Component> m_componentOverrides;
+	glm::quat m_hmdRotation;
+	glm::vec3 m_hmdPosition;
 };

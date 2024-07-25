@@ -12,8 +12,8 @@ vr::EVRInitError TrackedDeviceProvider::Init(vr::IVRDriverContext* pDriverContex
     VR_INIT_SERVER_DRIVER_CONTEXT(pDriverContext);
     m_InterfaceHook.Init(pDriverContext);
 
-    vr::VRServerDriverHost()->TrackedDeviceAdded("Leap_Hand_Left", vr::TrackedDeviceClass_Controller, &m_Left);
-    vr::VRServerDriverHost()->TrackedDeviceAdded("Leap_Hand_Right", vr::TrackedDeviceClass_Controller, &m_Right);
+    vr::VRServerDriverHost()->TrackedDeviceAdded("Leap_Left_Hand", vr::TrackedDeviceClass_Controller, &m_Left);
+    vr::VRServerDriverHost()->TrackedDeviceAdded("Leap_Right_Hand", vr::TrackedDeviceClass_Controller, &m_Right);
 
     bool connected = m_LeapConnection.Init();
     DeviceController::get().isHandTrackingEnabled(connected);
@@ -27,10 +27,23 @@ vr::EVRInitError TrackedDeviceProvider::Init(vr::IVRDriverContext* pDriverContex
 void TrackedDeviceProvider::Cleanup()
 {
     m_LeapConnection.End();
+
+    VR_CLEANUP_SERVER_DRIVER_CONTEXT();
 }
 
 void TrackedDeviceProvider::RunFrame()
 {
-    m_Left.Update();
-    m_Right.Update();
+    TrackedController::UpdateHMDCoordinates();
+
+    LeapHand left { };
+    LeapHand right { };
+
+    if (m_LeapConnection.IsConnected())
+    {
+        left = m_LeapConnection.GetHand(vr::TrackedControllerRole_LeftHand);
+        right = m_LeapConnection.GetHand(vr::TrackedControllerRole_RightHand);
+    }
+
+    m_Left.Update(left);
+    m_Right.Update(right);
 }

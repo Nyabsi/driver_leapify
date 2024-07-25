@@ -4,6 +4,9 @@
 #include <thread>
 #include <assert.h>
 
+#include <glm/vec3.hpp>
+#include <glm/gtx/quaternion.hpp>
+
 using namespace std::chrono_literals;
 
 bool LeapConnection::Init()
@@ -69,18 +72,34 @@ void LeapConnection::Poll()
 				LeapHand data { };
 				LEAP_TRACKING_EVENT event = *message.tracking_event;
 
-				for (uint32_t i = 0; i < event.nHands; i++)
+				if (m_frameId != event.tracking_frame_id)
 				{
-					auto& hand = event.pHands[i];
+					bool skipLeft = false;
+					bool skipRight = false;
 
-					data.role = static_cast<vr::ETrackedControllerRole>(hand.type + 1);
-					memcpy(&data.digits, &hand.digits, sizeof(data.digits));
-					data.arm = hand.arm;
+					for (uint32_t i = 0; i < event.nHands; i++)
+					{
+						auto& hand = event.pHands[i];
 
-					if (data.role == vr::TrackedControllerRole_LeftHand)
-						m_LeftHand.exchange(data);
-					if (data.role == vr::TrackedControllerRole_RightHand)
-						m_RightHand.exchange(data);
+						data.role = static_cast<vr::ETrackedControllerRole>(hand.type + 1);
+						memcpy(&data.digits, &hand.digits, sizeof(data.digits));
+						data.palm = hand.palm;
+						data.arm = hand.arm;
+
+						if (data.role == vr::TrackedControllerRole_LeftHand && !skipLeft)
+						{
+							m_LeftHand.exchange(data);
+							skipLeft = true;
+						}
+							
+						if (data.role == vr::TrackedControllerRole_RightHand && !skipRight)
+						{
+							m_RightHand.exchange(data);
+							skipRight = true;
+						}
+					}
+
+					m_frameId.exchange(event.tracking_frame_id);
 				}
 
 				break;

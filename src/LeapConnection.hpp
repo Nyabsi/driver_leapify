@@ -6,9 +6,12 @@
 #include <atomic>
 #include <array>
 
+#include <glm/vec3.hpp>
+#include <glm/gtx/quaternion.hpp>
+
 struct LeapHand
 {
-	vr::ETrackedControllerRole role;
+	vr::ETrackedControllerRole role { vr::TrackedControllerRole_Invalid };
 	union {
 		struct {
 			LEAP_DIGIT thumb;
@@ -17,9 +20,10 @@ struct LeapHand
 			LEAP_DIGIT ring;
 			LEAP_DIGIT pinky;
 		};
-		LEAP_DIGIT digits[5];
+		LEAP_DIGIT digits[5] { 0 };
 	};
-	LEAP_BONE arm;
+	LEAP_PALM palm { 0 };
+	LEAP_BONE arm { 0 };
 };
 
 class LeapConnection 
@@ -39,5 +43,6 @@ private:
 	std::atomic<uint32_t> m_DeviceCount { 0 };
 	std::atomic<LeapHand> m_LeftHand { };
 	std::atomic<LeapHand> m_RightHand { };
+	std::atomic<uint32_t> m_frameId { };
 	LEAP_CONNECTION m_connection { nullptr };
 };

@@ -7,6 +7,8 @@
 #include <openvr_driver.h>
 #include <rcmp.hpp>
 
+#include <glm/gtx/quaternion.hpp>
+
 // vtable starting index varies between compiler ABIs
 #ifdef _WIN32
     constexpr int vtable_offset = 0;
@@ -59,7 +61,7 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                             if (DeviceController::get().GetController(role).objectId == unWhichDevice)
                             {
                                 DeviceController::get().UpdateControllerPose(role, pose);
-                                pose.deviceIsConnected = false;
+                                pose.deviceIsConnected = true;
                             }
                         }
                     }
