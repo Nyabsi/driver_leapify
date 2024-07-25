@@ -239,9 +239,15 @@ void TrackedController::UpdatePose(LeapHand hand)
             m_pose.vecPosition[1] = position.y;
             m_pose.vecPosition[2] = position.z + offset;
 
+            m_pose.deviceIsConnected = true;
             m_pose.poseIsValid = true;
             m_pose.result = vr::TrackingResult_Running_OK;
 
+            vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
+        }
+        else {
+            m_pose.deviceIsConnected = true;
+            m_pose.poseIsValid = false;
             vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
         }
     }
