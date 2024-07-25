@@ -232,7 +232,7 @@ void TrackedController::UpdatePose(LeapHand hand)
             m_pose.qRotation.z = rotation.z;
             m_pose.qRotation.w = rotation.w;
 
-            float offset = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? -((-0.001f * hand.arm.prev_joint.y - -0.001f * hand.arm.next_joint.y)) : vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffset");
+            float offset = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? -((-0.001f * hand.arm.prev_joint.y - -0.001f * hand.arm.next_joint.y)) : -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffset");
 
             glm::vec4 position = matrix * zeroPoint;
             m_pose.vecPosition[0] = position.x;
