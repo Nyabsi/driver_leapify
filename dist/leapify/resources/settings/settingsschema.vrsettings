@@ -19,6 +19,13 @@
         "off_label": "Disabled"
       },
       {
+        "name": "/settings/driver_leapify/automaticControllerSwitching",
+        "control": "toggle",
+        "label": "Auto Switch Hand Tracking And Controllers",
+        "on_label": "Enabled",
+        "off_label": "Disabled"
+      },
+      {
         "name": "/settings/driver_leapify/automaticHandOffset",
         "control": "toggle",
         "label": "Automatic Hand Offset (Recommended)",

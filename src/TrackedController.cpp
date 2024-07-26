@@ -200,6 +200,23 @@ void TrackedController::UpdatePose(LeapHand hand)
 {
     if (vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled") && !vr::VRSettings()->GetBool("driver_leapify", "skeletalDataPassthrough"))
     {
+        bool isControllerConnected = false;
+        for (auto& state : StateManager::Get().getControllerStates())
+        {
+            if (state.second == true)
+                isControllerConnected = true;
+        }
+
+        if (isControllerConnected && vr::VRSettings()->GetBool("driver_leapify", "automaticControllerSwitching"))
+        {
+            m_pose.deviceIsConnected = false;
+            m_pose.poseIsValid = false;
+        }
+        else {
+            m_pose.deviceIsConnected = hand.role != vr::TrackedControllerRole_Invalid;
+            m_pose.poseIsValid = false;
+        }
+
         if (hand.role != vr::TrackedControllerRole_Invalid)
         {
             memcpy(m_pose.vecWorldFromDriverTranslation, ms_headPosition, sizeof(double) * 3U);
@@ -239,15 +256,12 @@ void TrackedController::UpdatePose(LeapHand hand)
             m_pose.vecPosition[1] = position.y;
             m_pose.vecPosition[2] = position.z + offset;
 
-            m_pose.deviceIsConnected = true;
             m_pose.poseIsValid = true;
             m_pose.result = vr::TrackingResult_Running_OK;
-
+            
             vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
         }
         else {
-            m_pose.deviceIsConnected = true;
-            m_pose.poseIsValid = false;
             vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
         }
     }

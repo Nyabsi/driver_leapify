@@ -4,6 +4,7 @@
 #include <openvr_driver.h>
 
 #include <vector>
+#include <map>
 
 struct TransformHook {
 	vr::VRInputComponentHandle_t handle;
@@ -52,8 +53,12 @@ public:
 	}
 
 	void clearTransformHooks() { m_transformHooks.clear(); }
+
+	void updateControllerState(int device, bool newState) { m_controllerStates[device] = newState; }
+	std::map<int, bool> getControllerStates() { return m_controllerStates; }
 private:
 	vr::VRBoneTransform_t* m_passThroughTransformLeft { nullptr };
-	vr::VRBoneTransform_t* m_passThroughTransformRight{ nullptr };
+	vr::VRBoneTransform_t* m_passThroughTransformRight { nullptr };
 	std::vector<TransformHook> m_transformHooks { };
+	std::map<int, bool> m_controllerStates { };
 };
