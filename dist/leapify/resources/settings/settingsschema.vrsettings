@@ -1,49 +1,49 @@
 [
   {
-    "title": "Leapify",
+    "title": "#{leapify}Settings_Title",
     "show_without_hmd": true,
     "values": [
       {
         "name": "/settings/driver_leapify/handTrackingEnabled",
         "control": "toggle",
-        "label": "Hand Tracking",
-        "on_label": "Enabled",
-        "off_label": "Disabled"
+        "label": "#{leapify}Setting_hand_tracking",
+        "on_label": "#{leapify}Setting_toggle_on",
+        "off_label": "#{leapify}Setting_toggle_off"
       },
       {
         "name": "/settings/driver_leapify/skeletalDataPassthrough",
         "control": "toggle",
         "advanced_only": true,
-        "label": "Skeletal data passthrough",
-        "on_label": "Enabled",
-        "off_label": "Disabled"
+        "label": "#{leapify}Setting_skeletal_passthrough",
+        "on_label": "#{leapify}Setting_toggle_on",
+        "off_label": "#{leapify}Setting_toggle_off"
       },
       {
         "name": "/settings/driver_leapify/positionalDataPassthrough",
         "control": "toggle",
         "advanced_only": true,
-        "label": "Position data passthrough (Extension)",
-        "on_label": "Enabled",
-        "off_label": "Disabled"
+        "label": "#{leapify}Setting_position_passthrough",
+        "on_label": "#{leapify}Setting_toggle_on",
+        "off_label": "#{leapify}Setting_toggle_off"
       },
       {
         "name": "/settings/driver_leapify/automaticControllerSwitching",
         "control": "toggle",
-        "label": "Auto Switch Hand Tracking And Controllers",
-        "on_label": "Enabled",
-        "off_label": "Disabled"
+        "label": "#{leapify}Setting_automatic_switch",
+        "on_label": "#{leapify}Setting_toggle_on",
+        "off_label": "#{leapify}Setting_toggle_off"
       },
       {
         "name": "/settings/driver_leapify/automaticHandOffset",
         "control": "toggle",
-        "label": "Automatic Hand Offset (Recommended)",
-        "on_label": "Enabled",
-        "off_label": "Disabled"
+        "label": "#{leapify}Setting_automatic_offset",
+        "on_label": "#{leapify}Setting_toggle_on",
+        "off_label": "#{leapify}Setting_toggle_off"
       },
       {
         "name": "/settings/driver_leapify/manualHandOffset",
         "control": "slider",
-        "label": "Manual Hand Offset (mm)",
+        "label": "#{leapify}Setting_manual_offset",
         "type": "float",
         "min": -500,
         "max": 500,
@@ -55,9 +55,9 @@
       {
         "name": "/settings/driver_leapify/blockOculus",
         "control": "toggle",
-        "label": "Block Meta/Oculus Controllers",
-        "on_label": "Enabled",
-        "off_label": "Disabled"
+        "label": "#{leapify}Setting_block_oculus",
+        "on_label": "#{leapify}Setting_toggle_on",
+        "off_label": "#{leapify}Setting_toggle_off"
       }
     ]
   }

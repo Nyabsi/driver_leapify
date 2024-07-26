@@ -4,6 +4,10 @@
 
 SteamVR for Leapmotion Controller 1 & 2 (*And other compatible controllers*) which strives for seamless co-existing with controllers.
 
+## ! DISCLAIMER !
+
+Currently SteamVR has bug where the menu will entirely break when HMD is not connected, if drivers define custom Menus, please connect driver before using this driver, or SteamVR **will** crash.
+
 ## Installation
 
 ### Step 1
