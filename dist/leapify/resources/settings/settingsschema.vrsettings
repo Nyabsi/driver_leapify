@@ -30,7 +30,7 @@
         "control": "slider",
         "label": "Manual Hand Offset (mm)",
         "type": "float",
-        "min": 0,
+        "min": -100,
         "max": 100,
         "decimals": 1,
         "requires": {
