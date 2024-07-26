@@ -19,6 +19,14 @@
         "off_label": "Disabled"
       },
       {
+        "name": "/settings/driver_leapify/positionalDataPassthrough",
+        "control": "toggle",
+        "advanced_only": true,
+        "label": "Position data passthrough (Extension)",
+        "on_label": "Enabled",
+        "off_label": "Disabled"
+      },
+      {
         "name": "/settings/driver_leapify/automaticControllerSwitching",
         "control": "toggle",
         "label": "Auto Switch Hand Tracking And Controllers",

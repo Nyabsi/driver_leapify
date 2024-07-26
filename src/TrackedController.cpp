@@ -158,6 +158,7 @@ void TrackedController::DebugRequest(const char* pchRequest, char* pchResponseBu
 
 vr::DriverPose_t TrackedController::GetPose()
 {
+    StateManager::Get().setLeapPose(m_pose);
     return m_pose;
 }
 
@@ -200,23 +201,31 @@ void TrackedController::UpdateHMDCoordinates()
 
 void TrackedController::UpdatePose(LeapHand hand)
 {
-    if (vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled") && !vr::VRSettings()->GetBool("driver_leapify", "skeletalDataPassthrough"))
+    if (vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled"))
     {
-        bool isControllerConnected = false;
-        for (auto& state : StateManager::Get().getControllerStates())
-        {
-            if (state.second == true)
-                isControllerConnected = true;
-        }
-
-        if (isControllerConnected && vr::VRSettings()->GetBool("driver_leapify", "automaticControllerSwitching"))
+        if (vr::VRSettings()->GetBool("driver_leapify", "skeletalDataPassthrough") || vr::VRSettings()->GetBool("driver_leapify", "positionalDataPassthrough"))
         {
             m_pose.deviceIsConnected = false;
             m_pose.poseIsValid = false;
         }
-        else {
-            m_pose.deviceIsConnected = hand.role != vr::TrackedControllerRole_Invalid;
-            m_pose.poseIsValid = false;
+        else
+        {
+            bool isControllerConnected = false;
+            for (auto& state : StateManager::Get().getControllerStates())
+            {
+                if (state.second == true)
+                    isControllerConnected = true;
+            }
+
+            if (isControllerConnected && vr::VRSettings()->GetBool("driver_leapify", "automaticControllerSwitching"))
+            {
+                m_pose.deviceIsConnected = false;
+                m_pose.poseIsValid = false;
+            }
+            else {
+                m_pose.deviceIsConnected = true;
+                m_pose.poseIsValid = false;
+            }
         }
 
         if (hand.role != vr::TrackedControllerRole_Invalid)

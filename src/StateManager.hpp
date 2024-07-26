@@ -56,9 +56,13 @@ public:
 
 	void updateControllerState(int device, bool newState) { m_controllerStates[device] = newState; }
 	std::map<int, bool> getControllerStates() { return m_controllerStates; }
+
+	vr::DriverPose_t getLeapPose() const { return m_passthroughPose; }
+	void setLeapPose(vr::DriverPose_t pose) { m_passthroughPose = pose; }
 private:
 	vr::VRBoneTransform_t* m_passThroughTransformLeft { nullptr };
 	vr::VRBoneTransform_t* m_passThroughTransformRight { nullptr };
 	std::vector<TransformHook> m_transformHooks { };
 	std::map<int, bool> m_controllerStates { };
+	vr::DriverPose_t m_passthroughPose { };
 };

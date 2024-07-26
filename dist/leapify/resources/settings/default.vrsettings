@@ -5,6 +5,7 @@
     "blocked_by_safe_mode": false,
     "handTrackingEnabled": true,
     "skeletalDataPassthrough": false,
+    "positionalDataPassthrough": false,
     "automaticControllerSwitching": false,
     "automaticHandOffset": true,
     "manualHandOffset": 0.0,
