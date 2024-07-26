@@ -122,6 +122,7 @@ private:
     std::array<glm::quat, 20U> m_boneRotations;
     glm::vec3 m_position;
     glm::quat m_rotation;
+    bool m_isControllerConnected { };
 
 	static double ms_headPosition[3U];
 	static vr::HmdQuaternion_t ms_headRotation;

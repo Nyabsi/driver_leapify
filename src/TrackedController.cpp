@@ -210,14 +210,15 @@ void TrackedController::UpdatePose(LeapHand hand)
         }
         else
         {
-            bool isControllerConnected = false;
+            m_isControllerConnected = false;
+
             for (auto& state : StateManager::Get().getControllerStates())
             {
                 if (state.second == true)
-                    isControllerConnected = true;
+                    m_isControllerConnected = true;
             }
 
-            if (isControllerConnected && vr::VRSettings()->GetBool("driver_leapify", "automaticControllerSwitching"))
+            if (m_isControllerConnected && vr::VRSettings()->GetBool("driver_leapify", "automaticControllerSwitching"))
             {
                 m_pose.deviceIsConnected = false;
                 m_pose.poseIsValid = false;
@@ -228,7 +229,7 @@ void TrackedController::UpdatePose(LeapHand hand)
             }
         }
 
-        if (hand.role != vr::TrackedControllerRole_Invalid)
+        if (hand.role != vr::TrackedControllerRole_Invalid && !m_isControllerConnected)
         {
             memcpy(m_pose.vecWorldFromDriverTranslation, ms_headPosition, sizeof(double) * 3U);
             memcpy(&m_pose.qWorldFromDriverRotation, &ms_headRotation, sizeof(vr::HmdQuaternion_t));
