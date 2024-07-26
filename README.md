@@ -25,12 +25,15 @@ Start SteamVR and it should be working.
 - Cross-platform (Windows, Linux)
 - Fallback to SteamVR controllers, if Hand Tracking is disabled
 - Hand offset estimation
+- Automatically Switch between Controllers and Hand Tracking
+- Skeletal data passthrough (use Leapmotion skeletal data with any other controller)
 - Settings integration into SteamVR
 
 ## TODO
 
 - Index Emulation for legacy SteamVR Input applications
-- System Button + Trigger
+- Add Joycon Input back
+- System Button + Trigger binds
 
 ## Configuration
 
@@ -42,7 +45,7 @@ Navigate to SteamVR -> Settings -> Leapify
 
 Navigate to SteamVR Settings -> Leapify
 
-![settings](https://github.com/user-attachments/assets/a0df2d1d-2461-4967-b7b0-81e69a45a591)
+![settings](https://github.com/user-attachments/assets/d3bb0dcf-863d-48ff-b028-b53fffc6d3e9)
 
 ## Building
 
