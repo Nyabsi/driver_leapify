@@ -7,6 +7,8 @@
 #include <glm/vec3.hpp>
 #include <glm/gtx/quaternion.hpp>
 
+#include <cstring>
+
 using namespace std::chrono_literals;
 
 bool LeapConnection::Init()

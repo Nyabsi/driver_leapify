@@ -2,6 +2,8 @@
 #include <StateManager.hpp>
 #include <Math.hpp>
 
+#include <cstring>
+
 constexpr glm::mat4 identityMatrix = glm::mat4(1.0f);
 constexpr glm::vec4 zeroPoint = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 constexpr float pi = glm::pi<float>();
