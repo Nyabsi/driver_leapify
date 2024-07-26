@@ -55,8 +55,8 @@ jobs:
     - name: Create distributable
       if: matrix.os == 'ubuntu-latest'
       run: |
-        mkdir -p ${{ github.workspace }}/dist/bin/linux64
-        cp ${{ github.workspace }}/vendor/LeapSDK/lib/x64/*.so ${{ github.workspace }}/dist/bin/linux64
+        mkdir -p ${{ github.workspace }}/dist/leapify/bin/linux64
+        cp ${{ github.workspace }}/vendor/LeapSDK/lib/x64/*.so ${{ github.workspace }}/dist/leapify/bin/linux64
         cp ${{ steps.strings.outputs.build-output-dir }}/libdriver_leapify.so ${{ github.workspace }}/dist/leapify/bin/linux64
 
     - name: Upload a Build Artifact
@@ -72,9 +72,9 @@ jobs:
     - name: Create distributable
       if: matrix.os == 'windows-latest'
       run: |
-        mkdir -p ${{ github.workspace }}/dist/bin/win64
-        cp ${{ github.workspace }}/vendor/LeapSDK/lib/x64/*.dll ${{ github.workspace }}/dist/bin/win64
-        cp ${{ steps.strings.outputs.build-output-dir }}/Release/driver_leapify.dll ${{ github.workspace }}/dist/bin/win64
+        mkdir -p ${{ github.workspace }}/dist/leapify/bin/win64
+        cp ${{ github.workspace }}/vendor/LeapSDK/lib/x64/*.dll ${{ github.workspace }}/dist/leapify/bin/win64
+        cp ${{ steps.strings.outputs.build-output-dir }}/Release/driver_leapify.dll ${{ github.workspace }}/dist/leapify/bin/win64
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4.3.4

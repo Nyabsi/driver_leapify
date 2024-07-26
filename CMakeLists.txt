@@ -34,11 +34,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${EXTERNAL_DIR}/openvr/header
 target_include_directories(${PROJECT_NAME} PRIVATE ${EXTERNAL_DIR}/rcmp/include)
 target_include_directories(${PROJECT_NAME} PRIVATE ${EXTERNAL_DIR}/glm)
 
-if (WIN32)
-	target_link_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/LeapSDK/lib/x64)
-else()
-	message(FATAL_ERROR "Linux not supported yet...")
-endif()
+target_link_directories(${PROJECT_NAME} PRIVATE ${VENDOR_DIR}/LeapSDK/lib/x64)
 
 add_subdirectory(${EXTERNAL_DIR}/rcmp)
 
