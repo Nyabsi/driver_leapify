@@ -37,8 +37,8 @@
         "control": "slider",
         "label": "Manual Hand Offset (mm)",
         "type": "float",
-        "min": -100,
-        "max": 100,
+        "min": -500,
+        "max": 500,
         "decimals": 1,
         "requires": {
           "/settings/driver_leapify/automaticHandOffset": false
