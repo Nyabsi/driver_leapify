@@ -59,10 +59,9 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                         {
                             pose = StateManager::Get().getLeapPose(static_cast<vr::ETrackedControllerRole>(role));
                             pose.deviceIsConnected = newPose.deviceIsConnected;
-                            orig(self, unWhichDevice, pose, unPoseStructSize);
-                            return;
                         }
                     }
+
                     orig(self, unWhichDevice, pose, unPoseStructSize);
            });
 
