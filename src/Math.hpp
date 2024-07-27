@@ -42,12 +42,12 @@ void ConvertRotation(const LEAP_QUATERNION& p_src, glm::quat& p_dst)
 
 void ConvertVector3(const vr::HmdVector4_t& src, glm::vec3& dst)
 {
-    for (size_t i = 0U; i < 3; i++) 
+    for (auto i = 0U; i < 3; i++)
         dst[i] = src.v[i];
 }
 
 void ConvertVector3(const glm::vec3& src, vr::HmdVector4_t& dst)
 {
-    for (size_t i = 0U; i < 3; i++) 
+    for (auto i = 0U; i < 3; i++) 
         dst.v[i] = src[i];
 }

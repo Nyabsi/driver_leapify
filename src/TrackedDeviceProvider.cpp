@@ -30,8 +30,6 @@ void TrackedDeviceProvider::Cleanup()
 
 void TrackedDeviceProvider::RunFrame()
 {
-    TrackedController::UpdateHMDCoordinates();
-
     LeapHand left { };
     LeapHand right { };
 

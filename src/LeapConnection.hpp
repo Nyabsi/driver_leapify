@@ -43,6 +43,6 @@ private:
 	std::atomic<uint32_t> m_DeviceCount { 0 };
 	std::atomic<LeapHand> m_LeftHand { };
 	std::atomic<LeapHand> m_RightHand { };
-	std::atomic<uint32_t> m_frameId { };
+	std::atomic<int64_t> m_frameId { };
 	LEAP_CONNECTION m_connection { nullptr };
 };
