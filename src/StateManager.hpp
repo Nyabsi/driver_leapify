@@ -57,12 +57,27 @@ public:
 	void updateControllerState(int device, bool newState) { m_controllerStates[device] = newState; }
 	std::map<int, bool> getControllerStates() { return m_controllerStates; }
 
-	vr::DriverPose_t getLeapPose() const { return m_passthroughPose; }
-	void setLeapPose(vr::DriverPose_t pose) { m_passthroughPose = pose; }
+	vr::DriverPose_t getLeapPose(vr::ETrackedControllerRole role) const
+	{ 
+		if (role == vr::TrackedControllerRole_LeftHand)
+			return m_passthroughPoseLeft;
+		if (role == vr::TrackedControllerRole_RightHand)
+			return m_passthroughPoseRight;
+		return vr::DriverPose_t();
+	}
+
+	void setLeapPose(vr::DriverPose_t pose, vr::ETrackedControllerRole role)
+	{ 
+		if (role == vr::TrackedControllerRole_LeftHand)
+			m_passthroughPoseLeft = pose;
+		else
+			m_passthroughPoseRight = pose;
+	}
 private:
 	vr::VRBoneTransform_t* m_passThroughTransformLeft { nullptr };
 	vr::VRBoneTransform_t* m_passThroughTransformRight { nullptr };
 	std::vector<TransformHook> m_transformHooks { };
 	std::map<int, bool> m_controllerStates { };
-	vr::DriverPose_t m_passthroughPose { };
+	vr::DriverPose_t m_passthroughPoseLeft { };
+	vr::DriverPose_t m_passthroughPoseRight { };
 };

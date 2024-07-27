@@ -155,7 +155,7 @@ void TrackedController::DebugRequest(const char* pchRequest, char* pchResponseBu
 
 vr::DriverPose_t TrackedController::GetPose()
 {
-    StateManager::Get().setLeapPose(m_pose);
+    StateManager::Get().setLeapPose(m_pose, m_role);
     return m_pose;
 }
 
@@ -183,6 +183,8 @@ void TrackedController::UpdatePose(LeapHand hand)
 {
     if (vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled"))
     {
+        m_isControllerConnected = false;
+
         if (vr::VRSettings()->GetBool("driver_leapify", "skeletalDataPassthrough") || vr::VRSettings()->GetBool("driver_leapify", "positionalDataPassthrough"))
         {
             m_pose.deviceIsConnected = false;
@@ -190,8 +192,6 @@ void TrackedController::UpdatePose(LeapHand hand)
         }
         else
         {
-            m_isControllerConnected = false;
-
             for (auto& state : StateManager::Get().getControllerStates())
             {
                 if (state.second == true)

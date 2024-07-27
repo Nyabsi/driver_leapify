@@ -41,7 +41,9 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                     auto pose = newPose;
                     auto props = vr::VRProperties()->TrackedDeviceToPropertyContainer(unWhichDevice);
                     auto manufacturer = vr::VRProperties()->GetStringProperty(props, vr::ETrackedDeviceProperty::Prop_ManufacturerName_String);
+                    auto trackingSystem = vr::VRProperties()->GetStringProperty(props, vr::ETrackedDeviceProperty::Prop_TrackingSystemName_String);
                     auto device_class = vr::VRProperties()->GetInt32Property(props, vr::ETrackedDeviceProperty::Prop_DeviceClass_Int32);
+                    auto role = vr::VRProperties()->GetInt32Property(props, vr::ETrackedDeviceProperty::Prop_ControllerRoleHint_Int32);
 
                     if (device_class == vr::TrackedDeviceClass_Controller && manufacturer != "Ultraleap")
                     {
@@ -53,9 +55,9 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                             pose.poseIsValid = false;
                         }
 
-                        if (manufacturer == "Leapify_Extension" && vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled") && vr::VRSettings()->GetBool("driver_leapify", "positionalDataPassthrough"))
+                        if (trackingSystem == "Leapify_Extension" && vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled") && vr::VRSettings()->GetBool("driver_leapify", "positionalDataPassthrough"))
                         {
-                            pose = StateManager::Get().getLeapPose();
+                            pose = StateManager::Get().getLeapPose(static_cast<vr::ETrackedControllerRole>(role));
                             pose.deviceIsConnected = newPose.deviceIsConnected;
                             orig(self, unWhichDevice, pose, unPoseStructSize);
                             return;
