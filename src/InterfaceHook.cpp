@@ -47,7 +47,7 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
 
                     if (device_class == vr::TrackedDeviceClass_Controller && manufacturer != "Ultraleap")
                     {
-                        StateManager::Get().updateControllerState(unWhichDevice, pose.deviceIsConnected || pose.poseIsValid);
+                        StateManager::Get().updateControllerState(unWhichDevice, pose.deviceIsConnected);
 
                         if (manufacturer == "Oculus" && vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled") && vr::VRSettings()->GetBool("driver_leapify", "blockOculus"))
                         {
