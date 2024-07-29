@@ -4,21 +4,24 @@
 
 SteamVR for Leapmotion Controller 1 & 2 (*And other compatible controllers*) which strives for seamless co-existing with controllers.
 
-## ! DISCLAIMER !
+## prerequisite
 
-Currently SteamVR has bug where the menu will entirely break when HMD is not connected, if drivers define custom Menus, please connect driver before using this driver, or SteamVR **will** crash.
+- Leapmotion controller (LMC1, LMC2, IR170, etc..)
+- HMD, this driver needs a Headset to work, this is a *SteamVR* limitation.
 
 ## Installation
 
 ### Step 1
 
-Install [Ultraleap Software](https://developer.leapmotion.com/tracking-software-download) for your device (use Gemini for LMC 1, Hyperion for LMC2)
+Install [Ultraleap Software](https://developer.leapmotion.com/tracking-software-download) for your device (use Gemini for LMC 1, Hyperion for LMC 2)
+
+*If you have issues activating Hyperion license, allow `LeapSvc.exe` in your firewall, if it still doesn't work. Contact Ultraleap directly.
 
 ### Step 2
 
 Download [the driver](https://github.com/Nyabsi/driver_leap/releases) and extract it to `C:\\Program Files (x86)\\Steam\\steamapps\\common\\SteamVR\\drivers\\` 
 
-(NOTE: this path may vary from your Steam installation location, or choice of operating system)
+(NOTE: this path may vary from your Steam installation location and choice of operating system)
 
 ### Step 3
 
@@ -26,18 +29,19 @@ Start SteamVR and it should be working.
 
 ## Features
 
-- Cross-platform (Windows, Linux)
-- Fallback to SteamVR controllers, if Hand Tracking is disabled
+- Cross-platform support
+- Switching between controllers and Hand Tracking
 - Hand offset estimation
-- Automatically Switch between Controllers and Hand Tracking
-- Skeletal data passthrough (use Leapmotion skeletal data with any other controller)
 - Settings integration into SteamVR
 
-## TODO
+## Advanced Features
 
-- Index Emulation for legacy SteamVR Input applications
-- Add Joycon Input back
-- System Button + Trigger binds
+- Skeletal data passthrough
+- Positional data passthrough (only for Extensions)
+
+## Extensions
+
+- TBA
 
 ## Configuration
 
@@ -53,7 +57,9 @@ Navigate to SteamVR Settings -> Leapify
 
 ## Building
 
-This project is built with CMake and Visual Studio 2022 on Windows. For Linux, you can use instructions below for building on Linux.
+This project is built with CMake and Visual Studio 2022 on Windows.
+
+You can use instructions below for building on Linux.
 
 ```sh
 git submodule init && git submodule update
