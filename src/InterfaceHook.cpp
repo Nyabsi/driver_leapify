@@ -55,7 +55,7 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                             pose.poseIsValid = false;
                         }
 
-                        if (trackingSystem == "Leapify_Extension" && vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled") && vr::VRSettings()->GetBool("driver_leapify", "positionalDataPassthrough"))
+                        if (vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled") && vr::VRSettings()->GetBool("driver_leapify", "positionalDataPassthrough"))
                         {
                             pose = StateManager::Get().getLeapPose(static_cast<vr::ETrackedControllerRole>(role));
                             pose.deviceIsConnected = newPose.deviceIsConnected;
