@@ -36,6 +36,14 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
 
        if (!m_IVRServerDriverHostHooked_006)
        {
+        
+           rcmp::hook_indirect_function<bool(void* self, const char *pchDeviceSerialNumber, vr::ETrackedDeviceClass eDeviceClass, vr::ITrackedDeviceServerDriver *pDriver)>(vtable + 0 + vtable_offset, [this](auto orig, void* self, const char *pchDeviceSerialNumber, vr::ETrackedDeviceClass eDeviceClass, vr::ITrackedDeviceServerDriver *pDriver) -> bool {
+                    std::string pchSerial(pchDeviceSerialNumber);
+                    if (pchSerial != "LMHAND-0000" && pchSerial != "LMHAND-0001")
+                        return orig(self, pchDeviceSerialNumber, eDeviceClass, pDriver);
+                   return false;
+           });
+
            rcmp::hook_indirect_function<void(*)(void* self, uint32_t unWhichDevice, const vr::DriverPose_t& newPose, uint32_t unPoseStructSize)>(vtable + 1 + vtable_offset, [](auto orig, void* self, uint32_t unWhichDevice, const vr::DriverPose_t& newPose, uint32_t unPoseStructSize) -> void
            {
                     auto pose = newPose;
