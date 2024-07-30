@@ -51,13 +51,6 @@
         "requires": {
           "/settings/driver_leapify/automaticHandOffset": false
         }
-      },
-      {
-        "name": "/settings/driver_leapify/blockOculus",
-        "control": "toggle",
-        "label": "#{leapify}Setting_block_oculus",
-        "on_label": "#{leapify}Setting_toggle_on",
-        "off_label": "#{leapify}Setting_toggle_off"
       }
     ]
   }

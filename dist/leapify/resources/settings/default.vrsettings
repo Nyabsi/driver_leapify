@@ -8,7 +8,6 @@
     "positionalDataPassthrough": false,
     "automaticControllerSwitching": false,
     "automaticHandOffset": true,
-    "manualHandOffset": 0.0,
-    "blockOculus": false
+    "manualHandOffset": 0.0
   }
 }
