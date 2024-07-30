@@ -49,7 +49,7 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                     auto pose = newPose;
                     auto props = vr::VRProperties()->TrackedDeviceToPropertyContainer(unWhichDevice);
                     auto manufacturer = vr::VRProperties()->GetStringProperty(props, vr::ETrackedDeviceProperty::Prop_ManufacturerName_String);
-                    auto trackingSystem = vr::VRProperties()->GetStringProperty(props, vr::ETrackedDeviceProperty::Prop_TrackingSystemName_String);
+                    auto type = vr::VRProperties()->GetStringProperty(props, vr::ETrackedDeviceProperty::Prop_ControllerType_String);
                     auto device_class = vr::VRProperties()->GetInt32Property(props, vr::ETrackedDeviceProperty::Prop_DeviceClass_Int32);
                     auto role = vr::VRProperties()->GetInt32Property(props, vr::ETrackedDeviceProperty::Prop_ControllerRoleHint_Int32);
 
@@ -61,6 +61,17 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                         {
                             pose = StateManager::Get().getLeapPose(static_cast<vr::ETrackedControllerRole>(role));
                             pose.deviceIsConnected = newPose.deviceIsConnected;
+                        }
+                    }
+
+                    if (device_class == vr::TrackedDeviceClass_GenericTracker)
+                    {
+                        if (vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled") && vr::VRSettings()->GetBool("driver_leapify", "fallbackTrackerPosition"))
+                        {
+                            if (type == "vive_tracker_handed" || type == "lighthouse_tracker" || type == "etee_tracker_handed")
+                            {
+                                StateManager::Get().setFallbackPose(pose, static_cast<vr::ETrackedControllerRole>(role));
+                            }
                         }
                     }
 

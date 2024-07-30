@@ -1,13 +1,14 @@
 {
-    "language_tag": "en_US",
+  "language_tag": "en_US",
 
-    "Settings_Title": "Leapify",
-    "Setting_toggle_on": "Enabled",
-	"Setting_toggle_off": "Disabled",
-    "Setting_hand_tracking": "Hand Tracking",
-    "Setting_skeletal_passthrough": "Skeletal data passthrough",
-    "Setting_position_passthrough": "Position data passthrough",
-    "Setting_automatic_switch": "Auto Switch Hand Tracking And Controllers",
-    "Setting_automatic_offset": "Automatic Hand Offset",
-    "Setting_manual_offset": "Manual Hand Offset (mm)"
+  "Settings_Title": "Leapify",
+  "Setting_toggle_on": "Enabled",
+  "Setting_toggle_off": "Disabled",
+  "Setting_hand_tracking": "Hand Tracking",
+  "Setting_skeletal_passthrough": "Skeletal data passthrough",
+  "Setting_position_passthrough": "Position data passthrough",
+  "Setting_automatic_switch": "Auto Switch Hand Tracking And Controllers",
+  "Setting_automatic_offset": "Automatic Hand Offset",
+  "Setting_fallback_tracker": "Fallback to Tracker position",
+  "Setting_manual_offset": "Manual Hand Offset (mm)"
 }

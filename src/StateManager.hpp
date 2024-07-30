@@ -73,6 +73,23 @@ public:
 		else
 			m_passthroughPoseRight = pose;
 	}
+
+	vr::DriverPose_t getFallbackPose(vr::ETrackedControllerRole role) const
+	{
+		if (role == vr::TrackedControllerRole_LeftHand)
+			return m_fallbackPoseLeft;
+		if (role == vr::TrackedControllerRole_RightHand)
+			return m_fallbackPoseRight;
+		return vr::DriverPose_t();
+	}
+
+	void setFallbackPose(vr::DriverPose_t pose, vr::ETrackedControllerRole role)
+	{
+		if (role == vr::TrackedControllerRole_LeftHand)
+			m_fallbackPoseLeft = pose;
+		else
+			m_fallbackPoseRight = pose;
+	}
 private:
 	vr::VRBoneTransform_t* m_passThroughTransformLeft { nullptr };
 	vr::VRBoneTransform_t* m_passThroughTransformRight { nullptr };
@@ -80,4 +97,6 @@ private:
 	std::map<int, bool> m_controllerStates { };
 	vr::DriverPose_t m_passthroughPoseLeft { };
 	vr::DriverPose_t m_passthroughPoseRight { };
+	vr::DriverPose_t m_fallbackPoseLeft{ };
+	vr::DriverPose_t m_fallbackPoseRight{ };
 };

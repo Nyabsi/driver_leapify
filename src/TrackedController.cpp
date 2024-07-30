@@ -129,7 +129,8 @@ void TrackedController::DebugRequest(const char* pchRequest, char* pchResponseBu
 
 vr::DriverPose_t TrackedController::GetPose()
 {
-    StateManager::Get().setLeapPose(m_pose, m_role);
+    if (vr::VRSettings()->GetBool("driver_leapify", "positionalDataPassthrough"))
+        StateManager::Get().setLeapPose(m_pose, m_role);
     return m_pose;
 }
 
@@ -233,6 +234,8 @@ void TrackedController::UpdatePose(LeapHand hand)
             vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
         }
         else {
+            if (vr::VRSettings()->GetBool("driver_leapify", "fallbackTrackerPosition"))
+                m_pose = StateManager::Get().getFallbackPose(m_role);
             vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
         }
     }

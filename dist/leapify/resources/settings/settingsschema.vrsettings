@@ -41,6 +41,16 @@
         "off_label": "#{leapify}Setting_toggle_off"
       },
       {
+        "name": "/settings/driver_leapify/fallbackTrackerPosition",
+        "control": "toggle",
+        "label": "#{leapify}Setting_fallback_tracker",
+        "on_label": "#{leapify}Setting_toggle_on",
+        "off_label": "#{leapify}Setting_toggle_off",
+        "requires": {
+          "/settings/driver_leapify/positionalDataPassthrough": false
+        }
+      },
+      {
         "name": "/settings/driver_leapify/manualHandOffset",
         "control": "slider",
         "label": "#{leapify}Setting_manual_offset",
