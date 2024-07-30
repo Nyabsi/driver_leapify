@@ -21,53 +21,34 @@ TrackedController::TrackedController(vr::ETrackedControllerRole role)
 {
     m_role = role;
 
-    m_pose = { 0 };
-    m_pose.deviceIsConnected = false;
-
-    for (size_t i = 0U; i < 3; i++)
-    {
-        m_pose.vecAcceleration[i] = 0;
-        m_pose.vecAngularAcceleration[i] = 0;
-        m_pose.vecAngularVelocity[i] = 0;
-        m_pose.vecDriverFromHeadTranslation[i] = 0;
-    }
-
-    m_pose.poseTimeOffset = .0;
-    m_pose.qDriverFromHeadRotation = { 1, 0, 0, 0 };
-    m_pose.qRotation = { 1, 0, 0, 0 };
-    m_pose.qWorldFromDriverRotation = { 1, 0, 0, 0 };
-    m_pose.result = vr::TrackingResult_Uninitialized;
-    m_pose.shouldApplyHeadModel = false;
-    m_pose.willDriftInYaw = false;
-
     for (size_t i = 0U; i < SB_Count; i++)
         m_boneTransform[i] = g_openHandGesture[i];
 
     if (m_role == vr::TrackedControllerRole_RightHand)
     {
-        // Transformation inversion along 0YZ plane
-        for (size_t i = 1U; i < SB_Count; i++)
+        for (size_t i = 1; i < SB_Count; i++)
         {
             m_boneTransform[i].position.v[0] *= -1.f;
 
             switch (i)
             {
-            case SB_Wrist:
-            {
-                m_boneTransform[i].orientation.y *= -1.f;
-                m_boneTransform[i].orientation.z *= -1.f;
-            } break;
-            case SB_Thumb0:
-            case SB_IndexFinger0:
-            case SB_MiddleFinger0:
-            case SB_RingFinger0:
-            case SB_PinkyFinger0:
-            {
-                m_boneTransform[i].orientation.z *= -1.f;
-                std::swap(m_boneTransform[i].orientation.x, m_boneTransform[i].orientation.w);
-                m_boneTransform[i].orientation.w *= -1.f;
-                std::swap(m_boneTransform[i].orientation.y, m_boneTransform[i].orientation.z);
-            } break;
+                case SB_Wrist:
+                {
+                    m_boneTransform[i].orientation.y *= -1.f;
+                    m_boneTransform[i].orientation.z *= -1.f;
+                } break;
+                case SB_Thumb0:
+                case SB_IndexFinger0:
+                case SB_MiddleFinger0:
+                case SB_RingFinger0:
+                case SB_PinkyFinger0:
+                {
+                    m_boneTransform[i].orientation.z *= -1.f;
+                    std::swap(m_boneTransform[i].orientation.x, m_boneTransform[i].orientation.w);
+                    m_boneTransform[i].orientation.w *= -1.f;
+                    std::swap(m_boneTransform[i].orientation.y, m_boneTransform[i].orientation.z);
+                    break;
+                }
             }
         }
     }
@@ -117,13 +98,6 @@ vr::EVRInitError TrackedController::Activate(uint32_t unObjectId)
         vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceNotReady_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_controller_status_error.png" : "{leapify}/icons//right_controller_status_error.png");
         vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceStandby_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_controller_status_off.png" : "{leapify}/icons//right_controller_status_off.png");
         vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceAlertLow_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_controller_status_ready_low.png" : "{leapify}/icons//right_controller_status_ready_low.png");
-
-        // vr::VRDriverInput()->CreateBooleanComponent(props, "/input/system/click", &DeviceController::get().getComponent(m_role == vr::TrackedControllerRole_LeftHand ? 0 : 1).override);
-        // vr::VRDriverInput()->CreateBooleanComponent(props, "/input/system/touch", &DeviceController::get().getComponent(m_role == vr::TrackedControllerRole_LeftHand ? 2 : 3).override);
-
-        // vr::VRDriverInput()->CreateBooleanComponent(props, "/input/trigger/click", &DeviceController::get().getComponent(m_role == vr::TrackedControllerRole_LeftHand ? 4 : 5).override);
-        // vr::VRDriverInput()->CreateBooleanComponent(props, "/input/trigger/touch", &DeviceController::get().getComponent(m_role == vr::TrackedControllerRole_LeftHand ? 6 : 7).override);
-        // vr::VRDriverInput()->CreateScalarComponent(props, "/input/trigger/value", &DeviceController::get().getComponent(m_role == vr::TrackedControllerRole_LeftHand ? 8 : 9).override, vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedOneSided);
 
         if (m_role == vr::TrackedControllerRole_LeftHand)
             vr::VRDriverInput()->CreateSkeletonComponent(props, "/input/skeleton/left", "/skeleton/hand/left", "/pose/raw", vr::VRSkeletalTracking_Full, nullptr, 0, &m_skeletonHandle);
@@ -224,11 +198,7 @@ void TrackedController::UpdatePose(LeapHand hand)
                 const glm::quat headRotation = glm::quat_cast(hmdMatrix);
                 memcpy(&m_pose.qWorldFromDriverRotation, &headRotation, sizeof(glm::quat));
 
-                glm::vec3 worldOffset = headRotation * glm::vec3(0.0f, 0.0f, 0.0f);
-
-                m_pose.vecWorldFromDriverTranslation[0] += worldOffset.x;
-                m_pose.vecWorldFromDriverTranslation[1] += worldOffset.y;
-                m_pose.vecWorldFromDriverTranslation[2] += worldOffset.z;
+                m_pose.qDriverFromHeadRotation.w = 1;
 
                 glm::quat root = headRotation * glm::quat(glm::radians(glm::vec3(0.0f, 0.0f, 0.0f)));
                 ConvertQuaternion(root, m_pose.qWorldFromDriverRotation);
@@ -280,7 +250,7 @@ void TrackedController::UpdateSkeletalPose(LeapHand hand)
     {
         for (size_t i = 0U; i < 5; i++)
         {
-            size_t index = GetFingerBoneIndex(i);
+            size_t index = i == 0 ? 2 : (i * 5) + 1;
             bool thumb = (i == 0);
 
             for (size_t j = 0, k = (thumb ? 3 : 4); j < k; j++)
@@ -311,7 +281,7 @@ void TrackedController::UpdateSkeletalPose(LeapHand hand)
         for (size_t i = HF_Thumb; i < HF_Count; i++)
         {
             glm::mat4 chainMatrix(wristMatrix);
-            const size_t l_chainIndex = GetFingerBoneIndex(i);
+            const size_t l_chainIndex = i == 0 ? 2 : (i * 5) + 1;
             for (size_t j = 0; j < ((i == HF_Thumb) ? 3 : 4); j++)
             {
                 ConvertVector3(m_boneTransform[l_chainIndex + j].position, position);
@@ -335,30 +305,6 @@ void TrackedController::UpdateSkeletalPose(LeapHand hand)
     }
 }
 
-size_t TrackedController::GetFingerBoneIndex(size_t id)
-{
-    size_t result = 0;
-    switch (id)
-    {
-    case HF_Thumb:
-        result = SB_Thumb0;
-        break;
-    case HF_Index:
-        result = SB_IndexFinger0;
-        break;
-    case HF_Middle:
-        result = SB_MiddleFinger0;
-        break;
-    case HF_Ring:
-        result = SB_RingFinger0;
-        break;
-    case HF_Pinky:
-        result = SB_PinkyFinger0;
-        break;
-    }
-    return result;
-}
-
 void TrackedController::GetFingerBoneLocalRotation(LeapHand hand, size_t finger, size_t bone, glm::quat& result, bool ignoreMeta)
 {
     if ((finger >= 5) || (bone >= 4) || (ignoreMeta && (bone == 0)))
@@ -374,8 +320,8 @@ void TrackedController::GetFingerBoneLocalPosition(LeapHand hand, size_t finger,
         return;
 
     size_t l_index = finger * 4U + bone;
-    glm::vec3 parentPosition = (((bone == 0U) || (ignoreMeta && (bone == 1))) ? m_position : m_bonePositions[l_index - 1]);
-    glm::quat parentRotation = (((bone == 0U) || (ignoreMeta && (bone == 1))) ? m_rotation : m_boneRotations[l_index - 1]);
+    glm::vec3 parentPosition = (((bone == 0) || (ignoreMeta && (bone == 1))) ? m_position : m_bonePositions[l_index - 1]);
+    glm::quat parentRotation = (((bone == 0) || (ignoreMeta && (bone == 1))) ? m_rotation : m_boneRotations[l_index - 1]);
     glm::mat4 parentMatrix = glm::translate(identityMatrix, parentPosition) * glm::toMat4(parentRotation);
     glm::mat4 childMatrix = glm::translate(identityMatrix, m_bonePositions[l_index]) * glm::toMat4(m_boneRotations[l_index]);
     glm::mat4 childLocal = glm::inverse(parentMatrix) * childMatrix;
@@ -386,6 +332,7 @@ void TrackedController::ChangeBoneOrientation(glm::quat& rotation)
 {
     std::swap(rotation.x, rotation.z);
     rotation.z *= -1.f;
+
     if (m_role == vr::TrackedControllerRole_LeftHand)
     {
         rotation.x *= -1.f;
@@ -399,7 +346,10 @@ void TrackedController::ChangeBonePosition(glm::vec3& position)
     position.z *= -1.f;
 
     if (m_role == vr::TrackedControllerRole_LeftHand)
+    {
         position.x *= -1.f;
+        position.y *= 1.f;
+    }
 }
 
 void TrackedController::FixMetacarpalBone(glm::quat& rotation)

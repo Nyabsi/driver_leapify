@@ -103,7 +103,6 @@ private:
 	void UpdatePose(LeapHand hand);
 	void UpdateSkeletalPose(LeapHand hand);
 
-    size_t GetFingerBoneIndex(size_t id);
 	void GetFingerBoneLocalRotation(LeapHand hand, size_t p_finger, size_t p_bone, glm::quat& l_result, bool p_ignoreMeta);
 	void GetFingerBoneLocalPosition(LeapHand hand, size_t p_finger, size_t p_bone, glm::vec3& l_result, bool p_ignoreMeta);
     void ChangeBoneOrientation(glm::quat& p_rot);
