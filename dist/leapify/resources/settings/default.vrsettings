@@ -6,7 +6,7 @@
     "handTrackingEnabled": true,
     "skeletalDataPassthrough": false,
     "positionalDataPassthrough": false,
-    "automaticControllerSwitching": false,
+    "automaticControllerSwitching": true,
     "automaticHandOffset": true,
     "manualHandOffset": 0.0,
     "fallbackTrackerPosition": false,
