@@ -9,6 +9,10 @@
     "automaticControllerSwitching": false,
     "automaticHandOffset": true,
     "manualHandOffset": 0.0,
-    "fallbackTrackerPosition": false
+    "fallbackTrackerPosition": false,
+    "manualSensorOffsetEnabled": false,
+    "manualSensorOffsetX": 0.0,
+    "manualSensorOffsetY": 0.0,
+    "manualSensorOffsetZ": 0.0
   }
 }

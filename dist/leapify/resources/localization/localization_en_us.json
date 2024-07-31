@@ -10,5 +10,9 @@
   "Setting_automatic_switch": "Auto Switch Hand Tracking And Controllers",
   "Setting_automatic_offset": "Automatic Hand Offset",
   "Setting_fallback_tracker": "Fallback to Tracker position",
-  "Setting_manual_offset": "Manual Hand Offset (mm)"
+  "Setting_manual_offset": "Manual Hand Offset (mm)",
+  "Setting_manual_sensor_offset": "Adjust Sensor Offset (Expert)",
+  "Setting_manual_sensor_offset_x": "Sensor Offset (X)",
+  "Setting_manual_sensor_offset_y": "Sensor Offset (Y)",
+  "Setting_manual_sensor_offset_z": "Sensor Offset (Z)"
 }

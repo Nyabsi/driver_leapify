@@ -8,7 +8,8 @@
         "control": "toggle",
         "label": "#{leapify}Setting_hand_tracking",
         "on_label": "#{leapify}Setting_toggle_on",
-        "off_label": "#{leapify}Setting_toggle_off"
+        "off_label": "#{leapify}Setting_toggle_off",
+        "requires": {}
       },
       {
         "name": "/settings/driver_leapify/skeletalDataPassthrough",
@@ -16,7 +17,8 @@
         "advanced_only": true,
         "label": "#{leapify}Setting_skeletal_passthrough",
         "on_label": "#{leapify}Setting_toggle_on",
-        "off_label": "#{leapify}Setting_toggle_off"
+        "off_label": "#{leapify}Setting_toggle_off",
+        "requires": {}
       },
       {
         "name": "/settings/driver_leapify/positionalDataPassthrough",
@@ -24,21 +26,24 @@
         "advanced_only": true,
         "label": "#{leapify}Setting_position_passthrough",
         "on_label": "#{leapify}Setting_toggle_on",
-        "off_label": "#{leapify}Setting_toggle_off"
+        "off_label": "#{leapify}Setting_toggle_off",
+        "requires": {}
       },
       {
         "name": "/settings/driver_leapify/automaticControllerSwitching",
         "control": "toggle",
         "label": "#{leapify}Setting_automatic_switch",
         "on_label": "#{leapify}Setting_toggle_on",
-        "off_label": "#{leapify}Setting_toggle_off"
+        "off_label": "#{leapify}Setting_toggle_off",
+        "requires": {}
       },
       {
         "name": "/settings/driver_leapify/automaticHandOffset",
         "control": "toggle",
         "label": "#{leapify}Setting_automatic_offset",
         "on_label": "#{leapify}Setting_toggle_on",
-        "off_label": "#{leapify}Setting_toggle_off"
+        "off_label": "#{leapify}Setting_toggle_off",
+        "requires": {}
       },
       {
         "name": "/settings/driver_leapify/fallbackTrackerPosition",
@@ -51,6 +56,15 @@
         }
       },
       {
+        "name": "/settings/driver_leapify/manualSensorOffsetEnabled",
+        "control": "toggle",
+        "advanced_only": true,
+        "label": "#{leapify}Setting_manual_sensor_offset",
+        "on_label": "#{leapify}Setting_toggle_on",
+        "off_label": "#{leapify}Setting_toggle_off",
+        "requires": {}
+      },
+      {
         "name": "/settings/driver_leapify/manualHandOffset",
         "control": "slider",
         "label": "#{leapify}Setting_manual_offset",
@@ -60,6 +74,42 @@
         "decimals": 1,
         "requires": {
           "/settings/driver_leapify/automaticHandOffset": false
+        }
+      },
+      {
+        "name": "/settings/driver_leapify/manualSensorOffsetX",
+        "control": "slider",
+        "label": "#{leapify}Setting_manual_sensor_offset_x",
+        "type": "float",
+        "min": -500,
+        "max": 500,
+        "decimals": 1,
+        "requires": {
+          "/settings/driver_leapify/manualSensorOffsetEnabled": true
+        }
+      },
+      {
+        "name": "/settings/driver_leapify/manualSensorOffsetY",
+        "control": "slider",
+        "label": "#{leapify}Setting_manual_sensor_offset_y",
+        "type": "float",
+        "min": -500,
+        "max": 500,
+        "decimals": 1,
+        "requires": {
+          "/settings/driver_leapify/manualSensorOffsetEnabled": true
+        }
+      },
+      {
+        "name": "/settings/driver_leapify/manualSensorOffsetZ",
+        "control": "slider",
+        "label": "#{leapify}Setting_manual_sensor_offset_z",
+        "type": "float",
+        "min": -500,
+        "max": 500,
+        "decimals": 1,
+        "requires": {
+          "/settings/driver_leapify/manualSensorOffsetEnabled": true
         }
       }
     ]
