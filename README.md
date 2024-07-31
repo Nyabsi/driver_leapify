@@ -53,7 +53,7 @@ Navigate to SteamVR -> Settings -> Leapify
 
 Navigate to SteamVR Settings -> Leapify
 
-![settings](https://github.com/user-attachments/assets/d3bb0dcf-863d-48ff-b028-b53fffc6d3e9)
+![image](https://github.com/user-attachments/assets/1385c29a-2ecc-4f02-8c97-a0d62c384f77)
 
 ## Building
 
