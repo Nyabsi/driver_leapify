@@ -71,6 +71,12 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                             if (type == "vive_tracker_handed" || type == "lighthouse_tracker" || type == "etee_tracker_handed")
                             {
                                 StateManager::Get().setFallbackPose(pose, static_cast<vr::ETrackedControllerRole>(role));
+
+                                if (!StateManager::Get().getShouldUseFallback())
+                                {
+                                    pose.deviceIsConnected = false;
+                                    pose.poseIsValid = false;
+                                }
                             }
                         }
                     }

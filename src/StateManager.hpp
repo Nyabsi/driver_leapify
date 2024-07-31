@@ -90,6 +90,16 @@ public:
 		else
 			m_fallbackPoseRight = pose;
 	}
+
+	bool getShouldUseFallback() const
+	{
+		return m_shouldUseFallback;
+	}
+
+	void setShouldUseFallback(bool value)
+	{
+		m_shouldUseFallback = value;
+	}
 private:
 	vr::VRBoneTransform_t* m_passThroughTransformLeft { nullptr };
 	vr::VRBoneTransform_t* m_passThroughTransformRight { nullptr };
@@ -99,4 +109,5 @@ private:
 	vr::DriverPose_t m_passthroughPoseRight { };
 	vr::DriverPose_t m_fallbackPoseLeft{ };
 	vr::DriverPose_t m_fallbackPoseRight{ };
+	bool m_shouldUseFallback { false };
 };

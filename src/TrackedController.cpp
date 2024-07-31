@@ -184,6 +184,9 @@ void TrackedController::UpdatePose(LeapHand hand)
             }
         }
 
+        if (vr::VRSettings()->GetBool("driver_leapify", "fallbackTrackerPosition"))
+            StateManager().setShouldUseFallback(hand.role != vr::TrackedControllerRole_Invalid);
+
         if (hand.role != vr::TrackedControllerRole_Invalid && !m_isControllerConnected)
         {
             vr::TrackedDevicePose_t pose;
@@ -231,6 +234,7 @@ void TrackedController::UpdatePose(LeapHand hand)
                 m_pose.poseIsValid = true;
                 m_pose.result = vr::TrackingResult_Running_OK;
             }
+
             vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
         }
         else {
