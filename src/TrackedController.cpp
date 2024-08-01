@@ -209,9 +209,9 @@ void TrackedController::UpdatePose(LeapHand hand)
 
                     m_pose.qDriverFromHeadRotation.w = 1;
 
-                    if (vr::VRSettings()->GetBool("driver_leapify", "manualSensorOffsetEnabled"))
+                    if (vr::VRSettings()->GetBool("driver_leapify", "manualMountingOffsetEnabled"))
                     {
-                        glm::vec3 worldOffset = headRotation * glm::vec3(vr::VRSettings()->GetFloat("driver_leapify", "manualSensorOffsetX"), vr::VRSettings()->GetFloat("driver_leapify", "manualSensorOffsetZ"), vr::VRSettings()->GetFloat("driver_leapify", "manualSensorOffsetY"));
+                        glm::vec3 worldOffset = headRotation * glm::vec3(vr::VRSettings()->GetFloat("driver_leapify", "manualMountingOffsetX"), vr::VRSettings()->GetFloat("driver_leapify", "manualMountingOffsetZ"), vr::VRSettings()->GetFloat("driver_leapify", "manualMountingOffsetY"));
                         m_pose.vecWorldFromDriverTranslation[0] += worldOffset.x;
                         m_pose.vecWorldFromDriverTranslation[1] += worldOffset.y;
                         m_pose.vecWorldFromDriverTranslation[2] += worldOffset.z;

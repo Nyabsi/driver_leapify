@@ -10,9 +10,9 @@
     "automaticHandOffset": true,
     "manualHandOffset": 0.0,
     "overrideWithTrackerPosition": false,
-    "manualSensorOffsetEnabled": false,
-    "manualSensorOffsetX": 0.0,
-    "manualSensorOffsetY": 0.0,
-    "manualSensorOffsetZ": 0.0
+    "manualMountingOffsetEnabled": false,
+    "manualMountingOffsetX": 0.0,
+    "manualMountingOffsetY": 0.0,
+    "manualMountingOffsetZ": 0.0
   }
 }

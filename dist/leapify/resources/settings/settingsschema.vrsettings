@@ -56,10 +56,10 @@
         }
       },
       {
-        "name": "/settings/driver_leapify/manualSensorOffsetEnabled",
+        "name": "/settings/driver_leapify/manualMountingOffsetEnabled",
         "control": "toggle",
         "advanced_only": true,
-        "label": "#{leapify}Setting_manual_sensor_offset",
+        "label": "#{leapify}Setting_manual_mounting_offset",
         "on_label": "#{leapify}Setting_toggle_on",
         "off_label": "#{leapify}Setting_toggle_off",
         "requires": {}
@@ -67,7 +67,7 @@
       {
         "name": "/settings/driver_leapify/manualHandOffset",
         "control": "slider",
-        "label": "#{leapify}Setting_manual_offset",
+        "label": "#{leapify}Setting_mounting_offset",
         "type": "float",
         "min": -500,
         "max": 500,
@@ -77,9 +77,9 @@
         }
       },
       {
-        "name": "/settings/driver_leapify/manualSensorOffsetX",
+        "name": "/settings/driver_leapify/manualMountingOffsetX",
         "control": "slider",
-        "label": "#{leapify}Setting_manual_sensor_offset_x",
+        "label": "#{leapify}Setting_mounting_sensor_offset_x",
         "type": "float",
         "min": -500,
         "max": 500,
@@ -89,9 +89,9 @@
         }
       },
       {
-        "name": "/settings/driver_leapify/manualSensorOffsetY",
+        "name": "/settings/driver_leapify/manualMountingOffsetY",
         "control": "slider",
-        "label": "#{leapify}Setting_manual_sensor_offset_y",
+        "label": "#{leapify}Setting_mounting_sensor_offset_y",
         "type": "float",
         "min": -500,
         "max": 500,
@@ -101,7 +101,7 @@
         }
       },
       {
-        "name": "/settings/driver_leapify/manualSensorOffsetZ",
+        "name": "/settings/driver_leapify/manualMountingOffsetZ",
         "control": "slider",
         "label": "#{leapify}Setting_manual_sensor_offset_z",
         "type": "float",

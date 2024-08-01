@@ -7,12 +7,12 @@
   "Setting_hand_tracking": "Hand Tracking",
   "Setting_skeletal_passthrough": "Skeletal data passthrough",
   "Setting_position_passthrough": "Position data passthrough",
-  "Setting_automatic_switch": "Auto Switch Hand Tracking And Controllers",
+  "Setting_automatic_switch": "Hand Tracking as Fallback",
   "Setting_automatic_offset": "Automatic Hand Offset",
   "Setting_tracker_override": "Override hand to Tracker position",
   "Setting_manual_offset": "Manual Hand Offset (mm)",
-  "Setting_manual_sensor_offset": "Adjust Sensor Offset (Expert)",
-  "Setting_manual_sensor_offset_x": "Sensor Offset (X)",
-  "Setting_manual_sensor_offset_y": "Sensor Offset (Y)",
-  "Setting_manual_sensor_offset_z": "Sensor Offset (Z)"
+  "Setting_manual_mounting_offset": "Adjust Mounting Offset",
+  "Setting_manual_mounting_offset_x": "Offset (X)",
+  "Setting_manual_mounting_offset_y": "Offset (Y)",
+  "Setting_manual_mounting_offset_z": "Offset (Z)"
 }
