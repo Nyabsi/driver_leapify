@@ -74,7 +74,7 @@ public:
 			m_passthroughPoseRight = pose;
 	}
 
-	vr::DriverPose_t getFallbackPose(vr::ETrackedControllerRole role) const
+	vr::DriverPose_t getTrackerPose(vr::ETrackedControllerRole role) const
 	{
 		if (role == vr::TrackedControllerRole_LeftHand)
 			return m_fallbackPoseLeft;
@@ -83,7 +83,7 @@ public:
 		return vr::DriverPose_t();
 	}
 
-	void setFallbackPose(vr::DriverPose_t pose, vr::ETrackedControllerRole role)
+	void setTrackerPose(vr::DriverPose_t pose, vr::ETrackedControllerRole role)
 	{
 		if (role == vr::TrackedControllerRole_LeftHand)
 			m_fallbackPoseLeft = pose;
@@ -91,12 +91,12 @@ public:
 			m_fallbackPoseRight = pose;
 	}
 
-	bool getShouldUseFallback() const
+	bool getAreHandsWithinVision() const
 	{
 		return m_shouldUseFallback;
 	}
 
-	void setShouldUseFallback(bool value)
+	void setAreHandsWithinVision(bool value)
 	{
 		m_shouldUseFallback = value;
 	}

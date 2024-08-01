@@ -9,7 +9,7 @@
     "automaticControllerSwitching": true,
     "automaticHandOffset": true,
     "manualHandOffset": 0.0,
-    "fallbackTrackerPosition": false,
+    "overrideWithTrackerPosition": false,
     "manualSensorOffsetEnabled": false,
     "manualSensorOffsetX": 0.0,
     "manualSensorOffsetY": 0.0,

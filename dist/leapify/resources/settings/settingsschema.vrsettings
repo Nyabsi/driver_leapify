@@ -46,9 +46,9 @@
         "requires": {}
       },
       {
-        "name": "/settings/driver_leapify/fallbackTrackerPosition",
+        "name": "/settings/driver_leapify/overrideWithTrackerPosition",
         "control": "toggle",
-        "label": "#{leapify}Setting_fallback_tracker",
+        "label": "#{leapify}Setting_tracker_override",
         "on_label": "#{leapify}Setting_toggle_on",
         "off_label": "#{leapify}Setting_toggle_off",
         "requires": {

@@ -66,13 +66,13 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
 
                     if (device_class == vr::TrackedDeviceClass_GenericTracker)
                     {
-                        if (vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled") && vr::VRSettings()->GetBool("driver_leapify", "fallbackTrackerPosition"))
+                        if (vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled") && vr::VRSettings()->GetBool("driver_leapify", "overrideWithTrackerPosition"))
                         {
                             if (type == "vive_tracker_handed" || type == "lighthouse_tracker" || type == "etee_tracker_handed")
                             {
-                                StateManager::Get().setFallbackPose(pose, static_cast<vr::ETrackedControllerRole>(role));
+                                StateManager::Get().setTrackerPose(pose, static_cast<vr::ETrackedControllerRole>(role));
 
-                                if (!StateManager::Get().getShouldUseFallback())
+                                if (!StateManager::Get().getAreHandsWithinVision())
                                 {
                                     pose.deviceIsConnected = false;
                                     pose.poseIsValid = false;
