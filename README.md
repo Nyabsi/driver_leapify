@@ -4,12 +4,12 @@
 
 SteamVR for Leapmotion Controller 1 & 2 (*And other compatible controllers*) which strives for seamless co-existing with controllers.
 
-## Prerequisites
+# Prerequisites
 
 - Leapmotion controller (LMC1, LMC2, IR170, etc..)
 - HMD, this driver needs a Headset to work, this is a *SteamVR* limitation.
 
-## Installation
+# Installation
 
 ### Step 1
 
@@ -27,23 +27,19 @@ Download [the driver](https://github.com/Nyabsi/driver_leap/releases) and extrac
 
 Start SteamVR and it should be working.
 
-## Features
+# Features
 
 - Cross-platform support
 - Switching between controllers and Hand Tracking
 - Hand offset estimation
 - Settings integration into SteamVR
 
-## Advanced Features
+# Advanced Features
 
 - Skeletal data passthrough
 - Positional data passthrough (only for Extensions)
 
-## Extensions
-
-- TBA
-
-## Configuration
+# Configuration
 
 > On Desktop
 
@@ -53,9 +49,53 @@ Navigate to SteamVR -> Settings -> Leapify
 
 Navigate to SteamVR Settings -> Leapify
 
-![image](https://github.com/user-attachments/assets/1385c29a-2ecc-4f02-8c97-a0d62c384f77)
+![image](https://github.com/user-attachments/assets/8b8329f7-86b5-4209-9e6f-2a6bcf6c2431)
 
-## Building
+### Hand Tracking
+
+> Toggles Hand Tracking
+
+- Enabled Behavior: Enables Hand Tracking
+- Disabled Behavior: Disables Hand Tracking
+
+### Hand Tracking as Fallback
+
+> Prefers controllers over Hand Tracking
+
+- Enabled Behavior: If SteamVR has connected controller, uses them instead of Hand Tracking, when SteamVR has no connected devices, enables Hand Tracking.
+- Disabled Behavior: Hand Tracking is always enabled if "Hand Tracking" is enabled.
+
+### Automatic Hand Offset
+
+> Attempts roughly estimation for Hand Offset relative to the Leapmotion sensor
+
+- Enabled Behavior: Automatically sets adjusted Hand Offset for the Hand Tracking.
+- Disabled Behavior: Allows you to manually adjust Hand Offset for the Hand Tracking.
+
+## Advanced Configuration
+
+### Skeletal Data Passthrough
+
+> Redirects leap skeletal data to every connected SteamVR device labeled as controller.
+
+- Enabled Behavior: Redirects leap skeletal data to other devices.
+- Disabled Behavior: Does nothing.
+
+- ### Positional Data Passthrough
+
+> Redirects leap positional data to every connected SteamVR device labeled as controller.
+
+- Enabled Behavior: Redirects leap positional data to other devices.
+- Disabled Behavior: Does nothing.
+
+### Adjust Mounting Offset
+
+> When enabled you can configure the physical mounting position of the Leapmotion Controller to better match the Headset position in SteamVR space.
+
+- Enabled Behavior: Allows you to configure X,Y,Z mounting axises of the Leapmotion.
+- Disabled Behavior: Does nothing.
+
+# Building
 
 This project is built with CMake and Visual Studio 2022 on Windows.
 
@@ -67,17 +107,17 @@ cmake -B build .
 cmake --build build
 ```
 
-## Credit
+# Credit
 
 - thanks to @SDraw for making the original `driver_leap` which this project uses some parts of.
 
 
-## Dependencies
+# Dependencies
 
 - [OpenVR](https://github.com/ValveSoftware/openvr) by @ValveSoftware
 - [rcmp](https://github.com/Smertig/rcmp) by @Smertig
 - [glm](https://github.com/g-truc/glm) by @g-truc
 
-## License
+# License
 
 The code is licensed under `MIT` you can view the full license [here](LICENSE)
