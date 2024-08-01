@@ -163,7 +163,6 @@ void TrackedController::UpdatePose(LeapHand hand)
         if (vr::VRSettings()->GetBool("driver_leapify", "skeletalDataPassthrough") || vr::VRSettings()->GetBool("driver_leapify", "positionalDataPassthrough"))
         {
             m_pose.deviceIsConnected = false;
-            m_pose.poseIsValid = false;
         }
         else
         {
@@ -176,11 +175,9 @@ void TrackedController::UpdatePose(LeapHand hand)
             if (m_isControllerConnected && vr::VRSettings()->GetBool("driver_leapify", "automaticControllerSwitching"))
             {
                 m_pose.deviceIsConnected = false;
-                m_pose.poseIsValid = false;
             }
             else {
                 m_pose.deviceIsConnected = true;
-                m_pose.poseIsValid = false;
             }
         }
 
@@ -247,6 +244,9 @@ void TrackedController::UpdatePose(LeapHand hand)
                     m_pose.poseIsValid = true;
                     m_pose.result = vr::TrackingResult_Running_OK;
                 }
+            }
+            else {
+                m_pose.poseIsValid = false;
             }
             vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
         }
