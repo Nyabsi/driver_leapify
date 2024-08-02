@@ -1,3 +1,4 @@
 {
-    "en_US" : "{leapify}/localization/localization_en_us.json"
+    "en_US" : "{leapify}/localization/localization_en_us.json",
+    "ja_JP" : "{leapify}/localization/localization_ja_jp.json"
 }
