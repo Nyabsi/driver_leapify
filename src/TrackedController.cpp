@@ -186,18 +186,18 @@ void TrackedController::UpdatePose(LeapHand hand)
             StateManager().setAreHandsWithinVision(hand.role != vr::TrackedControllerRole_Invalid);
             m_pose = StateManager::Get().getTrackerPose(m_role);
 
-	    if (vr::VRSettings()->GetBool("driver_leapify", "manualMountingTranslationOffset"))
+	    if (vr::VRSettings()->GetBool("driver_leapify", "manualTrackerTranslationOffset"))
 	    {
-		glm::vec3 worldOffset = glm::vec3(vr::VRSettings()->GetFloat("driver_leapify", "manualMountingTranslationOffsetX"), vr::VRSettings()->GetFloat("driver_leapify", "manualMountingTranslationOffsetZ"), vr::VRSettings()->GetFloat("driver_leapify", "manualMountingTranslationOffsetY"));
+		glm::vec3 worldOffset = glm::vec3(vr::VRSettings()->GetFloat("driver_leapify", "manualTrackerTranslationOffsetX"), vr::VRSettings()->GetFloat("driver_leapify", "manualTrackerTranslationOffsetZ"), vr::VRSettings()->GetFloat("driver_leapify", "manualTrackerTranslationOffsetY"));
 			    
         	m_pose.vecPosition[0] += worldOffset.x;
                 m_pose.vecPosition[1] += worldOffset.y;
                 m_pose.vecPosition[2] += worldOffset.z;
             }
 
-	    if (vr::VRSettings()->GetBool("driver_leapify", "manualMountingOrientationOffset"))
+	    if (vr::VRSettings()->GetBool("driver_leapify", "manualTrackerOrientationOffset"))
             {
-            	glm::vec3 worldOffset = glm::vec3(vr::VRSettings()->GetFloat("driver_leapify", "manualMountingOrientationOffsetX"), vr::VRSettings()->GetFloat("driver_leapify", "manualMountingOrientationOffsetY"), vr::VRSettings()->GetFloat("driver_leapify", "manualMountingOrientationOffsetZ"));
+            	glm::vec3 worldOffset = glm::vec3(vr::VRSettings()->GetFloat("driver_leapify", "manualTrackerOrientationOffsetX"), vr::VRSettings()->GetFloat("driver_leapify", "manualTrackerOrientationOffsetY"), vr::VRSettings()->GetFloat("driver_leapify", "manualTrackerOrientationOffsetZ"));
 			    
                 m_pose.qRotation.x += worldOffset.x;
                 m_pose.qRotation.y += worldOffset.y;
