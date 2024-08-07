@@ -185,6 +185,25 @@ void TrackedController::UpdatePose(LeapHand hand)
         {
             StateManager().setAreHandsWithinVision(hand.role != vr::TrackedControllerRole_Invalid);
             m_pose = StateManager::Get().getTrackerPose(m_role);
+
+	    if (vr::VRSettings()->GetBool("driver_leapify", "manualMountingTranslationOffset"))
+	    {
+		glm::vec3 worldOffset = glm::vec3(vr::VRSettings()->GetFloat("driver_leapify", "manualMountingTranslationOffsetX"), vr::VRSettings()->GetFloat("driver_leapify", "manualMountingTranslationOffsetZ"), vr::VRSettings()->GetFloat("driver_leapify", "manualMountingTranslationOffsetY"));
+			    
+        	m_pose.vecPosition[0] += worldOffset.x;
+                m_pose.vecPosition[1] += worldOffset.y;
+                m_pose.vecPosition[2] += worldOffset.z;
+            }
+
+	    if (vr::VRSettings()->GetBool("driver_leapify", "manualMountingOrientationOffset"))
+            {
+            	glm::vec3 worldOffset = glm::vec3(vr::VRSettings()->GetFloat("driver_leapify", "manualMountingOrientationOffsetX"), vr::VRSettings()->GetFloat("driver_leapify", "manualMountingOrientationOffsetY"), vr::VRSettings()->GetFloat("driver_leapify", "manualMountingOrientationOffsetZ"));
+			    
+                m_pose.qRotation.x += worldOffset.x;
+                m_pose.qRotation.y += worldOffset.y;
+                m_pose.qRotation.z += worldOffset.z;
+            }
+		
             vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
         }
         else
