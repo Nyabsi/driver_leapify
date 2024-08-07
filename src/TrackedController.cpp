@@ -206,12 +206,22 @@ void TrackedController::UpdatePose(LeapHand hand)
 
                     m_pose.qDriverFromHeadRotation.w = 1;
 
-                    if (vr::VRSettings()->GetBool("driver_leapify", "manualMountingOffsetEnabled"))
+                    if (vr::VRSettings()->GetBool("driver_leapify", "manualMountingTranslationOffset"))
                     {
-                        glm::vec3 worldOffset = headRotation * glm::vec3(vr::VRSettings()->GetFloat("driver_leapify", "manualMountingOffsetX"), vr::VRSettings()->GetFloat("driver_leapify", "manualMountingOffsetZ"), vr::VRSettings()->GetFloat("driver_leapify", "manualMountingOffsetY"));
+                        glm::vec3 worldOffset = headRotation * glm::vec3(vr::VRSettings()->GetFloat("driver_leapify", "manualMountingTranslationOffsetX"), vr::VRSettings()->GetFloat("driver_leapify", "manualMountingTranslationOffsetZ"), vr::VRSettings()->GetFloat("driver_leapify", "manualMountingTranslationOffsetY"));
+			    
                         m_pose.vecWorldFromDriverTranslation[0] += worldOffset.x;
                         m_pose.vecWorldFromDriverTranslation[1] += worldOffset.y;
                         m_pose.vecWorldFromDriverTranslation[2] += worldOffset.z;
+                    }
+
+		    if (vr::VRSettings()->GetBool("driver_leapify", "manualMountingOrientationOffset"))
+                    {
+                        glm::vec3 worldOffset = headRotation * glm::vec3(vr::VRSettings()->GetFloat("driver_leapify", "manualMountingOrientationOffsetX"), vr::VRSettings()->GetFloat("driver_leapify", "manualMountingOrientationOffsetY"), vr::VRSettings()->GetFloat("driver_leapify", "manualMountingOrientationOffsetZ"));
+			    
+                        m_pose.qWorldFromDriverRotation.x += worldOffset.x;
+                        m_pose.qWorldFromDriverRotation.y += worldOffset.y;
+                        m_pose.qWorldFromDriverRotation.z += worldOffset.z;
                     }
 
                     glm::quat root = headRotation * glm::quat(glm::radians(glm::vec3(0.0f, 0.0f, 0.0f)));
