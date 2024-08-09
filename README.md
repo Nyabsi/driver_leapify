@@ -7,7 +7,6 @@ SteamVR for Leapmotion Controller 1 & 2 (*And other compatible controllers*) whi
 # Prerequisites
 
 - Leapmotion controller (LMC1, LMC2, IR170, etc..)
-- HMD, this driver needs a Headset to work, this is a *SteamVR* limitation.
 
 # Installation
 
