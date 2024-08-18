@@ -1,18 +1,20 @@
 {
-    "language_tag": "ja_JP",
-  
-    "Settings_Title": "Leapify",
-    "Setting_toggle_on": "有効",
-    "Setting_toggle_off": "無効",
-    "Setting_hand_tracking": "ハンドトラッキング",
-    "Setting_skeletal_passthrough": "スケルトンデータ・パススルー",
-    "Setting_position_passthrough": "ポジションデータ・パススルー",
-    "Setting_automatic_switch": "ハンドトラッキングを代替手段として利用",
-    "Setting_automatic_offset": "ハンド・オフセットを自動で設定する",
-    "Setting_tracker_override": "手の位置をトラッカーの位置として利用する",
-    "Setting_manual_offset": "ハンド・オフセット調整 (mm)",
-    "Setting_manual_mounting_offset": "位置調整用オフセット",
-    "Setting_manual_mounting_offset_x": "オフセット (X)",
-    "Setting_manual_mounting_offset_y": "オフセット (Y)",
-    "Setting_manual_mounting_offset_z": "オフセット (Z)"
+  "language_tag": "ja_JP",
+
+  "Settings_Title": "Leapify",
+  "Setting_toggle_on": "有効",
+  "Setting_toggle_off": "無効",
+  "Setting_hand_tracking": "ハンドトラッキング",
+  "Setting_skeletal_passthrough": "スケルトンデータ・パススルー",
+  "Setting_position_passthrough": "ポジションデータ・パススルー",
+  "Setting_automatic_switch": "ハンドトラッキングを代替手段として利用",
+  "Setting_automatic_offset": "ハンド・オフセットを自動で設定する",
+  "Setting_tracker_override": "手の位置をトラッカーの位置として利用する",
+  "Setting_tracker_calibration_mode": "Calibration Mode",
+  "Setting_manual_offset": "ハンド・オフセット調整 (mm)",
+  "Setting_manual_mounting_translation_offset": "Adjust Mounting Offset (Translation)",
+  "Setting_manual_mounting_orientation_offset": "Adjust Mounting Offset (Orientation)",
+  "Setting_manual_mounting_offset_x": "オフセット (X)",
+  "Setting_manual_mounting_offset_y": "オフセット (Y)",
+  "Setting_manual_mounting_offset_z": "オフセット (Z)"
 }

@@ -2,6 +2,7 @@
 
 #include <openvr_driver.h>
 #include <LeapConnection.hpp>
+#include <GestureInput.hpp>
 
 #include <glm/gtx/quaternion.hpp>
 
@@ -102,6 +103,7 @@ public:
 private:
 	void UpdatePose(LeapHand hand);
 	void UpdateSkeletalPose(LeapHand hand);
+    void PoseCalibrationSubroutine(LeapHand hand);
 
 	void GetFingerBoneLocalRotation(LeapHand hand, size_t p_finger, size_t p_bone, glm::quat& l_result, bool p_ignoreMeta);
 	void GetFingerBoneLocalPosition(LeapHand hand, size_t p_finger, size_t p_bone, glm::vec3& l_result, bool p_ignoreMeta);
@@ -120,4 +122,10 @@ private:
     glm::vec3 m_position;
     glm::quat m_rotation;
     bool m_isControllerConnected { };
+    GestureInput m_gestureInput{ };
+    bool m_startedCalibration {};
+    vr::DriverPose_t m_initialPose{};
+    vr::DriverPose_t m_finalPose{};
+    glm::vec3 m_positionOffset{};
+    glm::quat m_rotationOffset{};
 };

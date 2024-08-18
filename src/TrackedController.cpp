@@ -104,6 +104,11 @@ vr::EVRInitError TrackedController::Activate(uint32_t unObjectId)
         else
             vr::VRDriverInput()->CreateSkeletonComponent(props, "/input/skeleton/right", "/skeleton/hand/right", "/pose/raw", vr::VRSkeletalTracking_Full, nullptr, 0, &m_skeletonHandle);
 
+        m_gestureInput.setPinchMinimumDistance(10.0f);
+        m_gestureInput.setMovementDistanceThreshold(25.0f);
+
+        m_gestureInput.addBinding(FINGER_INDEX, GESTURE_DUAL_PINCH, {});
+
         result = vr::VRInitError_None;
     }
 
@@ -152,6 +157,9 @@ void TrackedController::Update(LeapHand hand)
 
     UpdateSkeletalPose(hand);
     UpdatePose(hand);
+
+    if (vr::VRSettings()->GetBool("driver_leapify", "trackerCalibrationMode"))
+        PoseCalibrationSubroutine(hand);
 }
 
 void TrackedController::UpdatePose(LeapHand hand)
@@ -182,103 +190,98 @@ void TrackedController::UpdatePose(LeapHand hand)
         }
 
         if (vr::VRSettings()->GetBool("driver_leapify", "overrideWithTrackerPosition"))
-	{
-	    StateManager().setAreHandsWithinVision(hand.role != vr::TrackedControllerRole_Invalid);
-	    m_pose = StateManager::Get().getTrackerPose(m_role);
-	
-	    if (vr::VRSettings()->GetBool("driver_leapify", "manualTrackerTranslationOffset"))
 	    {
-	        glm::vec3 worldOffset = glm::vec3(-0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualTrackerTranslationOffsetX"), -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualTrackerTranslationOffsetZ"), -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualTrackerTranslationOffsetY"));
-	
-	        m_pose.vecPosition[0] += worldOffset.x;
-	        m_pose.vecPosition[1] += worldOffset.y;
-	        m_pose.vecPosition[2] += worldOffset.z;
+	        StateManager().setAreHandsWithinVision(hand.role != vr::TrackedControllerRole_Invalid);
+	        m_pose = StateManager::Get().getTrackerPose(m_role);
+
+            if (m_startedCalibration)
+                m_pose.poseIsValid = false;
+
+            auto offsetPosition = glm::vec3(m_pose.vecPosition[0], m_pose.vecPosition[1], m_pose.vecPosition[2]) + (m_positionOffset * glm::quat(m_pose.qRotation.w, m_pose.qRotation.x, m_pose.qRotation.y, m_pose.qRotation.z));
+
+            m_pose.vecPosition[0] = offsetPosition.x;
+            m_pose.vecPosition[1] = offsetPosition.y;
+            m_pose.vecPosition[2] = offsetPosition.z;
+
+            auto offsetRotation = glm::quat(m_pose.qRotation.w, m_pose.qRotation.x, m_pose.qRotation.y, m_pose.qRotation.z) * m_rotationOffset;
+
+            m_pose.qRotation.w = offsetRotation.w;
+            m_pose.qRotation.x = offsetRotation.x;
+            m_pose.qRotation.y = offsetRotation.y;
+            m_pose.qRotation.z = offsetRotation.z;
+
+	        vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
 	    }
-	
-	    if (vr::VRSettings()->GetBool("driver_leapify", "manualTrackerOrientationOffset"))
+	    else
 	    {
-	        glm::vec3 worldOffset = glm::vec3(-0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualTrackerOrientationOffsetX"), -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualTrackerOrientationOffsetY"), -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualTrackerOrientationOffsetZ"));
-	
-	        m_pose.qRotation.x += worldOffset.x;
-	        m_pose.qRotation.y += worldOffset.y;
-	        m_pose.qRotation.z += worldOffset.z;
-	    }
-	
-	    vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
-	}
-	else
-	{
-	    if (hand.role != vr::TrackedControllerRole_Invalid && !m_isControllerConnected)
-	    {
-	        vr::TrackedDevicePose_t pose;
-	        vr::VRServerDriverHost()->GetRawTrackedDevicePoses(0, &pose, 1);
-	        if (pose.bPoseIsValid)
+	        if (hand.role != vr::TrackedControllerRole_Invalid && !m_isControllerConnected)
 	        {
-	            for (size_t i = 0U; i < 3; i++)
-	                m_pose.vecWorldFromDriverTranslation[i] = pose.mDeviceToAbsoluteTracking.m[i][3];
-	
-	            glm::mat4 hmdMatrix(1.0f);
-	            ConvertMatrix(pose.mDeviceToAbsoluteTracking, hmdMatrix);
-	
-	            const glm::quat headRotation = glm::quat_cast(hmdMatrix);
-	            memcpy(&m_pose.qWorldFromDriverRotation, &headRotation, sizeof(glm::quat));
-	
-	            m_pose.qDriverFromHeadRotation.w = 1;
-	
-	            if (vr::VRSettings()->GetBool("driver_leapify", "manualMountingTranslationOffset"))
+	            vr::TrackedDevicePose_t pose;
+	            vr::VRServerDriverHost()->GetRawTrackedDevicePoses(0, &pose, 1);
+	            if (pose.bPoseIsValid)
 	            {
-	                glm::vec3 worldOffset = headRotation * glm::vec3(-0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualMountingTranslationOffsetX"), -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualMountingTranslationOffsetZ"), -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualMountingTranslationOffsetY"));
+	                for (size_t i = 0U; i < 3; i++)
+	                    m_pose.vecWorldFromDriverTranslation[i] = pose.mDeviceToAbsoluteTracking.m[i][3];
 	
-	                m_pose.vecWorldFromDriverTranslation[0] += worldOffset.x;
-	                m_pose.vecWorldFromDriverTranslation[1] += worldOffset.y;
-	                m_pose.vecWorldFromDriverTranslation[2] += worldOffset.z;
+	                glm::mat4 hmdMatrix(1.0f);
+	                ConvertMatrix(pose.mDeviceToAbsoluteTracking, hmdMatrix);
+	
+	                const glm::quat headRotation = glm::quat_cast(hmdMatrix);
+	                memcpy(&m_pose.qWorldFromDriverRotation, &headRotation, sizeof(glm::quat));
+	
+	                m_pose.qDriverFromHeadRotation.w = 1;
+
+	                if (vr::VRSettings()->GetBool("driver_leapify", "manualMountingTranslationOffset"))
+	                {
+	                    glm::vec3 offset = headRotation * glm::vec3(-0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualMountingTranslationOffsetX"), -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualMountingTranslationOffsetZ"), -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualMountingTranslationOffsetY"));
+
+	                    m_pose.vecWorldFromDriverTranslation[0] += offset.x;
+	                    m_pose.vecWorldFromDriverTranslation[1] += offset.y;
+	                    m_pose.vecWorldFromDriverTranslation[2] += offset.z;
+	                }
+	
+	                if (vr::VRSettings()->GetBool("driver_leapify", "manualMountingOrientationOffset"))
+	                {
+	                    glm::quat offset = headRotation * glm::quat(0.0f, -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualMountingOrientationOffsetX"), -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualMountingOrientationOffsetY"), -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualMountingOrientationOffsetZ"));
+                        ConvertQuaternion(offset, m_pose.qWorldFromDriverRotation);
+                    }
+                    else {
+                        ConvertQuaternion(headRotation, m_pose.qWorldFromDriverRotation);
+                    }
+	
+	                glm::vec3 velocity = headRotation * glm::vec3(-0.001f * hand.palm.velocity.x, -0.001f * hand.palm.velocity.y, -0.001f * hand.palm.velocity.z);
+	                m_pose.vecVelocity[0] = velocity.x;
+	                m_pose.vecVelocity[1] = velocity.y;
+	                m_pose.vecVelocity[2] = velocity.z;
+	
+	                glm::quat rotation = m_rotation * (m_role == vr::TrackedControllerRole_LeftHand ? skeletonOffsetLeft : skeletonOffsetRight);
+	
+	                glm::mat4 matrix = glm::translate(identityMatrix, m_position) * glm::toMat4(rotation);
+	                matrix *= (m_role == vr::TrackedControllerRole_LeftHand ? wristOffsetLeft : wristOffsetRight);
+	
+	                rotation = glm::toQuat(matrix);
+	
+	                m_pose.qRotation.x = rotation.x;
+	                m_pose.qRotation.y = rotation.y;
+	                m_pose.qRotation.z = rotation.z;
+	                m_pose.qRotation.w = rotation.w;
+	
+	                float offset = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? -((-0.001f * hand.arm.prev_joint.y - -0.001f * hand.arm.next_joint.y)) : -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffset");
+	
+	                glm::vec4 position = matrix * zeroPoint;
+	                m_pose.vecPosition[0] = position.x;
+	                m_pose.vecPosition[1] = position.y;
+	                m_pose.vecPosition[2] = position.z + offset;
+	
+	                m_pose.poseIsValid = true;
+	                m_pose.result = vr::TrackingResult_Running_OK;
 	            }
-	
-	            if (vr::VRSettings()->GetBool("driver_leapify", "manualMountingOrientationOffset"))
-	            {
-	                glm::vec3 worldOffset = headRotation * glm::vec3(-0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualMountingOrientationOffsetX"), -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualMountingOrientationOffsetY"), -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualMountingOrientationOffsetZ"));
-	
-	                m_pose.qWorldFromDriverRotation.x += worldOffset.x;
-	                m_pose.qWorldFromDriverRotation.y += worldOffset.y;
-	                m_pose.qWorldFromDriverRotation.z += worldOffset.z;
-	            }
-	
-	            glm::quat root = headRotation * glm::quat(glm::radians(glm::vec3(0.0f, 0.0f, 0.0f)));
-	            ConvertQuaternion(root, m_pose.qWorldFromDriverRotation);
-	
-	            glm::vec3 velocity = root * glm::vec3(-0.001f * hand.palm.velocity.x, -0.001f * hand.palm.velocity.y, -0.001f * hand.palm.velocity.z);
-	            m_pose.vecVelocity[0] = velocity.x;
-	            m_pose.vecVelocity[1] = velocity.y;
-	            m_pose.vecVelocity[2] = velocity.z;
-	
-	            glm::quat rotation = m_rotation * (m_role == vr::TrackedControllerRole_LeftHand ? skeletonOffsetLeft : skeletonOffsetRight);
-	
-	            glm::mat4 matrix = glm::translate(identityMatrix, m_position) * glm::toMat4(rotation);
-	            matrix *= (m_role == vr::TrackedControllerRole_LeftHand ? wristOffsetLeft : wristOffsetRight);
-	
-	            rotation = glm::toQuat(matrix);
-	
-	            m_pose.qRotation.x = rotation.x;
-	            m_pose.qRotation.y = rotation.y;
-	            m_pose.qRotation.z = rotation.z;
-	            m_pose.qRotation.w = rotation.w;
-	
-	            float offset = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? -((-0.001f * hand.arm.prev_joint.y - -0.001f * hand.arm.next_joint.y)) : -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffset");
-	
-	            glm::vec4 position = matrix * zeroPoint;
-	            m_pose.vecPosition[0] = position.x;
-	            m_pose.vecPosition[1] = position.y;
-	            m_pose.vecPosition[2] = position.z + offset;
-	
-	            m_pose.poseIsValid = true;
-	            m_pose.result = vr::TrackingResult_Running_OK;
 	        }
+	        else {
+	            m_pose.poseIsValid = false;
+	        }
+	        vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
 	    }
-	    else {
-	        m_pose.poseIsValid = false;
-	    }
-	    vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
-	}
     }
     else 
     {
@@ -346,6 +349,26 @@ void TrackedController::UpdateSkeletalPose(LeapHand hand)
 
         if (!vr::VRSettings()->GetBool("driver_leapify", "skeletalDataPassthrough"))
             vr::VRDriverInput()->UpdateSkeletonComponent(m_skeletonHandle, vr::VRSkeletalMotionRange_WithoutController, m_boneTransform, SB_Count);
+    }
+}
+
+void TrackedController::PoseCalibrationSubroutine(LeapHand hand)
+{
+    m_gestureInput.Update(hand);
+
+    auto indexState = m_gestureInput.GetState(FINGER_INDEX);
+
+    if (indexState.click) {
+        if (!m_startedCalibration) {
+            m_initialPose = StateManager::Get().getTrackerPose(m_role);
+            m_startedCalibration = true;
+        }
+        else {
+            m_finalPose = StateManager::Get().getTrackerPose(m_role);
+            m_positionOffset = glm::vec3(m_initialPose.vecPosition[0], m_initialPose.vecPosition[1], m_initialPose.vecPosition[2]) - glm::vec3(m_finalPose.vecPosition[0], m_finalPose.vecPosition[1], m_finalPose.vecPosition[2]);
+            m_rotationOffset = glm::quat(m_initialPose.qRotation.w, m_initialPose.qRotation.x, m_initialPose.qRotation.y, m_initialPose.qRotation.z) * -glm::quat(m_finalPose.qRotation.w, m_finalPose.qRotation.x, m_finalPose.qRotation.y, m_finalPose.qRotation.z);
+            m_startedCalibration = false;
+        }
     }
 }
 

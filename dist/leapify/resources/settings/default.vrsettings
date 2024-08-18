@@ -10,6 +10,7 @@
     "automaticHandOffset": true,
     "manualHandOffset": 0.0,
     "overrideWithTrackerPosition": false,
+    "trackerCalibrationMode": false,
     "manualMountingTranslationOffset": false,
     "manualMountingTranslationOffsetX": 0.0,
     "manualMountingTranslationOffsetY": 0.0,
@@ -17,14 +18,6 @@
     "manualMountingOrientationOffset": false,
     "manualMountingOrientationOffsetX": 0.0,
     "manualMountingOrientationOffsetY": 0.0,
-    "manualMountingOrientationOffsetZ": 0.0,
-    "manualTrackerTranslationOffset": false,
-    "manualTrackerTranslationOffsetX": 0.0,
-    "manualTrackerTranslationOffsetY": 0.0,
-    "manualTrackerTranslationOffsetZ": 0.0,
-    "manualTrackerOrientationOffset": false,
-    "manualTrackerOrientationOffsetX": 0.0,
-    "manualTrackerOrientationOffsetY": 0.0,
-    "manualTrackerOrientationOffsetZ": 0.0
+    "manualMountingOrientationOffsetZ": 0.0
   }
 }

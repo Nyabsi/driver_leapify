@@ -69,6 +69,17 @@
         }
       },
       {
+        "name": "/settings/driver_leapify/trackerCalibrationMode",
+        "control": "toggle",
+        "advanced_only": true,
+        "label": "#{leapify}Setting_tracker_calibration_mode",
+        "on_label": "#{leapify}Setting_toggle_on",
+        "off_label": "#{leapify}Setting_toggle_off",
+        "requires": {
+          "/settings/driver_leapify/overrideWithTrackerPosition": true
+        }
+      },
+      {
         "name": "/settings/driver_leapify/manualMountingTranslationOffset",
         "control": "toggle",
         "advanced_only": true,
@@ -156,96 +167,6 @@
         "decimals": 1,
         "requires": {
           "/settings/driver_leapify/manualMountingOrientationOffset": true
-        }
-      },
-      {
-        "name": "/settings/driver_leapify/manualTrackerTranslationOffset",
-        "control": "toggle",
-        "advanced_only": true,
-        "label": "#{leapify}Setting_manual_tracker_translation_offset",
-        "on_label": "#{leapify}Setting_toggle_on",
-        "off_label": "#{leapify}Setting_toggle_off",
-        "requires": {}
-      },
-      {
-        "name": "/settings/driver_leapify/manualTrackerTranslationOffsetX",
-        "control": "slider",
-        "label": "#{leapify}Setting_offset_x",
-        "type": "float",
-        "min": -500,
-        "max": 500,
-        "decimals": 1,
-        "requires": {
-          "/settings/driver_leapify/manualTrackerTranslationOffset": true
-        }
-      },
-      {
-        "name": "/settings/driver_leapify/manualTrackerTranslationOffsetY",
-        "control": "slider",
-        "label": "#{leapify}Setting_offset_y",
-        "type": "float",
-        "min": -500,
-        "max": 500,
-        "decimals": 1,
-        "requires": {
-          "/settings/driver_leapify/manualTrackerTranslationOffset": true
-        }
-      },
-      {
-        "name": "/settings/driver_leapify/manualTrackerTranslationOffsetZ",
-        "control": "slider",
-        "label": "#{leapify}Setting_offset_z",
-        "type": "float",
-        "min": -500,
-        "max": 500,
-        "decimals": 1,
-        "requires": {
-          "/settings/driver_leapify/manualTrackerTranslationOffset": true
-        }
-      },
-      {
-        "name": "/settings/driver_leapify/manualTrackerOrientationOffset",
-        "control": "toggle",
-        "advanced_only": true,
-        "label": "#{leapify}Setting_manual_tracker_orientation_offset",
-        "on_label": "#{leapify}Setting_toggle_on",
-        "off_label": "#{leapify}Setting_toggle_off",
-        "requires": {}
-      },
-      {
-        "name": "/settings/driver_leapify/manualTrackerOrientationOffsetX",
-        "control": "slider",
-        "label": "#{leapify}Setting_offset_x",
-        "type": "float",
-        "min": -500,
-        "max": 500,
-        "decimals": 1,
-        "requires": {
-          "/settings/driver_leapify/manualTrackerOrientationOffset": true
-        }
-      },
-      {
-        "name": "/settings/driver_leapify/manualTrackerOrientationOffsetY",
-        "control": "slider",
-        "label": "#{leapify}Setting_offset_y",
-        "type": "float",
-        "min": -500,
-        "max": 500,
-        "decimals": 1,
-        "requires": {
-          "/settings/driver_leapify/manualTrackerOrientationOffset": true
-        }
-      },
-      {
-        "name": "/settings/driver_leapify/manualTrackerOrientationOffsetZ",
-        "control": "slider",
-        "label": "#{leapify}Setting_offset_z",
-        "type": "float",
-        "min": -500,
-        "max": 500,
-        "decimals": 1,
-        "requires": {
-          "/settings/driver_leapify/manualTrackerOrientationOffset": true
         }
       }
     ]
