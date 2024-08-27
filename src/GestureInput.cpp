@@ -166,15 +166,11 @@ void GestureInput::Update(LeapHand hand)
 			{
 				auto position = getNormalizedPosition(state.movementOrigin, target);
 
-				if (position.z > 0.75f)
+				if (position.z >= 1.0f)
 					binding.state.up = true;
-				else
-					binding.state.up = false;
 
-				if (position.z < -0.75f)
+				if (position.z <= -1.0f)
 					binding.state.down = true;
-				else
-					binding.state.down = false;
 
 				binding.state.click = true;
 			}

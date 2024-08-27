@@ -168,6 +168,38 @@
         "requires": {
           "/settings/driver_leapify/manualMountingOrientationOffset": true
         }
+      },
+      {
+        "name": "/settings/driver_leapify/gestureInput",
+        "control": "toggle",
+        "label": "#{leapify}Setting_gesture_input",
+        "on_label": "#{leapify}Setting_toggle_on",
+        "off_label": "#{leapify}Setting_toggle_off",
+        "requires": {}
+      },
+      {
+        "name": "/settings/driver_leapify/gestureInputPinchThreshold",
+        "control": "slider",
+        "label": "#{leapify}Setting_offset_y",
+        "type": "float",
+        "min": 0,
+        "max": 100,
+        "decimals": 1,
+        "requires": {
+          "/settings/driver_leapify/manualMountingOrientationOffset": true
+        }
+      },
+      {
+        "name": "/settings/driver_leapify/gestureInputMovementThreshold",
+        "control": "slider",
+        "label": "#{leapify}Setting_offset_y",
+        "type": "float",
+        "min": 0,
+        "max": 100,
+        "decimals": 1,
+        "requires": {
+          "/settings/driver_leapify/manualMountingOrientationOffset": true
+        }
       }
     ]
   }

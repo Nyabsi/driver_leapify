@@ -18,6 +18,9 @@
     "manualMountingOrientationOffset": false,
     "manualMountingOrientationOffsetX": 0.0,
     "manualMountingOrientationOffsetY": 0.0,
-    "manualMountingOrientationOffsetZ": 0.0
+    "manualMountingOrientationOffsetZ": 0.0,
+    "gestureInput": false,
+    "gestureInputPinchThreshold": 10.0,
+    "gestureInputMovementThreshold":  25.0
   }
 }

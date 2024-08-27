@@ -102,10 +102,12 @@ vr::EVRInitError TrackedController::Activate(uint32_t unObjectId)
         else
             vr::VRDriverInput()->CreateSkeletonComponent(props, "/input/skeleton/right", "/skeleton/hand/right", "/pose/raw", vr::VRSkeletalTracking_Full, nullptr, 0, &m_skeletonHandle);
 
-        m_gestureInput.setPinchMinimumDistance(10.0f);
-        m_gestureInput.setMovementDistanceThreshold(25.0f);
+        m_gestureInput.setPinchMinimumDistance(vr::VRSettings()->GetFloat("driver_leapify", "gestureInputPinchThreshold"));
+        m_gestureInput.setMovementDistanceThreshold(vr::VRSettings()->GetFloat("driver_leapify", "gestureInputMovementThreshold"));
 
-        m_gestureInput.addBinding(FINGER_INDEX, GESTURE_DUAL_PINCH, {});
+        m_gestureInput.addBinding(FINGER_INDEX, GESTURE_SWIPE_VERTICAL, {});
+        m_gestureInput.addBinding(FINGER_MIDDLE, GESTURE_THUMB_STICK, {});
+        m_gestureInput.addBinding(FINGER_RING, GESTURE_DUAL_PINCH, {});
 
         result = vr::VRInitError_None;
     }
@@ -155,6 +157,9 @@ void TrackedController::Update(LeapHand hand)
 
     UpdateSkeletalPose(hand);
     UpdatePose(hand);
+
+    if (vr::VRSettings()->GetBool("driver_leapify", "gestureInput"))
+        UpdateInput(hand);
 
     if (vr::VRSettings()->GetBool("driver_leapify", "trackerCalibrationMode"))
         PoseCalibrationSubroutine(hand);
@@ -347,6 +352,43 @@ void TrackedController::UpdateSkeletalPose(LeapHand hand)
 
         if (!vr::VRSettings()->GetBool("driver_leapify", "skeletalDataPassthrough"))
             vr::VRDriverInput()->UpdateSkeletonComponent(m_skeletonHandle, vr::VRSkeletalMotionRange_WithoutController, m_boneTransform, SB_Count);
+    }
+}
+
+void TrackedController::UpdateInput(LeapHand hand)
+{
+    if (!vr::VRSettings()->GetBool("driver_leapify", "trackerCalibrationMode"))
+    {
+        // mmm yes.
+        m_gestureInput.setPinchMinimumDistance(vr::VRSettings()->GetFloat("driver_leapify", "gestureInputPinchThreshold"));
+        m_gestureInput.setMovementDistanceThreshold(vr::VRSettings()->GetFloat("driver_leapify", "gestureInputMovementThreshold"));
+
+        m_gestureInput.Update(hand);
+
+        auto indexState = m_gestureInput.GetState(FINGER_INDEX);
+        auto middleState = m_gestureInput.GetState(FINGER_MIDDLE);
+        auto ringState = m_gestureInput.GetState(FINGER_RING);
+
+        auto triggerValue = m_gestureInput.getNormalizedFingerCurl(hand, FINGER_INDEX);
+        auto gripValue = m_gestureInput.getNormalizedCombinedCurl(hand);
+
+
+        vr::VRDriverInput()->UpdateBooleanComponent(m_bButton, indexState.up, 0.0f);
+        vr::VRDriverInput()->UpdateBooleanComponent(m_aButton, indexState.down, 0.0f);
+
+        vr::VRDriverInput()->UpdateScalarComponent(m_xAxis, middleState.x, 0.0f);
+        vr::VRDriverInput()->UpdateScalarComponent(m_yAxis, middleState.y, 0.0f);
+
+        vr::VRDriverInput()->UpdateBooleanComponent(m_systemMenu, ringState.click, 0.0f);
+
+        if (!hand.index.is_extended)
+        {
+            vr::VRDriverInput()->UpdateBooleanComponent(m_trigger, triggerValue >= 1.0f, 0.0f);
+            vr::VRDriverInput()->UpdateScalarComponent(m_triggerValue, triggerValue, 0.0f);
+        }
+
+        vr::VRDriverInput()->UpdateScalarComponent(m_grip, gripValue, 0.0f);
+        vr::VRDriverInput()->UpdateScalarComponent(m_gripForce, gripValue, 0.0f);
     }
 }
 

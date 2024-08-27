@@ -103,6 +103,7 @@ public:
 private:
 	void UpdatePose(LeapHand hand);
 	void UpdateSkeletalPose(LeapHand hand);
+    void UpdateInput(LeapHand hand);
     void PoseCalibrationSubroutine(LeapHand hand);
 
 	void GetFingerBoneLocalRotation(LeapHand hand, size_t p_finger, size_t p_bone, glm::quat& l_result, bool p_ignoreMeta);
@@ -128,4 +129,15 @@ private:
     vr::DriverPose_t m_finalPose{};
     glm::vec3 m_positionOffset{};
     glm::quat m_rotationOffset{};
+
+    // Bindings
+    vr::VRInputComponentHandle_t m_systemMenu{};
+    vr::VRInputComponentHandle_t m_xAxis{};
+    vr::VRInputComponentHandle_t m_yAxis{};
+    vr::VRInputComponentHandle_t m_trigger{};
+    vr::VRInputComponentHandle_t m_triggerValue{};
+    vr::VRInputComponentHandle_t m_aButton{};
+    vr::VRInputComponentHandle_t m_bButton{};
+    vr::VRInputComponentHandle_t m_grip{};
+    vr::VRInputComponentHandle_t m_gripForce{};
 };

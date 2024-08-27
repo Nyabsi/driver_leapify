@@ -16,5 +16,8 @@
   "Setting_manual_mounting_orientation_offset": "Adjust Mounting Offset (Orientation)",
   "Setting_manual_mounting_offset_x": "Offset (X)",
   "Setting_manual_mounting_offset_y": "Offset (Y)",
-  "Setting_manual_mounting_offset_z": "Offset (Z)"
+  "Setting_manual_mounting_offset_z": "Offset (Z)",
+  "Setting_gesture_input": "Gesture Input (Experimental)",
+  "Setting_pinch_threshold": "Pinch Threshold",
+  "Setting_movement_threshold":  "Movement Threshold"
 }
