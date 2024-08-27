@@ -97,6 +97,20 @@ vr::EVRInitError TrackedController::Activate(uint32_t unObjectId)
         vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceReadyAlert_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_handtracking_status_ready_info.png" : "{leapify}/icons/right_handtracking_status_ready_info.png");
         vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceStandby_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_handtracking_off.png" : "{leapify}/icons/right_handtracking_off.png");
 
+        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/system/click", &m_systemMenu);
+
+        vr::VRDriverInput()->CreateScalarComponent(props, "/input/thumbstick/x", &m_xAxis, vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedTwoSided);
+        vr::VRDriverInput()->CreateScalarComponent(props, "/input/thumbstick/y", &m_yAxis, vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedTwoSided);
+
+        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/trigger/click", &m_trigger);
+        vr::VRDriverInput()->CreateScalarComponent(props, "/input/trigger/value", &m_triggerValue, vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedOneSided);
+
+        vr::VRDriverInput()->CreateScalarComponent(props, "/input/grip/force", &m_gripForce, vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedOneSided);
+        vr::VRDriverInput()->CreateScalarComponent(props, "/input/grip/value", &m_grip, vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedOneSided);
+
+        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/a/click", &m_aButton);
+        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/b/click", &m_bButton);
+
         if (m_role == vr::TrackedControllerRole_LeftHand)
             vr::VRDriverInput()->CreateSkeletonComponent(props, "/input/skeleton/left", "/skeleton/hand/left", "/pose/raw", vr::VRSkeletalTracking_Full, nullptr, 0, &m_skeletonHandle);
         else
