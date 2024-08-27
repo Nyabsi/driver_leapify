@@ -85,19 +85,17 @@ vr::EVRInitError TrackedController::Activate(uint32_t unObjectId)
         vr::VRProperties()->SetInt32Property(props, vr::Prop_Axis2Type_Int32, vr::k_eControllerAxis_Trigger);
 
         vr::VRProperties()->SetStringProperty(props, vr::Prop_ModelNumber_String, "Leap_Hand");
+        vr::VRProperties()->SetStringProperty(props, vr::Prop_ControllerType_String, "Leapify_Hand");
 
         vr::VRProperties()->SetStringProperty(props, vr::Prop_ResourceRoot_String, "leapify");
         vr::VRProperties()->SetStringProperty(props, vr::Prop_AdditionalDeviceSettingsPath_String, "{leapify}/settings/settingsschema.vrsettings");
-        vr::VRProperties()->SetStringProperty(props, vr::Prop_InputProfilePath_String, "{leapify}/input/index_controller_profile.json");
         vr::VRProperties()->SetStringProperty(props, vr::Prop_RenderModelName_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}valve_controller_knu_1_0_left" : "{leapify}valve_controller_knu_1_0_right");
-        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceOff_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_controller_status_off.png" : "{leapify}/icons/right_controller_status_off.png");
-        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceSearching_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_controller_status_searching.gif" : "{leapify}/icons/right_controller_status_searching.gif");
-        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceSearchingAlert_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_controller_status_searching_alert.gif" : "{leapify}/icons//right_controller_status_searching_alert.gif");
-        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceReady_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_controller_status_ready.png" : "{leapify}/icons//right_controller_status_ready.png");
-        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceReadyAlert_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_controller_status_ready_alert.png" : "{leapify}/icons//right_controller_status_ready_alert.png");
-        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceNotReady_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_controller_status_error.png" : "{leapify}/icons//right_controller_status_error.png");
-        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceStandby_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_controller_status_off.png" : "{leapify}/icons//right_controller_status_off.png");
-        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceAlertLow_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_controller_status_ready_low.png" : "{leapify}/icons//right_controller_status_ready_low.png");
+
+        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceOff_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_handtracking_off.png" : "{leapify}/icons/right_handtracking_off.png");
+        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceSearching_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_handtracking_searching.gif" : "{leapify}/icons/right_handtracking_searching.gif");
+        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceReady_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_handtracking_ready.png" : "{leapify}/icons/right_handtracking_ready.png");
+        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceReadyAlert_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_handtracking_status_ready_info.png" : "{leapify}/icons/right_handtracking_status_ready_info.png");
+        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceStandby_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_handtracking_off.png" : "{leapify}/icons/right_handtracking_off.png");
 
         if (m_role == vr::TrackedControllerRole_LeftHand)
             vr::VRDriverInput()->CreateSkeletonComponent(props, "/input/skeleton/left", "/skeleton/hand/left", "/pose/raw", vr::VRSkeletalTracking_Full, nullptr, 0, &m_skeletonHandle);
