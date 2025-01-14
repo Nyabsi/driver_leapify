@@ -4,9 +4,6 @@
 #include <thread>
 #include <assert.h>
 
-#include <glm/vec3.hpp>
-#include <glm/gtx/quaternion.hpp>
-
 #include <cstring>
 
 using namespace std::chrono_literals;
@@ -45,8 +42,6 @@ LeapHand LeapConnection::GetHand(vr::ETrackedControllerRole role) const
 
 	if (role == vr::TrackedControllerRole_RightHand)
 		return m_RightHand;
-
-	return LeapHand();
 }
 
 void LeapConnection::Poll()

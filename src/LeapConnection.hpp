@@ -6,9 +6,6 @@
 #include <atomic>
 #include <array>
 
-#include <glm/vec3.hpp>
-#include <glm/gtx/quaternion.hpp>
-
 struct LeapHand
 {
 	vr::ETrackedControllerRole role { vr::TrackedControllerRole_Invalid };
