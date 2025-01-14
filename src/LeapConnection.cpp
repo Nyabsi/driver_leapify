@@ -16,6 +16,9 @@ bool LeapConnection::Init()
 
 	result = LeapOpenConnection(m_connection);
 
+	LeapSetTrackingMode(m_connection, eLeapTrackingMode::eLeapTrackingMode_HMD);
+    LeapSetPolicyFlags(m_connection, eLeapPolicyFlag::eLeapPolicyFlag_OptimizeHMD, 0x0);
+
 	return result == eLeapRS::eLeapRS_Success;
 }
 
@@ -59,15 +62,10 @@ void LeapConnection::Poll()
 		switch (message.type)
 		{
 			case eLeapEventType_Device:
-				{
-					LeapSetTrackingMode(m_connection, eLeapTrackingMode::eLeapTrackingMode_HMD);
-					m_DeviceCount.exchange(m_DeviceCount + 1);
-				}
+				m_DeviceCount.exchange(m_DeviceCount + 1);
 				break;
 			case eLeapEventType_DeviceLost:
-				{
-					m_DeviceCount.exchange(m_DeviceCount - 1);
-				}
+				m_DeviceCount.exchange(m_DeviceCount - 1);
 				break;
 			case eLeapEventType_Tracking:
 			{
