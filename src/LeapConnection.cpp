@@ -64,10 +64,15 @@ void LeapConnection::Poll()
 		switch (message.type)
 		{
 			case eLeapEventType_Device:
-				m_DeviceCount.exchange(m_DeviceCount + 1);
+				{
+					LeapSetTrackingMode(m_connection, eLeapTrackingMode::eLeapTrackingMode_HMD);
+					m_DeviceCount.exchange(m_DeviceCount + 1);
+				}
 				break;
 			case eLeapEventType_DeviceLost:
-				m_DeviceCount.exchange(m_DeviceCount - 1);
+				{
+					m_DeviceCount.exchange(m_DeviceCount - 1);
+				}
 				break;
 			case eLeapEventType_Tracking:
 			{
