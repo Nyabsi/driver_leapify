@@ -1,7 +1,7 @@
 {
   "driver_leapify": {
     "enable": true,
-    "loadPriority": 10,
+    "loadPriority": 10000,
     "blocked_by_safe_mode": false,
     "handTrackingEnabled": true,
     "skeletalDataPassthrough": false,
