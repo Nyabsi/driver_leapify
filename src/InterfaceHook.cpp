@@ -44,7 +44,7 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
             return orig(self, pchDeviceSerialNumber, eDeviceClass, pDriver);
         };
 
-        rcmp::hook_indirect_function<bool(void* self, const char *pchDeviceSerialNumber, vr::ETrackedDeviceClass eDeviceClass, vr::ITrackedDeviceServerDriver *pDriver)>(vtable + 0 + vtable_offset, TrackedDeviceAdded_hook);
+        // rcmp::hook_indirect_function<bool(void* self, const char *pchDeviceSerialNumber, vr::ETrackedDeviceClass eDeviceClass, vr::ITrackedDeviceServerDriver *pDriver)>(vtable + 0 + vtable_offset, TrackedDeviceAdded_hook);
 
         auto TrackedDevicePoseUpdated_hook = [](auto orig, void* self, uint32_t unWhichDevice, const vr::DriverPose_t& newPose, uint32_t unPoseStructSize) -> void {
             
