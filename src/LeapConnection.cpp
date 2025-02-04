@@ -19,6 +19,9 @@ bool LeapConnection::Init()
 
 	result = LeapOpenConnection(m_connection);
 
+	// we don't know if result succeeded, well if it didn't, doesn't matter.
+	LeapSetTrackingMode(m_connection, eLeapTrackingMode_HMD);
+
 	return result == eLeapRS::eLeapRS_Success;
 }
 
