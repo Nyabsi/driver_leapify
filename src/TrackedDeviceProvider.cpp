@@ -30,6 +30,7 @@ void TrackedDeviceProvider::Cleanup()
 
 void TrackedDeviceProvider::RunFrame()
 {
+    // TODO: only update when new frame is received, this is fucking stupid.
     LeapHand left { };
     LeapHand right { };
 
