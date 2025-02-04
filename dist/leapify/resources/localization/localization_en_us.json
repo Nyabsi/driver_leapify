@@ -3,12 +3,11 @@
 
     "Settings_Title": "Leapify",
     "Setting_toggle_on": "Enabled",
-	"Setting_toggle_off": "Disabled",
+	  "Setting_toggle_off": "Disabled",
     "Setting_hand_tracking": "Hand Tracking",
-    "Setting_skeletal_passthrough": "Skeletal data passthrough",
-    "Setting_position_passthrough": "Position data passthrough",
-    "Setting_automatic_switch": "Auto Switch Hand Tracking And Controllers",
-    "Setting_automatic_offset": "Automatic Hand Offset (Recommended)",
-    "Setting_manual_offset": "Manual Hand Offset (mm)",
-    "Setting_block_oculus": "Block Meta/Oculus Controllers"
+    "Setting_skeletal_passthrough": "Skeletal Data Passthrough",
+    "Setting_position_passthrough": "Position Data Passthrough",
+    "Setting_automatic_switch": "Hand Tracking as Fallback",
+    "Setting_automatic_offset": "Automatic Hand Offset",
+    "Setting_manual_offset": "Manual Hand Offset"
 }
