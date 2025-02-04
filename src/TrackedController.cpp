@@ -188,24 +188,21 @@ void TrackedController::UpdatePose(LeapHand hand)
         if (vr::VRSettings()->GetBool("driver_leapify", "skeletalDataPassthrough") || vr::VRSettings()->GetBool("driver_leapify", "positionalDataPassthrough"))
         {
             m_pose.deviceIsConnected = false;
-            m_pose.poseIsValid = false;
         }
         else
         {
-            for (auto& state : StateManager::Get().getControllerStates())
+            if (vr::VRSettings()->GetBool("driver_leapify", "automaticControllerSwitching"))
             {
-                if (state.second == true)
-                    m_isControllerConnected = true;
-            }
+                for (auto& state : StateManager::Get().getControllerStates())
+                {
+                    if (state.second.isIdle == false)
+                        m_isControllerConnected = true;
+                }
 
-            if (m_isControllerConnected && vr::VRSettings()->GetBool("driver_leapify", "automaticControllerSwitching"))
-            {
-                m_pose.deviceIsConnected = false;
-                m_pose.poseIsValid = false;
+                m_pose.deviceIsConnected = !m_isControllerConnected;
             }
             else {
                 m_pose.deviceIsConnected = true;
-                m_pose.poseIsValid = false;
             }
         }
 
@@ -224,16 +221,12 @@ void TrackedController::UpdatePose(LeapHand hand)
                 const glm::quat headRotation = glm::quat_cast(hmdMatrix);
                 memcpy(&m_pose.qWorldFromDriverRotation, &headRotation, sizeof(glm::quat));
 
-                glm::vec3 worldOffset = headRotation * glm::vec3(0.0f, 0.0f, 0.0f);
-
-                m_pose.vecWorldFromDriverTranslation[0] += worldOffset.x;
-                m_pose.vecWorldFromDriverTranslation[1] += worldOffset.y;
-                m_pose.vecWorldFromDriverTranslation[2] += worldOffset.z;
+                m_pose.qDriverFromHeadRotation.w = 1;
 
                 glm::quat root = headRotation * glm::quat(glm::radians(glm::vec3(0.0f, 0.0f, 0.0f)));
                 ConvertQuaternion(root, m_pose.qWorldFromDriverRotation);
 
-                glm::vec3 velocity = root * glm::vec3(0, 0, 0);
+                glm::vec3 velocity = root * glm::vec3(-0.001f * hand.palm.velocity.x, -0.001f * hand.palm.velocity.y, -0.001f * hand.palm.velocity.z);
                 m_pose.vecVelocity[0] = velocity.x;
                 m_pose.vecVelocity[1] = velocity.y;
                 m_pose.vecVelocity[2] = velocity.z;
@@ -260,13 +253,14 @@ void TrackedController::UpdatePose(LeapHand hand)
                 m_pose.poseIsValid = true;
                 m_pose.result = vr::TrackingResult_Running_OK;
             }
-            vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
         }
         else {
-            vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
+            m_pose.poseIsValid = false;
         }
+
+        vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
     }
-    else 
+    else
     {
         m_pose.deviceIsConnected = false;
         m_pose.poseIsValid = false;

@@ -11,6 +11,11 @@ struct TransformHook {
 	vr::ETrackedControllerRole role;
 };
 
+struct ControllerState {
+	bool isIdle{ false };
+	int64_t timestamp{ -1 };
+};
+
 class StateManager {
 public:
 	static inline StateManager& Get() { return Singleton<StateManager>::get(); }
@@ -54,8 +59,11 @@ public:
 
 	void clearTransformHooks() { m_transformHooks.clear(); }
 
-	void updateControllerState(int device, bool newState) { m_controllerStates[device] = newState; }
-	std::map<int, bool> getControllerStates() { return m_controllerStates; }
+	void updateControllerState(int device, ControllerState newState) { m_controllerStates[device] = newState; }
+	std::map<int, ControllerState> getControllerStates() { return m_controllerStates; }
+	ControllerState& getState(int device) {
+		return m_controllerStates[device];
+	}
 
 	vr::DriverPose_t getLeapPose(vr::ETrackedControllerRole role) const
 	{ 
@@ -77,7 +85,7 @@ private:
 	vr::VRBoneTransform_t* m_passThroughTransformLeft { nullptr };
 	vr::VRBoneTransform_t* m_passThroughTransformRight { nullptr };
 	std::vector<TransformHook> m_transformHooks { };
-	std::map<int, bool> m_controllerStates { };
+	std::map<int, ControllerState> m_controllerStates{ };
 	vr::DriverPose_t m_passthroughPoseLeft { };
 	vr::DriverPose_t m_passthroughPoseRight { };
 };

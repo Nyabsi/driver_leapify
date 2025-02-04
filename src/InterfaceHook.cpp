@@ -1,5 +1,6 @@
 #include <InterfaceHook.hpp>
 #include <StateManager.hpp>
+#include <LeapC.h>
 
 #include <stdint.h>
 #include <string>
@@ -55,7 +56,37 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
 
                     if (device_class == vr::TrackedDeviceClass_Controller && manufacturer != "Ultraleap")
                     {
-                        StateManager::Get().updateControllerState(unWhichDevice, pose.deviceIsConnected);
+                        if (vr::VRSettings()->GetBool("driver_leapify", "automaticControllerSwitching"))
+                        {
+                            ControllerState& state = StateManager::Get().getState(unWhichDevice);
+
+                            auto calculateVelocityMagnitude = [](const vr::DriverPose_t& pose)
+                                {
+                                    return pose.vecVelocity[0] * pose.vecVelocity[0] +
+                                        pose.vecVelocity[1] * pose.vecVelocity[1] +
+                                        pose.vecVelocity[2] * pose.vecVelocity[2];
+                                };
+
+                            // value of 0.000025 was hand measured on Valve Index Controller
+                            // it may wary from vendor to vendor, TODO!
+                            if (calculateVelocityMagnitude(pose) <= 0.000025)
+                            {
+                                if (state.timestamp == -1)
+                                    state.timestamp = LeapGetNow();
+
+                                if ((LeapGetNow() - state.timestamp) >= 1000000) // LeapGetNow is in micro seconds
+                                {
+                                    state.isIdle = true;
+                                    pose.deviceIsConnected = false;  
+                                }
+                            }
+                            else {
+                                state.timestamp = -1;
+                                state.isIdle = false;
+                            }
+
+                            StateManager::Get().updateControllerState(unWhichDevice, state);
+                        }
 
                         if (manufacturer == "Oculus" && vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled") && vr::VRSettings()->GetBool("driver_leapify", "blockOculus"))
                         {
