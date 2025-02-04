@@ -67,14 +67,14 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                                         pose.vecVelocity[2] * pose.vecVelocity[2];
                                 };
 
-                            // value of 0.000025 was hand measured on Valve Index Controller
+                            // value of 0.000200 was hand measured on Valve Index Controller
                             // it may wary from vendor to vendor, TODO!
-                            if (calculateVelocityMagnitude(pose) <= 0.000025)
+                            if (calculateVelocityMagnitude(pose) <= 0.000200)
                             {
                                 if (state.timestamp == -1)
                                     state.timestamp = LeapGetNow();
 
-                                if ((LeapGetNow() - state.timestamp) >= 1000000) // LeapGetNow is in micro seconds
+                                if ((LeapGetNow() - state.timestamp) >= 3000000) // LeapGetNow is in micro seconds
                                 {
                                     state.isIdle = true;
                                     pose.deviceIsConnected = false;  
