@@ -24,6 +24,8 @@ struct LeapHand
 	};
 	LEAP_PALM palm { 0 };
 	LEAP_BONE arm { 0 };
+
+	int64_t timestamp { 0 };
 };
 
 class LeapConnection 

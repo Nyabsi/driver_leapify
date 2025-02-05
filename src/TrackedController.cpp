@@ -159,13 +159,15 @@ vr::DriverPose_t TrackedController::GetPose()
     return m_pose;
 }
 
-void TrackedController::Update(LeapHand hand)
+void TrackedController::Update(LeapHand hand, float offset)
 {
+    delayFromTransformation = LeapGetNow() + offset;
+
     ConvertPosition(hand.arm.next_joint, m_position);
     ConvertRotation(hand.palm.orientation, m_rotation);
     m_rotation = glm::normalize(m_rotation);
 
-    for (size_t i = 0; i < 5; i++)
+    for (size_t i = 0; i < 5; i++)  
     {
         for (size_t j = 0; j < 4; j++)
         {
@@ -175,8 +177,8 @@ void TrackedController::Update(LeapHand hand)
         }
     }
 
-    UpdateSkeletalPose(hand);
     UpdatePose(hand);
+    UpdateSkeletalPose(hand);
 }
 
 void TrackedController::UpdatePose(LeapHand hand)
@@ -208,8 +210,12 @@ void TrackedController::UpdatePose(LeapHand hand)
 
         if (hand.role != vr::TrackedControllerRole_Invalid && !m_isControllerConnected)
         {
+            int64_t delayOverhead = (static_cast<float>(LeapGetNow() - delayFromTransformation)) / 1000000;
+            float offset = -(((static_cast<float>(LeapGetNow() - hand.timestamp) / 1000000) - delayOverhead));
+
             vr::TrackedDevicePose_t pose;
-            vr::VRServerDriverHost()->GetRawTrackedDevicePoses(0, &pose, 1);
+            vr::VRServerDriverHost()->GetRawTrackedDevicePoses(offset, & pose, 1);
+
             if (pose.bPoseIsValid)
             {
                 for (size_t i = 0U; i < 3; i++)
@@ -219,17 +225,13 @@ void TrackedController::UpdatePose(LeapHand hand)
                 ConvertMatrix(pose.mDeviceToAbsoluteTracking, hmdMatrix);
 
                 const glm::quat headRotation = glm::quat_cast(hmdMatrix);
+
                 memcpy(&m_pose.qWorldFromDriverRotation, &headRotation, sizeof(glm::quat));
 
                 m_pose.qDriverFromHeadRotation.w = 1;
 
                 glm::quat root = headRotation * glm::quat(glm::radians(glm::vec3(vr::VRSettings()->GetFloat("driver_leapify", "rotationOffsetX"), vr::VRSettings()->GetFloat("driver_leapify", "rotationOffsetY"), vr::VRSettings()->GetFloat("driver_leapify", "rotationOffsetZ"))));
                 ConvertQuaternion(root, m_pose.qWorldFromDriverRotation);
-
-                glm::vec3 velocity = root * glm::vec3(-0.001f * hand.palm.velocity.x, -0.001f * hand.palm.velocity.y, -0.001f * hand.palm.velocity.z);
-                m_pose.vecVelocity[0] = velocity.x;
-                m_pose.vecVelocity[1] = velocity.y;
-                m_pose.vecVelocity[2] = velocity.z;
 
                 glm::quat rotation = m_rotation * (m_role == vr::TrackedControllerRole_LeftHand ? skeletonOffsetLeft : skeletonOffsetRight);
 
@@ -259,6 +261,10 @@ void TrackedController::UpdatePose(LeapHand hand)
         else {
             m_pose.poseIsValid = false;
         }
+
+        
+
+        // m_pose.poseTimeOffset = ((static_cast<double>(LeapGetNow()) - hand.timestamp) / 1000000) + 0.00838;
 
         vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
     }

@@ -2,6 +2,7 @@
 
 #include <openvr_driver.h>
 #include <LeapConnection.hpp>
+#include <LowPassFilter.hpp>
 
 #include <glm/gtx/quaternion.hpp>
 
@@ -98,7 +99,7 @@ public:
 	void* GetComponent(const char* pchComponentNameAndVersion);
 	void DebugRequest(const char* pchRequest, char* pchResponseBuffer, uint32_t unResponseBufferSize);
 	vr::DriverPose_t GetPose();
-	void Update(LeapHand hand);
+	void Update(LeapHand hand, float offset);
 private:
 	void UpdatePose(LeapHand hand);
 	void UpdateSkeletalPose(LeapHand hand);
@@ -121,4 +122,10 @@ private:
     glm::vec3 m_position;
     glm::quat m_rotation;
     bool m_isControllerConnected { };
+
+    int64_t delayFromTransformation { 0 };
+
+    LowPassFilter<float, 32> m_lowPassX;
+    LowPassFilter<float, 32> m_lowPassY;
+    LowPassFilter<float, 32> m_lowPassZ;
 };

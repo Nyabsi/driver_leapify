@@ -76,6 +76,7 @@ void LeapConnection::Poll()
 			{
 				LeapHand data { };
 				LEAP_TRACKING_EVENT event = *message.tracking_event;
+				data.timestamp = event.info.timestamp;
 
 				if (m_frameId != event.tracking_frame_id)
 				{
@@ -113,6 +114,6 @@ void LeapConnection::Poll()
 				break;
 		}
 
-		std::this_thread::sleep_for(1ms);
+		std::this_thread::sleep_for(10ns);
 	}
 }
