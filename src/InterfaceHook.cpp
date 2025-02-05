@@ -45,7 +45,7 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                    return false;
            });
 
-           rcmp::hook_indirect_function<void(*)(void* self, uint32_t unWhichDevice, const vr::DriverPose_t& newPose, uint32_t unPoseStructSize)>(vtable + 1 + vtable_offset, [](auto orig, void* self, uint32_t unWhichDevice, const vr::DriverPose_t& newPose, uint32_t unPoseStructSize) -> void
+           rcmp::hook_indirect_function<void(*)(void* self, uint32_t unWhichDevice, const vr::DriverPose_t& newPose, uint32_t unPoseStructSize)>(vtable + 1 + vtable_offset, [this](auto orig, void* self, uint32_t unWhichDevice, const vr::DriverPose_t& newPose, uint32_t unPoseStructSize) -> void
            {
                     auto pose = newPose;
                     auto props = vr::VRProperties()->TrackedDeviceToPropertyContainer(unWhichDevice);
@@ -67,14 +67,13 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                                         pose.vecVelocity[2] * pose.vecVelocity[2];
                                 };
 
-                            // value of 0.000200 was hand measured on Valve Index Controller
-                            // it may wary from vendor to vendor, TODO!
-                            if (calculateVelocityMagnitude(pose) <= 0.000200)
+                            m_lowPassFilter.filterValue(calculateVelocityMagnitude(pose));
+                            if (m_lowPassFilter.getValue() <= 0.000025)
                             {
                                 if (state.timestamp == -1)
                                     state.timestamp = LeapGetNow();
 
-                                if ((LeapGetNow() - state.timestamp) >= 3000000) // LeapGetNow is in micro seconds
+                                if ((LeapGetNow() - state.timestamp) >= 5000000) // LeapGetNow is in micro seconds
                                 {
                                     state.isIdle = true;
                                     pose.deviceIsConnected = false;  

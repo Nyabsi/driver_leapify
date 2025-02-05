@@ -3,6 +3,8 @@
 #include <openvr_driver.h>
 #include <vector>
 
+#include <LowPassFilter.hpp>
+
 class InterfaceHook
 {
 public:
@@ -14,4 +16,6 @@ private:
 
     bool m_IVRServerDriverHostHooked_006 { false };
     bool m_IVRDriverInputHooked_003 { false };
+
+    LowPassFilter<double, 32> m_lowPassFilter;
 };
