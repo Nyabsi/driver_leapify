@@ -8,6 +8,9 @@
     "positionalDataPassthrough": false,
     "automaticControllerSwitching": false,
     "automaticHandOffset": true,
-    "manualHandOffset": 0.0
+    "manualHandOffset": 0.0,
+    "rotationOffsetX": 0.0,
+    "rotationOffsetY": 0.0,
+    "rotationOffsetZ": 0.0
   }
 }

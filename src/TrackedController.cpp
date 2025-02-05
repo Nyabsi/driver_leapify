@@ -223,7 +223,7 @@ void TrackedController::UpdatePose(LeapHand hand)
 
                 m_pose.qDriverFromHeadRotation.w = 1;
 
-                glm::quat root = headRotation * glm::quat(glm::radians(glm::vec3(0.0f, 0.0f, 0.0f)));
+                glm::quat root = headRotation * glm::quat(glm::radians(glm::vec3(vr::VRSettings()->GetFloat("driver_leapify", "rotationOffsetX"), vr::VRSettings()->GetFloat("driver_leapify", "rotationOffsetY"), vr::VRSettings()->GetFloat("driver_leapify", "rotationOffsetZ"))));
                 ConvertQuaternion(root, m_pose.qWorldFromDriverRotation);
 
                 glm::vec3 velocity = root * glm::vec3(-0.001f * hand.palm.velocity.x, -0.001f * hand.palm.velocity.y, -0.001f * hand.palm.velocity.z);
