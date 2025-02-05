@@ -7,7 +7,7 @@
     "Setting_hand_tracking": "Hand Tracking",
     "Setting_skeletal_passthrough": "Skeletal Data Passthrough",
     "Setting_position_passthrough": "Position Data Passthrough",
-    "Setting_automatic_switch": "Hand Tracking as Fallback",
+    "Setting_automatic_switch": "Switch between Hand Tracking & Controllers",
     "Setting_automatic_offset": "Automatic Hand Offset",
     "Setting_manual_offset": "Manual Hand Offset",
     "Setting_head_offset_x": "Head Offset (X)",
