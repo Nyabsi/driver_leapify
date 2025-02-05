@@ -243,12 +243,14 @@ void TrackedController::UpdatePose(LeapHand hand)
                 m_pose.qRotation.z = rotation.z;
                 m_pose.qRotation.w = rotation.w;
 
-                float offset = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? -((-0.001f * hand.arm.prev_joint.y - -0.001f * hand.arm.next_joint.y)) : -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffset");
+                float offsetX = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? 0 : 0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffsetX");
+                float offsetY = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? 0 : 0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffsetY");
+                float offsetZ = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? -((-0.001f * hand.arm.prev_joint.y - -0.001f * hand.arm.next_joint.y)) : -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffsetZ");
 
                 glm::vec4 position = matrix * zeroPoint;
-                m_pose.vecPosition[0] = position.x;
-                m_pose.vecPosition[1] = position.y;
-                m_pose.vecPosition[2] = position.z + offset;
+                m_pose.vecPosition[0] = position.x + offsetX;
+                m_pose.vecPosition[1] = position.y + offsetY;
+                m_pose.vecPosition[2] = position.z + offsetZ;
 
                 m_pose.poseIsValid = true;
                 m_pose.result = vr::TrackingResult_Running_OK;

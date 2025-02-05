@@ -1,16 +1,18 @@
 {
-    "language_tag": "en_US",
+  "language_tag": "en_US",
 
-    "Settings_Title": "Leapify",
-    "Setting_toggle_on": "Enabled",
-    "Setting_toggle_off": "Disabled",
-    "Setting_hand_tracking": "Hand Tracking",
-    "Setting_skeletal_passthrough": "Skeletal Data Passthrough",
-    "Setting_position_passthrough": "Position Data Passthrough",
-    "Setting_automatic_switch": "Switch between Hand Tracking & Controllers",
-    "Setting_automatic_offset": "Automatic Hand Offset",
-    "Setting_manual_offset": "Manual Hand Offset",
-    "Setting_head_offset_x": "Head Offset (X)",
-    "Setting_head_offset_y": "Head Offset (Y)",
-    "Setting_head_offset_z": "Head Offset (Z)"
+  "Settings_Title": "Leapify",
+  "Setting_toggle_on": "Enabled",
+  "Setting_toggle_off": "Disabled",
+  "Setting_hand_tracking": "Hand Tracking",
+  "Setting_skeletal_passthrough": "Skeletal Data Passthrough",
+  "Setting_position_passthrough": "Position Data Passthrough",
+  "Setting_automatic_switch": "Switch between Hand Tracking & Controllers",
+  "Setting_automatic_offset": "Automatic Hand Offset",
+  "Setting_manual_offset_x": "Hand Offset (Left/Right)",
+  "Setting_manual_offset_y": "Hand Offset (Down/Up)",
+  "Setting_manual_offset_z": "Hand Offset (Backwards/Towards)",
+  "Setting_head_offset_x": "Head Rotation Offset (Pitch)",
+  "Setting_head_offset_y": "Head Rotation Offset (Yaw)",
+  "Setting_head_offset_z": "Head Rotation Offset (Roll)"
 }

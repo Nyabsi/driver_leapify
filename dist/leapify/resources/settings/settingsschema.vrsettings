@@ -41,46 +41,71 @@
         "off_label": "#{leapify}Setting_toggle_off"
       },
       {
-        "name": "/settings/driver_leapify/manualHandOffset",
+        "name": "/settings/driver_leapify/manualHandOffsetX",
         "control": "slider",
-        "label": "#{leapify}Setting_manual_offset",
+        "label": "#{leapify}Setting_manual_offset_x",
         "type": "float",
         "min": -500,
         "max": 500,
         "decimals": 1,
         "requires": {
           "/settings/driver_leapify/automaticHandOffset": false
-        },
-        {
-          "name": "/settings/driver_leapify/rotationOffsetX",
-          "control": "slider",
-          "advanced_only": true,
-          "label": "#{leapify}Setting_head_offset_x",
-          "type": "float",
-          "min": -360,
-          "max": 360,
-          "decimals": 1
-        },
-        {
-          "name": "/settings/driver_leapify/rotationOffsetY",
-          "control": "slider",
-          "advanced_only": true,
-          "label": "#{leapify}Setting_head_offset_y",
-          "type": "float",
-          "min": -360,
-          "max": 360,
-          "decimals": 1
-        },
-        {
-          "name": "/settings/driver_leapify/rotationOffsetZ",
-          "control": "slider",
-          "advanced_only": true,
-          "label": "#{leapify}Setting_head_offset_z",
-          "type": "float",
-          "min": -360,
-          "max": 360,
-          "decimals": 1
         }
+      },
+      {
+        "name": "/settings/driver_leapify/manualHandOffsetY",
+        "control": "slider",
+        "label": "#{leapify}Setting_manual_offset_y",
+        "type": "float",
+        "min": -500,
+        "max": 500,
+        "decimals": 1,
+        "requires": {
+          "/settings/driver_leapify/automaticHandOffset": false
+        }
+      },
+      {
+        "name": "/settings/driver_leapify/manualHandOffsetZ",
+        "control": "slider",
+        "label": "#{leapify}Setting_manual_offset_z",
+        "type": "float",
+        "min": -500,
+        "max": 500,
+        "decimals": 1,
+        "requires": {
+          "/settings/driver_leapify/automaticHandOffset": false
+        }
+      },
+      {
+        "name": "/settings/driver_leapify/rotationOffsetX",
+        "control": "slider",
+        "advanced_only": true,
+        "label": "#{leapify}Setting_head_offset_x",
+        "type": "float",
+        "min": -360,
+        "max": 360,
+        "decimals": 1
+      },
+      {
+        "name": "/settings/driver_leapify/rotationOffsetY",
+        "control": "slider",
+        "advanced_only": true,
+        "label": "#{leapify}Setting_head_offset_y",
+        "type": "float",
+        "min": -360,
+        "max": 360,
+        "decimals": 1
+      },
+      {
+        "name": "/settings/driver_leapify/rotationOffsetZ",
+        "control": "slider",
+        "advanced_only": true,
+        "label": "#{leapify}Setting_head_offset_z",
+        "type": "float",
+        "min": -360,
+        "max": 360,
+        "decimals": 1
+      }
     ]
   }
 ]
