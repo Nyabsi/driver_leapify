@@ -105,6 +105,12 @@ void LeapConnection::Poll()
 						}
 					}
 
+					if (!skipLeft)
+						m_LeftHand.exchange(LeapHand());
+
+					if (!skipRight)
+						m_RightHand.exchange(LeapHand());
+
 					m_frameId.exchange(event.tracking_frame_id);
 				}
 
