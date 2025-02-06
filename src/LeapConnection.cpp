@@ -92,13 +92,13 @@ void LeapConnection::Poll()
 						data.palm = hand.palm;
 						data.arm = hand.arm;
 
-						if (data.role == vr::TrackedControllerRole_LeftHand && !skipLeft)
+						if (data.role == vr::TrackedControllerRole_LeftHand)
 						{
 							m_LeftHand.exchange(data);
 							skipLeft = true;
 						}
 							
-						if (data.role == vr::TrackedControllerRole_RightHand && !skipRight)
+						if (data.role == vr::TrackedControllerRole_RightHand)
 						{
 							m_RightHand.exchange(data);
 							skipRight = true;
