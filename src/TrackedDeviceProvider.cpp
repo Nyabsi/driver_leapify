@@ -40,12 +40,6 @@ void TrackedDeviceProvider::RunFrame()
         right = m_LeapConnection.GetHand(vr::TrackedControllerRole_RightHand);
     }
 
-    int64_t beforeLeft = LeapGetNow();
-
-    m_Left.Update(left, 0);
-
-    int64_t afterLeft = LeapGetNow();
-    int64_t rightOffset = (afterLeft - beforeLeft);
-    
-    m_Right.Update(right, rightOffset);
+    m_Left.Update(left);
+    m_Right.Update(right);
 }
