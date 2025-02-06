@@ -6,6 +6,8 @@
 #include <vector>
 #include <map>
 
+#include <SimpleKalmanFilter.hpp>
+
 struct TransformHook {
 	vr::VRInputComponentHandle_t handle;
 	vr::ETrackedControllerRole role;
@@ -14,6 +16,7 @@ struct TransformHook {
 struct ControllerState {
 	bool isIdle{ false };
 	int64_t timestamp{ -1 };
+	SimpleKalmanFilter m_velocity{};
 };
 
 class StateManager {

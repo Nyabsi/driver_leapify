@@ -3,8 +3,6 @@
 #include <openvr_driver.h>
 #include <vector>
 
-#include <SimpleKalmanFilter.hpp>
-
 class InterfaceHook
 {
 public:
@@ -16,6 +14,4 @@ private:
 
     bool m_IVRServerDriverHostHooked_006 { false };
     bool m_IVRDriverInputHooked_003 { false };
-
-    SimpleKalmanFilter m_KalmanFilter;
 };
