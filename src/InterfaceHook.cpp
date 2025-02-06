@@ -67,8 +67,7 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                                         pose.vecVelocity[2] * pose.vecVelocity[2];
                                 };
 
-                            m_lowPassFilter.filterValue(calculateVelocityMagnitude(pose));
-                            if (m_lowPassFilter.getValue() <= 0.000025)
+                            if (m_KalmanFilter.update(calculateVelocityMagnitude(pose)) <= 0.010000)
                             {
                                 if (state.timestamp == -1)
                                     state.timestamp = LeapGetNow();
