@@ -67,7 +67,7 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                                         pose.vecVelocity[2] * pose.vecVelocity[2];
                                 };
 
-                            if (state.m_velocity.update(calculateVelocityMagnitude(pose)) <= 0.005000)
+                            if (state.m_velocity.update(calculateVelocityMagnitude(pose)) < 0.000030)
                             {
                                 if (state.timestamp == -1)
                                     state.timestamp = LeapGetNow();
