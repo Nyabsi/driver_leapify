@@ -122,4 +122,5 @@ private:
     glm::vec3 m_position;
     glm::quat m_rotation;
     bool m_isControllerConnected { };
+    float m_previousOffset { };
 };
