@@ -26,6 +26,7 @@ struct LeapHand
 	LEAP_BONE arm { 0 };
 
 	int64_t timestamp { 0 };
+	LEAP_VECTOR accelerometer{ 0 };
 };
 
 class LeapConnection 
@@ -46,5 +47,6 @@ private:
 	std::atomic<LeapHand> m_LeftHand { };
 	std::atomic<LeapHand> m_RightHand { };
 	std::atomic<int64_t> m_frameId { };
+	std::atomic<LEAP_VECTOR> m_accelerometer { };
 	LEAP_CONNECTION m_connection { nullptr };
 };

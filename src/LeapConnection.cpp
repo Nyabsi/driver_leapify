@@ -72,6 +72,12 @@ void LeapConnection::Poll()
 			case eLeapEventType_DeviceLost:
 				m_DeviceCount.exchange(m_DeviceCount - 1);
 				break;
+			case eLeapEventType_IMU:
+			{
+				LEAP_IMU_EVENT event = *message.imu_event;
+				m_accelerometer.exchange(event.accelerometer);
+				break;
+			}
 			case eLeapEventType_Tracking:
 			{
 				LeapHand data { };
@@ -91,6 +97,7 @@ void LeapConnection::Poll()
 						memcpy(&data.digits, &hand.digits, sizeof(data.digits));
 						data.palm = hand.palm;
 						data.arm = hand.arm;
+						data.accelerometer = m_accelerometer;
 
 						if (data.role == vr::TrackedControllerRole_LeftHand)
 						{

@@ -3,6 +3,7 @@
 #include <Math.hpp>
 
 #include <cstring>
+#include <Windows.h>
 
 constexpr glm::mat4 identityMatrix = glm::mat4(1.0f);
 constexpr glm::vec4 zeroPoint = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
@@ -161,7 +162,9 @@ vr::DriverPose_t TrackedController::GetPose()
 
 void TrackedController::Update(LeapHand hand)
 {
-    ConvertPosition(hand.palm.position, m_position);
+    delayFromTransformation = LeapGetNow();
+
+    ConvertPosition(hand.arm.next_joint, m_position);
     ConvertRotation(hand.palm.orientation, m_rotation);
     m_rotation = glm::normalize(m_rotation);
 
@@ -215,7 +218,8 @@ void TrackedController::UpdatePose(LeapHand hand)
 
         if (hand.role != vr::TrackedControllerRole_Invalid && !m_isControllerConnected)
         {
-            float offset = -(((static_cast<float>(LeapGetNow() - hand.timestamp) / 1000000)));
+            int64_t delayOverhead = (static_cast<float>(LeapGetNow() - delayFromTransformation)) / 1000000;
+            float offset = -(((static_cast<float>(LeapGetNow() - hand.timestamp) / 1000000)) - delayOverhead);
 
             vr::TrackedDevicePose_t pose;
             vr::VRServerDriverHost()->GetRawTrackedDevicePoses(offset, & pose, 1);
@@ -231,12 +235,6 @@ void TrackedController::UpdatePose(LeapHand hand)
                 const glm::quat headRotation = glm::quat_cast(hmdMatrix);
 
                 memcpy(&m_pose.qWorldFromDriverRotation, &headRotation, sizeof(glm::quat));
-
-                //glm::vec3 translationOffset = headRotation * glm::vec3(0.0f, -0.015f, 0.0f); // TODO: hardcoded for personal setup, configurable!
-
-                //m_pose.vecWorldFromDriverTranslation[0] += translationOffset.x;
-                //m_pose.vecWorldFromDriverTranslation[1] += translationOffset.y;
-                //m_pose.vecWorldFromDriverTranslation[2] += translationOffset.z;
 
                 m_pose.qDriverFromHeadRotation.w = 1;
 
@@ -255,11 +253,11 @@ void TrackedController::UpdatePose(LeapHand hand)
                 m_pose.qRotation.z = rotation.z;
                 m_pose.qRotation.w = rotation.w;
 
-                auto calculateOffsetDistance = [&](LeapHand& hand)
+                auto calculateOffsetDistanceZ = [&](LeapHand& hand)
                     {
                         float elbowHeight = std::abs(hand.arm.prev_joint.y - hand.arm.next_joint.y);
 
-                        float result = elbowHeight - (elbowHeight * 0.9f);
+                        float result = elbowHeight - (elbowHeight * 0.6f);
                         if (m_previousOffset > result && m_previousOffset != 0)
                             return m_previousOffset;
 
@@ -267,9 +265,25 @@ void TrackedController::UpdatePose(LeapHand hand)
                         return result;
                     };
 
-                float offsetX = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? 0 : 0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffsetX");
-                float offsetY = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? 0 : 0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffsetY");
-                float offsetZ = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? -0.001f * (calculateOffsetDistance(hand)) : -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffsetZ");
+                auto calculateOffsetDistanceX = [&](LeapHand& hand)
+                    {
+                        const float dTime = 0.01f; // ~100 hz
+                        
+                        glm::vec3 leapVelocity = headRotation * glm::vec3(hand.accelerometer.x * dTime, hand.accelerometer.z * dTime, hand.accelerometer.y * dTime);
+                        glm::vec3 hmdVelocity = glm::vec3(pose.vVelocity.v[0], pose.vVelocity.v[1], pose.vVelocity.v[2]);
+
+                        glm::vec3 displacement = {
+                            (hmdVelocity.x * dTime) - (leapVelocity.x * dTime),
+                            (hmdVelocity.y * dTime) - (leapVelocity.y * dTime),
+                            (hmdVelocity.z * dTime) - (leapVelocity.z * dTime)
+                        };
+
+                        return displacement.x;
+                    };
+
+                float offsetX = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? 0.001f * (calculateOffsetDistanceX(hand)) : 0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffsetX");
+                float offsetY = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? 0.001f * 0.0 : 0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffsetY");
+                float offsetZ = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? -0.001f * (calculateOffsetDistanceZ(hand)) : -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffsetZ");
 
                 glm::vec4 position = matrix * zeroPoint;
                 m_pose.vecPosition[0] = position.x + offsetX;
@@ -287,7 +301,7 @@ void TrackedController::UpdatePose(LeapHand hand)
 
         
 
-        m_pose.poseTimeOffset = 0;
+        //m_pose.poseTimeOffset = 0;
         vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
     }
     else

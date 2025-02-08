@@ -123,4 +123,7 @@ private:
     glm::quat m_rotation;
     bool m_isControllerConnected { };
     float m_previousOffset { };
+    float m_previousOffsetY {};
+    float m_previousOffsetX{};
+    int64_t delayFromTransformation{};
 };
