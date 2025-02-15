@@ -1,9 +1,10 @@
 #include <TrackedController.hpp>
 #include <StateManager.hpp>
-#include <Math.hpp>
 
 #include <cstring>
 #include <Windows.h>
+
+#include <Math.hpp>
 
 constexpr glm::mat4 identityMatrix = glm::mat4(1.0f);
 constexpr glm::vec4 zeroPoint = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
@@ -164,8 +165,8 @@ void TrackedController::Update(LeapHand hand)
 {
     delayFromTransformation = LeapGetNow();
 
-    ConvertPosition(hand.arm.next_joint, m_position);
-    ConvertRotation(hand.palm.orientation, m_rotation);
+    math::ConvertPosition(hand.arm.next_joint, m_position);
+    math::ConvertRotation(hand.palm.orientation, m_rotation);
     m_rotation = glm::normalize(m_rotation);
 
     for (size_t i = 0; i < 5; i++)  
@@ -173,8 +174,8 @@ void TrackedController::Update(LeapHand hand)
         for (size_t j = 0; j < 4; j++)
         {
             size_t index = i * 4 + j;
-            ConvertPosition(hand.digits[i].bones[j].prev_joint, m_bonePositions[index]);
-            ConvertRotation(hand.digits[i].bones[j].rotation, m_boneRotations[index]);
+            math::ConvertPosition(hand.digits[i].bones[j].prev_joint, m_bonePositions[index]);
+            math::ConvertRotation(hand.digits[i].bones[j].rotation, m_boneRotations[index]);
         }
     }
 
@@ -230,7 +231,7 @@ void TrackedController::UpdatePose(LeapHand hand)
                     m_pose.vecWorldFromDriverTranslation[i] = pose.mDeviceToAbsoluteTracking.m[i][3];
 
                 glm::mat4 hmdMatrix(1.0f);
-                ConvertMatrix(pose.mDeviceToAbsoluteTracking, hmdMatrix);
+                math::ConvertMatrix(pose.mDeviceToAbsoluteTracking, hmdMatrix);
 
                 const glm::quat headRotation = glm::quat_cast(hmdMatrix);
 
@@ -239,7 +240,7 @@ void TrackedController::UpdatePose(LeapHand hand)
                 m_pose.qDriverFromHeadRotation.w = 1;
 
                 glm::quat root = headRotation * glm::quat(glm::radians(glm::vec3(vr::VRSettings()->GetFloat("driver_leapify", "rotationOffsetX"), vr::VRSettings()->GetFloat("driver_leapify", "rotationOffsetY"), vr::VRSettings()->GetFloat("driver_leapify", "rotationOffsetZ"))));
-                ConvertQuaternion(root, m_pose.qWorldFromDriverRotation);
+                math::ConvertQuaternion(root, m_pose.qWorldFromDriverRotation);
 
                 glm::quat rotation = m_rotation * (m_role == vr::TrackedControllerRole_LeftHand ? skeletonOffsetLeft : skeletonOffsetRight);
 
@@ -281,12 +282,28 @@ void TrackedController::UpdatePose(LeapHand hand)
                         return displacement.x;
                     };
 
+                auto calculateOffsetDistanceY = [&](LeapHand& hand)
+                    {
+                        const float dTime = 0.01f; // ~100 hz
+
+                        glm::vec3 leapVelocity = headRotation * glm::vec3(hand.accelerometer.x * dTime, hand.accelerometer.z * dTime, hand.accelerometer.y * dTime);
+                        glm::vec3 hmdVelocity = glm::vec3(pose.vVelocity.v[0], pose.vVelocity.v[1], pose.vVelocity.v[2]);
+
+                        glm::vec3 displacement = {
+                            (hmdVelocity.x * dTime) - (leapVelocity.x * dTime),
+                            (hmdVelocity.y * dTime) - (leapVelocity.y * dTime),
+                            (hmdVelocity.z * dTime) - (leapVelocity.z * dTime)
+                        };
+
+                        return displacement.y;
+                    };
+
                 float offsetX = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? 0.001f * (calculateOffsetDistanceX(hand)) : 0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffsetX");
-                float offsetY = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? 0.001f * 0.0 : 0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffsetY");
+                float offsetY = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? 0.001f * (calculateOffsetDistanceY(hand)) : 0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffsetY");
                 float offsetZ = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? -0.001f * (calculateOffsetDistanceZ(hand)) : -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffsetZ");
 
                 glm::vec4 position = matrix * zeroPoint;
-                m_pose.vecPosition[0] = position.x + offsetX;
+                m_pose.vecPosition[0] = position.x + (m_role == vr::TrackedControllerRole_LeftHand ? -offsetX : offsetX);
                 m_pose.vecPosition[1] = position.y + offsetY;
                 m_pose.vecPosition[2] = position.z + offsetZ;
 
@@ -328,22 +345,22 @@ void TrackedController::UpdateSkeletalPose(LeapHand hand)
                 ChangeBoneOrientation(rotation);
                 if (j == 0U)
                     FixMetacarpalBone(rotation);
-                ConvertQuaternion(rotation, m_boneTransform[index + j].orientation);
+                math::ConvertQuaternion(rotation, m_boneTransform[index + j].orientation);
 
                 if (j > 0U)
                 {
                     glm::vec3 position;
                     GetFingerBoneLocalPosition(hand, i, (thumb ? (j + 1) : j), position, thumb);
                     ChangeBonePosition(position);
-                    ConvertVector3(position, m_boneTransform[index + j].position);
+                    math::ConvertVector3(position, m_boneTransform[index + j].position);
                 }
             }
         }
 
         glm::vec3 position;
         glm::quat rotation;
-        ConvertVector3(m_boneTransform[SB_Wrist].position, position);
-        ConvertQuaternion(m_boneTransform[SB_Wrist].orientation, rotation);
+        math::ConvertVector3(m_boneTransform[SB_Wrist].position, position);
+        math::ConvertQuaternion(m_boneTransform[SB_Wrist].orientation, rotation);
 
         const glm::mat4 wristMatrix = glm::translate(identityMatrix, position) * glm::mat4_cast(rotation);
         for (size_t i = HF_Thumb; i < HF_Count; i++)
@@ -352,8 +369,8 @@ void TrackedController::UpdateSkeletalPose(LeapHand hand)
             const size_t l_chainIndex = GetFingerBoneIndex(i);
             for (size_t j = 0; j < ((i == HF_Thumb) ? 3 : 4); j++)
             {
-                ConvertVector3(m_boneTransform[l_chainIndex + j].position, position);
-                ConvertQuaternion(m_boneTransform[l_chainIndex + j].orientation, rotation);
+                math::ConvertVector3(m_boneTransform[l_chainIndex + j].position, position);
+                math::ConvertQuaternion(m_boneTransform[l_chainIndex + j].orientation, rotation);
                 chainMatrix = chainMatrix * (glm::translate(identityMatrix, position) * glm::mat4_cast(rotation));
             }
 
@@ -362,8 +379,8 @@ void TrackedController::UpdateSkeletalPose(LeapHand hand)
             if (m_role == vr::TrackedControllerRole_LeftHand)
                 ChangeAuxTransformation(position, rotation);
 
-            ConvertVector3(position, m_boneTransform[SB_Aux_Thumb + i].position);
-            ConvertQuaternion(rotation, m_boneTransform[SB_Aux_Thumb + i].orientation);
+            math::ConvertVector3(position, m_boneTransform[SB_Aux_Thumb + i].position);
+            math::ConvertQuaternion(rotation, m_boneTransform[SB_Aux_Thumb + i].orientation);
         }
 
         StateManager::Get().setLeapTransform(m_boneTransform, m_role);

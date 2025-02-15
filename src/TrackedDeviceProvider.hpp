@@ -1,10 +1,12 @@
 #pragma once
 
 #include <TrackedController.hpp>
+#include <TrackedObject.hpp>
 #include <InterfaceHook.hpp>
 #include <LeapConnection.hpp>
 
 #include <openvr_driver.h>
+#include <vector>
 
 class TrackedDeviceProvider : public vr::IServerTrackedDeviceProvider 
 {
@@ -29,4 +31,5 @@ private:
     TrackedController m_Right { vr::ETrackedControllerRole::TrackedControllerRole_RightHand };
     InterfaceHook m_InterfaceHook { };
     LeapConnection m_LeapConnection { };
+    std::vector<TrackedObject> m_trackers { };
 };

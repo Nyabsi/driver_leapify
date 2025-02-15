@@ -27,6 +27,7 @@ add_library(${PROJECT_NAME} SHARED
 	${SRC_DIR}/TrackedController.cpp
 	${SRC_DIR}/LeapConnection.cpp
 	${SRC_DIR}/SimpleKalmanFilter.cpp
+	${SRC_DIR}/TrackedObject.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_DIR})

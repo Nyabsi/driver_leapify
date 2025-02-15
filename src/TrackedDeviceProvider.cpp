@@ -10,8 +10,19 @@ vr::EVRInitError TrackedDeviceProvider::Init(vr::IVRDriverContext* pDriverContex
     VR_INIT_SERVER_DRIVER_CONTEXT(pDriverContext);
     m_InterfaceHook.Init(pDriverContext);
 
+    //m_trackers.push_back(TrackedObject("Wrist_Tracker_Left", true, 1));
+    //m_trackers.push_back(TrackedObject("Wrist_Tracker_Right", false, 1));
+    //m_trackers.push_back(TrackedObject("Elbow_Tracker_Left", true, 2));
+    //m_trackers.push_back(TrackedObject("Elbow_Tracker_Right", false, 2));
+
     vr::VRServerDriverHost()->TrackedDeviceAdded("Leap_Left_Hand", vr::TrackedDeviceClass_Controller, &m_Left);
     vr::VRServerDriverHost()->TrackedDeviceAdded("Leap_Right_Hand", vr::TrackedDeviceClass_Controller, &m_Right);
+
+    /*
+    for (auto& tracker : m_trackers) {
+        vr::VRServerDriverHost()->TrackedDeviceAdded(tracker.getSerial(), vr::TrackedDeviceClass_GenericTracker, &tracker);
+    }
+    */
 
     bool connected = m_LeapConnection.Init();
 
@@ -42,4 +53,10 @@ void TrackedDeviceProvider::RunFrame()
 
     m_Left.Update(left);
     m_Right.Update(right);
+
+    /*
+    for (auto& tracker : m_trackers) {
+        tracker.Update(tracker.isLeft() ? left : right);
+    }
+    */
 }
