@@ -99,7 +99,7 @@ public:
 	void* GetComponent(const char* pchComponentNameAndVersion);
 	void DebugRequest(const char* pchRequest, char* pchResponseBuffer, uint32_t unResponseBufferSize);
 	vr::DriverPose_t GetPose();
-	void Update(LeapHand hand);
+	void Update(std::vector<LeapHand> hands);
 private:
 	void UpdatePose(LeapHand hand);
 	void UpdateSkeletalPose(LeapHand hand);

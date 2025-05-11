@@ -51,8 +51,8 @@ void TrackedDeviceProvider::RunFrame()
         right = m_LeapConnection.GetHand(vr::TrackedControllerRole_RightHand);
     }
 
-    m_Left.Update(left);
-    m_Right.Update(right);
+    m_Left.Update({left, right });
+    m_Right.Update({ left, right });
 
     /*
     for (auto& tracker : m_trackers) {

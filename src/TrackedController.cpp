@@ -160,8 +160,14 @@ vr::DriverPose_t TrackedController::GetPose()
     return m_pose;
 }
 
-void TrackedController::Update(LeapHand hand)
+void TrackedController::Update(std::vector<LeapHand> hands)
 {
+     auto it = std::find_if(hands.begin(), hands.end(), [&](const LeapHand& hand) {
+        return hand.role == m_role;
+    });
+
+    LeapHand hand = *it; // guaranteed.
+
     delayFromTransformation = LeapGetNow();
 
     math::ConvertPosition(hand.arm.next_joint, m_position);
