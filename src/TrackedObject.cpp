@@ -1,5 +1,5 @@
 #include <TrackedObject.hpp>
-
+#include <cstring>
 #include <glm/gtx/quaternion.hpp>
 
 template<class T, class U> void ConvertQuaternion(const T& p_src, U& p_dst)

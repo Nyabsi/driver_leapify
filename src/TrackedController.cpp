@@ -2,7 +2,6 @@
 #include <StateManager.hpp>
 
 #include <cstring>
-#include <Windows.h>
 
 #include <Math.hpp>
 
