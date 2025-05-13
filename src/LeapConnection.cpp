@@ -3,6 +3,7 @@
 #include <LeapC.h>
 #include <thread>
 #include <assert.h>
+#include <chrono>
 
 #include <glm/vec3.hpp>
 #include <glm/gtx/quaternion.hpp>
