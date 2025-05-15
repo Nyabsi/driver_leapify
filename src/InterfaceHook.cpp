@@ -67,15 +67,17 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                                         pose.vecVelocity[2] * pose.vecVelocity[2];
                                 };
 
-                            if (state.m_velocity.update(calculateVelocityMagnitude(pose)) < 0.000030)
+                            if (state.m_velocity.update(calculateVelocityMagnitude(pose)) < 0.000030 && !StateManager::Get().getShouldWeHiJackTheController())
                             {
                                 if (state.timestamp == -1)
                                     state.timestamp = LeapGetNow();
 
-                                if ((LeapGetNow() - state.timestamp) >= 5000000) // LeapGetNow is in micro seconds
+                                if ((LeapGetNow() - state.timestamp) >= 3000000) // LeapGetNow is in micro seconds
                                 {
                                     state.isIdle = true;
                                     pose.deviceIsConnected = false;  
+
+                                    StateManager::Get().setShouldWeHiJackTheController(true);
                                 }
                             }
                             else {
@@ -129,6 +131,18 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                    else
                         return orig(self, ulComponent, eMotionRange, pTransforms, unTransformCount);
            });
+
+           rcmp::hook_indirect_function<vr::EVRInputError(void* self, vr::VRInputComponentHandle_t ulComponent, bool bNewValue, double fTimeOffset)>(vtable + 1 + vtable_offset, [](auto orig, void* self, vr::VRInputComponentHandle_t ulComponent, bool bNewValue, double fTimeOffset) -> vr::EVRInputError
+           {
+                   auto yes = StateManager::Get().getShouldWeHiJackTheController();
+                   if (yes) {
+                    StateManager::Get().setShouldWeHiJackTheController(false);
+                    return orig(self, ulComponent, false, 0);
+                   } else {
+                    return orig(self, ulComponent, bNewValue, fTimeOffset);
+                   }
+           });
+
            m_IVRDriverInputHooked_003 = true;
        }
    }

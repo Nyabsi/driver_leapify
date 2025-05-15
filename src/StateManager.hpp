@@ -84,6 +84,14 @@ public:
 		else
 			m_passthroughPoseRight = pose;
 	}
+
+	bool getShouldWeHiJackTheController() {
+		return m_AwaitingControllerReActivation;
+	}
+
+	void setShouldWeHiJackTheController(bool newValue) {
+		m_AwaitingControllerReActivation = newValue;
+	}
 private:
 	vr::VRBoneTransform_t* m_passThroughTransformLeft { nullptr };
 	vr::VRBoneTransform_t* m_passThroughTransformRight { nullptr };
@@ -91,4 +99,5 @@ private:
 	std::map<int, ControllerState> m_controllerStates{ };
 	vr::DriverPose_t m_passthroughPoseLeft { };
 	vr::DriverPose_t m_passthroughPoseRight { };
+	bool m_AwaitingControllerReActivation { false };
 };
