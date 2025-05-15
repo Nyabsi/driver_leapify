@@ -67,12 +67,12 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                                         pose.vecVelocity[2] * pose.vecVelocity[2];
                                 };
 
-                            if (state.m_velocity.update(calculateVelocityMagnitude(pose)) < 0.000005 && !StateManager::Get().getShouldWeHiJackTheController())
+                            if (state.m_velocity.update(calculateVelocityMagnitude(pose)) < 0.000015 && !StateManager::Get().getShouldWeHiJackTheController())
                             {
                                 if (state.timestamp == -1)
                                     state.timestamp = LeapGetNow();
 
-                                if ((LeapGetNow() - state.timestamp) >= 3000000) // LeapGetNow is in micro seconds
+                                if ((LeapGetNow() - state.timestamp) >= 5000000) // LeapGetNow is in micro seconds
                                 {
                                     state.timestamp = -1;
                                     StateManager::Get().setShouldWeHiJackTheController(true);
