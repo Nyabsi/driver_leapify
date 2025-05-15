@@ -2,7 +2,7 @@ name: Build project driver_leapify
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "controller_switch_fix" ]
 
 jobs:
   build:
