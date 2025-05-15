@@ -74,15 +74,18 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
 
                                 if ((LeapGetNow() - state.timestamp) >= 3000000) // LeapGetNow is in micro seconds
                                 {
-                                    state.isIdle = true;
-                                    pose.deviceIsConnected = false;  
-
                                     StateManager::Get().setShouldWeHiJackTheController(true);
                                 }
                             }
                             else {
                                 state.timestamp = -1;
                                 state.isIdle = false;
+                            }
+
+                            if (StateManager::Get().getShouldWeHiJackTheController())
+                            {
+                                state.isIdle = true;
+                                pose.deviceIsConnected = false;
                             }
 
                             StateManager::Get().updateControllerState(unWhichDevice, state);
