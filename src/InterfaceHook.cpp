@@ -74,12 +74,9 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
 
                                 if ((LeapGetNow() - state.timestamp) >= 3000000) // LeapGetNow is in micro seconds
                                 {
+                                    state.timestamp = -1;
                                     StateManager::Get().setShouldWeHiJackTheController(true);
                                 }
-                            }
-                            else {
-                                state.timestamp = -1;
-                                state.isIdle = false;
                             }
 
                             if (StateManager::Get().getShouldWeHiJackTheController())
