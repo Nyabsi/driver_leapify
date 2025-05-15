@@ -83,6 +83,8 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                             {
                                 state.isIdle = true;
                                 pose.deviceIsConnected = false;
+                            } else {
+                                state.isIdle = false;
                             }
 
                             StateManager::Get().updateControllerState(unWhichDevice, state);
