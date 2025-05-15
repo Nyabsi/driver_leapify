@@ -1,10 +1,10 @@
-#include <TrackedController.hpp>
-#include <StateManager.hpp>
+#include <driver/TrackedController.hpp>
+#include <core/StateManager.hpp>
+#include <util/Math.hpp>
 
 #include <cstring>
 
-#include <Math.hpp>
-
+// TODO: move move move move! disgusting!
 constexpr glm::mat4 identityMatrix = glm::mat4(1.0f);
 constexpr glm::vec4 zeroPoint = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 constexpr float pi = glm::pi<float>();

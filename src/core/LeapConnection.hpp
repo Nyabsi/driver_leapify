@@ -1,14 +1,15 @@
 #pragma once
 
-#include <LeapC.h>
-#include <openvr_driver.h>
 #include <thread>
 #include <atomic>
 #include <array>
 
+#include <LeapC.h>
 #include <glm/vec3.hpp>
+#include <openvr_driver.h>
 #include <glm/gtx/quaternion.hpp>
 
+// TODO: remove this garbage.
 struct LeapHand
 {
 	vr::ETrackedControllerRole role { vr::TrackedControllerRole_Invalid };

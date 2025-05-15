@@ -4,7 +4,7 @@
  * @date        6th Nov. 2019
  */
 
-#include <SimpleKalmanFilter.hpp>
+#include <util/SimpleKalmanFilter.hpp>
 
 SimpleKalmanFilter::SimpleKalmanFilter() : P(1), X(0)
 {

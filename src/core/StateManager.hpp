@@ -1,12 +1,12 @@
 #pragma once
 
-#include <Singleton.hpp>
+#include <util/Singleton.hpp>
 #include <openvr_driver.h>
 
 #include <vector>
 #include <map>
 
-#include <SimpleKalmanFilter.hpp>
+#include <util/SimpleKalmanFilter.hpp>
 
 struct TransformHook {
 	vr::VRInputComponentHandle_t handle;

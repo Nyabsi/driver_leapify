@@ -2,7 +2,8 @@
 #include <string.h>
 
 #include <openvr_driver.h>
-#include <TrackedDeviceProvider.hpp>
+
+#include <driver/TrackedDeviceProvider.hpp>
 
 #ifdef _WIN32
 #define EXPORT_FUNC extern "C" __declspec(dllexport)

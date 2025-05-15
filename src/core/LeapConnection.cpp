@@ -1,13 +1,13 @@
-#include <LeapConnection.hpp>
+#include <core/LeapConnection.hpp>
 
-#include <LeapC.h>
 #include <thread>
+#include <chrono>
+#include <cstring>
 #include <assert.h>
 
+#include <LeapC.h>
 #include <glm/vec3.hpp>
 #include <glm/gtx/quaternion.hpp>
-
-#include <cstring>
 
 using namespace std::chrono_literals;
 
@@ -19,8 +19,7 @@ bool LeapConnection::Init()
 
 	result = LeapOpenConnection(m_connection);
 
-	// we don't know if result succeeded, well if it didn't, doesn't matter.
-	LeapSetTrackingMode(m_connection, eLeapTrackingMode_HMD);
+	LeapSetTrackingMode(m_connection, eLeapTrackingMode_HMD); // Force to HMD mode
 
 	return result == eLeapRS::eLeapRS_Success;
 }

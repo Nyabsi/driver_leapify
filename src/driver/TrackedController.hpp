@@ -1,8 +1,8 @@
 #pragma once
 
 #include <openvr_driver.h>
-#include <LeapConnection.hpp>
-#include <LowPassFilter.hpp>
+#include <core/LeapConnection.hpp>
+#include <util/LowPassFilter.hpp>
 
 #include <glm/gtx/quaternion.hpp>
 

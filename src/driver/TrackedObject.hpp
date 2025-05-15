@@ -1,6 +1,6 @@
 #pragma once
 
-#include <LeapConnection.hpp>
+#include <core/LeapConnection.hpp>
 #include <openvr_driver.h>
 
 class TrackedObject : public vr::ITrackedDeviceServerDriver {

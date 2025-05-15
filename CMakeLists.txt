@@ -11,6 +11,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+set(CORE ${SRC_DIR}/core)
+set(HOOK ${SRC_DIR}/hook)
+set(UTIL ${SRC_DIR}/util)
+set(DRIVER ${SRC_DIR}/driver)
+
 set(EXTERNAL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external)
 set(VENDOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/vendor)
 
@@ -22,12 +28,12 @@ endif (UNIX)
 
 add_library(${PROJECT_NAME} SHARED
 	${SRC_DIR}/main.cpp
-	${SRC_DIR}/TrackedDeviceProvider.cpp
-    ${SRC_DIR}/InterfaceHook.cpp
-	${SRC_DIR}/TrackedController.cpp
-	${SRC_DIR}/LeapConnection.cpp
-	${SRC_DIR}/SimpleKalmanFilter.cpp
-	${SRC_DIR}/TrackedObject.cpp
+	${CORE}/LeapConnection.cpp
+	${HOOK}/HookManager.cpp
+	${UTIL}/SimpleKalmanFilter.cpp
+	${DRIVER}/TrackedDeviceProvider.cpp
+	${DRIVER}/TrackedController.cpp
+	${DRIVER}/TrackedObject.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_DIR})

@@ -1,14 +1,14 @@
-#include <TrackedDeviceProvider.hpp>
-#include <TrackedController.hpp>
-#include <InterfaceHook.hpp>
-#include <LeapConnection.hpp>
+#include <driver/TrackedDeviceProvider.hpp>
+#include <driver/TrackedController.hpp>
+#include <hook/HookManager.hpp>
+#include <core/LeapConnection.hpp>
 
 #include <openvr_driver.h>
 
 vr::EVRInitError TrackedDeviceProvider::Init(vr::IVRDriverContext* pDriverContext)
 {
     VR_INIT_SERVER_DRIVER_CONTEXT(pDriverContext);
-    m_InterfaceHook.Init(pDriverContext);
+    m_HookManager.Initialize(pDriverContext);
 
     //m_trackers.push_back(TrackedObject("Wrist_Tracker_Left", true, 1));
     //m_trackers.push_back(TrackedObject("Wrist_Tracker_Right", false, 1));
