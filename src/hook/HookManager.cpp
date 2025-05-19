@@ -30,14 +30,14 @@ void HookManager::Initialize(vr::IVRDriverContext* pContext)
 
     auto GetGenericInterface = [this](auto orig, void* self, const char* pchInterfaceVersion, void* peError) -> void* {
         void* pTablePtr = orig(self, pchInterfaceVersion, peError);
-        hookGenericInterface(pTablePtr);
+        hookGenericInterface(pchInterfaceVersion, pTablePtr);
         return pTablePtr;
     };
 
     rcmp::hook_indirect_function<void*(*)(void* self, const char* pchInterfaceVersion, void* peError)>(pVtable + 0 + vtable_offset, GetGenericInterface);
 }
 
-void HookManager::hookGenericInterface(void* pTablePtr)
+void HookManager::hookGenericInterface(const char* pchInterfaceVersion, void* pTablePtr)
 {
     uint64_t hash = util::hashString(std::string(pchInterfaceVersion));
     switch (hash) {
