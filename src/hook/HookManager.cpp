@@ -71,7 +71,7 @@ void HookManager::hookIVRDriverInput(void* pTablePtr)
         {
             // NOTE: orig needs to be called before running hook, otherwise the pointer of "pHandle" will be invalid, we don't want to discard the result of this function anyways.
             auto result = orig(self, ulContainer, pchName, pchSkeletonPath, pchBasePosePath, eSkeletalTrackingLevel, pGripLimitTransforms, unGripLimitTransformCount, pHandle);
-            hooks::IVRDriverInput::UpdateBooleanComponent(ulContainer, pchName, pchSkeletonPath, pchBasePosePath, eSkeletalTrackingLevel, pGripLimitTransforms, unGripLimitTransformCount, pHandle);
+            hooks::IVRDriverInput::CreateSkeletonComponent(ulContainer, pchName, pchSkeletonPath, pchBasePosePath, eSkeletalTrackingLevel, pGripLimitTransforms, unGripLimitTransformCount, pHandle);
             return result;
         };
 
