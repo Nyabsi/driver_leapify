@@ -30,7 +30,7 @@ void HookManager::Initialize(vr::IVRDriverContext* pContext)
 
     auto GetGenericInterface = [this](auto orig, void* self, const char* pchInterfaceVersion, void* peError) -> void* {
         void* pTablePtr = orig(self, pchInterfaceVersion, peError);
-        GenericInterface(pTablePtr);
+        hookGenericInterface(pTablePtr);
         return pTablePtr;
     };
 
@@ -58,7 +58,7 @@ void HookManager::hookIVRDriverInput(void* pTablePtr)
 
     if (!m_IVRDriverInputHooked)
     {
-        auto _UpdateBooleanComponent = [](auto orig, void* self, vr::VRInputComponentHandle_t& ulComponent, bool& bNewValue, double& fTimeOffset) -> vr::EVRInputError
+        auto _UpdateBooleanComponent = [&](auto orig, void* self, vr::VRInputComponentHandle_t& ulComponent, bool& bNewValue, double& fTimeOffset) -> vr::EVRInputError
         {
             bool block = hooks::IVRDriverInput::UpdateBooleanComponent(ulComponent, bNewValue, fTimeOffset);
             if (!block)
@@ -67,7 +67,7 @@ void HookManager::hookIVRDriverInput(void* pTablePtr)
                 return vr::EVRInputError::VRInputError_None;
         }
 
-        auto _CreateSkeletonComponent = [](auto orig, void* self, vr::PropertyContainerHandle_t ulContainer, const char* pchName, const char* pchSkeletonPath, const char* pchBasePosePath, vr::EVRSkeletalTrackingLevel eSkeletalTrackingLevel, const vr::VRBoneTransform_t* pGripLimitTransforms, uint32_t unGripLimitTransformCount, vr::VRInputComponentHandle_t* pHandle) -> vr::EVRInputError
+        auto _CreateSkeletonComponent = [&](auto orig, void* self, vr::PropertyContainerHandle_t ulContainer, const char* pchName, const char* pchSkeletonPath, const char* pchBasePosePath, vr::EVRSkeletalTrackingLevel eSkeletalTrackingLevel, const vr::VRBoneTransform_t* pGripLimitTransforms, uint32_t unGripLimitTransformCount, vr::VRInputComponentHandle_t* pHandle) -> vr::EVRInputError
         {
             // NOTE: orig needs to be called before running hook, otherwise the pointer of "pHandle" will be invalid, we don't want to discard the result of this function anyways.
             auto result = orig(self, ulContainer, pchName, pchSkeletonPath, pchBasePosePath, eSkeletalTrackingLevel, pGripLimitTransforms, unGripLimitTransformCount, pHandle);
@@ -75,7 +75,7 @@ void HookManager::hookIVRDriverInput(void* pTablePtr)
             return result;
         };
 
-        auto _UpdateSkeletonComponent = [](auto orig, void* self, vr::VRInputComponentHandle_t ulComponent, vr::EVRSkeletalMotionRange eMotionRange, const vr::VRBoneTransform_t* pTransforms, uint32_t unTransformCount) -> vr::EVRInputError
+        auto _UpdateSkeletonComponent = [&](auto orig, void* self, vr::VRInputComponentHandle_t ulComponent, vr::EVRSkeletalMotionRange eMotionRange, const vr::VRBoneTransform_t* pTransforms, uint32_t unTransformCount) -> vr::EVRInputError
         {
             bool block = hooks::IVRDriverInput::UpdateSkeletonComponent(ulComponent, eMotionRange, pTransforms, unTransformCount);
             if (!block)
@@ -98,7 +98,7 @@ void HookManager::hookIVRServerDriverHost(void* pTablePtr)
 
     if (!m_IVRServerDriverHostHooked)
     {
-        auto _TrackedDevicePoseUpdated = [this](auto orig, void* self, uint32_t unWhichDevice, const vr::DriverPose_t& newPose, uint32_t unPoseStructSize) -> void {
+        auto _TrackedDevicePoseUpdated = [&](auto orig, void* self, uint32_t unWhichDevice, const vr::DriverPose_t& newPose, uint32_t unPoseStructSize) -> void {
             bool block = hooks::IVRServerDriverHost::TrackedDevicePoseUpdated(unWhichDevice, newPose, unPoseStructSize);
             if (!block)
                 orig(self, unWhichDevice, pose, unPoseStructSize);
