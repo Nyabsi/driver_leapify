@@ -101,7 +101,7 @@ void HookManager::hookIVRServerDriverHost(void* pTablePtr)
         auto _TrackedDevicePoseUpdated = [&](auto orig, void* self, uint32_t unWhichDevice, const vr::DriverPose_t& newPose, uint32_t unPoseStructSize) -> void {
             bool block = hooks::IVRServerDriverHost::TrackedDevicePoseUpdated(unWhichDevice, newPose, unPoseStructSize);
             if (!block)
-                orig(self, unWhichDevice, pose, unPoseStructSize);
+                orig(self, unWhichDevice, newPose, unPoseStructSize);
         };
 
         rcmp::hook_indirect_function<void(*)(void* self, uint32_t unWhichDevice, const vr::DriverPose_t& newPose, uint32_t unPoseStructSize)>(pVtable + 1 + vtable_offset, _TrackedDevicePoseUpdated);
