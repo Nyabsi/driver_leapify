@@ -1,9 +1,6 @@
 #pragma once
 
-#include <driver/TrackedController.hpp>
-#include <driver/TrackedObject.hpp>
 #include <hook/HookManager.hpp>
-#include <core/LeapConnection.hpp>
 
 #include <vector>
 
@@ -11,8 +8,11 @@
 
 class TrackedDeviceProvider : public vr::IServerTrackedDeviceProvider 
 {
+private:
+    HookManager m_HookManager;
 public:
-    ~TrackedDeviceProvider() { }
+    TrackedDeviceProvider();
+    ~TrackedDeviceProvider();
 
     vr::EVRInitError Init(vr::IVRDriverContext* pDriverContext);
 
@@ -27,10 +27,4 @@ public:
     void EnterStandby() { }
     
     void LeaveStandby() { }
-private:
-    TrackedController m_Left { vr::ETrackedControllerRole::TrackedControllerRole_LeftHand };
-    TrackedController m_Right { vr::ETrackedControllerRole::TrackedControllerRole_RightHand };
-    HookManager m_HookManager { };
-    LeapConnection m_LeapConnection { };
-    std::vector<TrackedObject> m_trackers { };
 };

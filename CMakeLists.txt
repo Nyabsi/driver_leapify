@@ -32,8 +32,6 @@ add_library(${PROJECT_NAME} SHARED
 	${HOOK}/HookManager.cpp
 	${UTIL}/SimpleKalmanFilter.cpp
 	${DRIVER}/TrackedDeviceProvider.cpp
-	${DRIVER}/TrackedController.cpp
-	${DRIVER}/TrackedObject.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_DIR})
