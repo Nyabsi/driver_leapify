@@ -58,7 +58,7 @@ void HookManager::hookIVRDriverInput(void* pTablePtr)
 
     if (!m_IVRDriverInputHooked)
     {
-        auto _UpdateBooleanComponent = [&](auto orig, void* self, vr::VRInputComponentHandle_t& ulComponent, bool& bNewValue, double& fTimeOffset) -> vr::EVRInputError
+        auto _UpdateBooleanComponent = [&](auto orig, void* self, vr::VRInputComponentHandle_t ulComponent, bool bNewValue, double fTimeOffset) -> vr::EVRInputError
         {
             bool block = hooks::IVRDriverInput::UpdateBooleanComponent(ulComponent, bNewValue, fTimeOffset);
             if (!block)
