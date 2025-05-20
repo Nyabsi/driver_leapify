@@ -65,7 +65,7 @@ void HookManager::hookIVRDriverInput(void* pTablePtr)
                 return orig(self, ulComponent, bNewValue, fTimeOffset);
             else
                 return vr::EVRInputError::VRInputError_None;
-        }
+        };
 
         auto _CreateSkeletonComponent = [&](auto orig, void* self, vr::PropertyContainerHandle_t ulContainer, const char* pchName, const char* pchSkeletonPath, const char* pchBasePosePath, vr::EVRSkeletalTrackingLevel eSkeletalTrackingLevel, const vr::VRBoneTransform_t* pGripLimitTransforms, uint32_t unGripLimitTransformCount, vr::VRInputComponentHandle_t* pHandle) -> vr::EVRInputError
         {
