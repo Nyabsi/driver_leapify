@@ -10,11 +10,11 @@
 
 namespace hooks {
     namespace IVRServerDriverHost {
-        bool TrackedDeviceAdded(const char*& pchDeviceSerialNumber, vr::ETrackedDeviceClass& eDeviceClass, vr::ITrackedDeviceServerDriver*& pDriver) {
+        bool TrackedDeviceAdded(char*& pchDeviceSerialNumber, vr::ETrackedDeviceClass& eDeviceClass, vr::ITrackedDeviceServerDriver*& pDriver) {
             return false;
         }
 
-        bool TrackedDevicePoseUpdated(uint32_t& unWhichDevice, const vr::DriverPose_t& newPose, uint32_t& unPoseStructSize) {
+        bool TrackedDevicePoseUpdated(uint32_t& unWhichDevice, vr::DriverPose_t& newPose, uint32_t& unPoseStructSize) {
 
             if (!StateManager::Get().IsDeviceRegistered(unWhichDevice))
             {

@@ -13,12 +13,12 @@ namespace hooks {
             return false;
         }
 
-        void CreateSkeletonComponent(vr::PropertyContainerHandle_t& ulContainer, const char*& pchName, const char*& pchSkeletonPath, const char*& pchBasePosePath, vr::EVRSkeletalTrackingLevel& eSkeletalTrackingLevel, const vr::VRBoneTransform_t*& pGripLimitTransforms, uint32_t& unGripLimitTransformCount, vr::VRInputComponentHandle_t*& pHandle) {
+        void CreateSkeletonComponent(vr::PropertyContainerHandle_t& ulContainer, char*& pchName, char*& pchSkeletonPath, char*& pchBasePosePath, vr::EVRSkeletalTrackingLevel& eSkeletalTrackingLevel, vr::VRBoneTransform_t*& pGripLimitTransforms, uint32_t& unGripLimitTransformCount, vr::VRInputComponentHandle_t*& pHandle) {
 
         }
 
-		bool UpdateSkeletonComponent(vr::VRInputComponentHandle_t& ulComponent, vr::EVRSkeletalMotionRange& eMotionRange, const vr::VRBoneTransform_t*& pTransforms, uint32_t& unTransformCount) {
-            
+		bool UpdateSkeletonComponent(vr::VRInputComponentHandle_t& ulComponent, vr::EVRSkeletalMotionRange& eMotionRange, vr::VRBoneTransform_t*& pTransforms, uint32_t& unTransformCount) {
+
             return false;
         }
     };
