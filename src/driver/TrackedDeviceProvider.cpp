@@ -5,7 +5,7 @@
 
 TrackedDeviceProvider::TrackedDeviceProvider()
 {
-    m_HookManager = {};
+
 }
 
 TrackedDeviceProvider::~TrackedDeviceProvider()
