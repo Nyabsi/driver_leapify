@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/StateManager.h>
+#include <core/StateManager.hpp>
 
 #ifdef _WIN32
 #include <Windows.h>
