@@ -38,7 +38,7 @@ void TrackedDeviceProvider::RunFrame()
 
     if (leftId != -1 && rightId != -1) {
         double combinedMagnitude = leftDevice.accelMagnitude * rightDevice.accelMagnitude;
-        if (combinedMagnitude <= 6) {
+        if (combinedMagnitude >= 6) {
             #ifdef _WIN32
             MessageBoxA(NULL, "Hit two controllers together.", "Validation", MB_OK);
             #endif
