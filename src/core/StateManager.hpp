@@ -6,7 +6,7 @@
 #include <functional>
 #include <utility>
 #include <vector>
-#include <math>
+#include <cmath>
 #include <map>
 
 // #include <util/SimpleKalmanFilter.hpp>
