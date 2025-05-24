@@ -5,6 +5,7 @@
 #include <openvr_driver.h>
 
 #ifdef _WIN32
+#include <string>
 #include <Windows.h>
 #endif
 
@@ -38,7 +39,10 @@ void TrackedDeviceProvider::RunFrame()
 
     if (leftId != -1 && rightId != -1) {
         double combinedMagnitude = leftDevice.accelMagnitude * rightDevice.accelMagnitude;
-        if (combinedMagnitude >= 6) {
+        #ifdef _WIN32
+        MessageBoxA(NULL, std::to_string(combinedMagnitude).c_str(), "Validation (SPAM)", MB_OK);
+        #endif
+        if (combinedMagnitude >= 1) {
             #ifdef _WIN32
             MessageBoxA(NULL, "Hit two controllers together.", "Validation", MB_OK);
             #endif
