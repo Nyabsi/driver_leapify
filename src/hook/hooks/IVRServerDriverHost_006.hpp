@@ -25,7 +25,7 @@ namespace hooks {
                 StateManager::Get().RegisterDevice(unWhichDevice, device);
             }
 
-            StateManager::Get().UpdateDevice(unWhichDevice, [](DeviceState& device) {
+            StateManager::Get().UpdateDevice(unWhichDevice, [newPose](DeviceState& device) {
                 device.accelMagnitude = std::sqrt(newPose.vecAcceleration[0] * newPose.vecAcceleration[0] + newPose.vecAcceleration[1] * newPose.vecAcceleration[1] + newPose.vecAcceleration[2] * newPose.vecAcceleration[2]);
             });
 
