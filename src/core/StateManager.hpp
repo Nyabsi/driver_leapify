@@ -21,6 +21,7 @@ struct DeviceState {
 	std::string trackingSystem { "Undefined" };
 	int32_t deviceClass { -1 };
 	int32_t roleHint { -1 };
+	double accelMagnitude { 0.0 };
 	bool shouldWeBlockPose { false };
 };
 
@@ -38,6 +39,11 @@ public:
 		m_devices[deviceId] = device;
 	}
 
+	void UpdateDevice(uint32_t deviceId, std::function<void(DeviceState&)> updater) {
+    if (m_devices.count(deviceId))
+        updater(m_devices[deviceId]);
+	}
+
 	std::vector<std::pair<uint32_t, DeviceState>> GetDeviceByClass(int32_t deviceClass) {
 		std::vector<std::pair<uint32_t, DeviceState>> result = {};
 		for (auto& [id, device] : m_devices) {
@@ -45,6 +51,14 @@ public:
 				result.push_back(std::make_pair(id, device));
 		}
 		return result;
+	}
+
+	std::pair<uint32_t, DeviceState> GetDeviceByHint(int32_t roleHint) {
+		for (auto& [id, device] : m_devices) {
+			if (device.roleHint == roleHint)
+				return std::make_pair(id, device);
+		}
+		return std::make_pair(-1, {});
 	}
 
 	bool ShouldWeBlockDevicePose(uint32_t deviceId) {

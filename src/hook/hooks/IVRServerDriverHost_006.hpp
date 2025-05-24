@@ -2,10 +2,6 @@
 
 #include <core/StateManager.hpp>
 
-#ifdef _WIN32
-#include <Windows.h>
-#endif
-
 #include <openvr_driver.h>
 
 namespace hooks {
@@ -27,11 +23,11 @@ namespace hooks {
                 device.roleHint = vr::VRProperties()->GetInt32Property(props, vr::ETrackedDeviceProperty::Prop_ControllerRoleHint_Int32);
 
                 StateManager::Get().RegisterDevice(unWhichDevice, device);
-
-                #ifdef _WIN32
-                MessageBoxA(NULL, "The sea was sailing and we did init register on the controller", "Validation", MB_OK);
-                #endif
             }
+
+            StateManager::Get().UpdateDevice(unWhichDevice, [](DeviceState& device) {
+                device.accelMagnitude = std::sqrt(newPose.vecAcceleration[0] * newPose.vecAcceleration[0] + newPose.vecAcceleration[1] * newPose.vecAcceleration[1] + newPose.vecAcceleration[2] * newPose.vecAcceleration[2]);
+            });
 
             if (StateManager::Get().ShouldWeBlockDevicePose(unWhichDevice))
             {

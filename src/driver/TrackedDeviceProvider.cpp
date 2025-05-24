@@ -1,7 +1,12 @@
 #include <driver/TrackedDeviceProvider.hpp>
 #include <hook/HookManager.hpp>
+#include <core/StateManager.hpp>
 
 #include <openvr_driver.h>
+
+#ifdef _WIN32
+#include <Windows.h>
+#endif
 
 TrackedDeviceProvider::TrackedDeviceProvider()
 {
@@ -28,5 +33,15 @@ void TrackedDeviceProvider::Cleanup()
 
 void TrackedDeviceProvider::RunFrame()
 {
+    auto [leftId, leftDevice] = StateManager::Get().GetDeviceByHint(vr::TrackedControllerRole_LeftHand);
+    auto [rightId, rightDevice] = StateManager::Get().GetDeviceByHint(vr::TrackedControllerRole_RightHand);
 
+    if (leftId != -1 && rightId != -1) {
+        double combinedMagnitude = leftDevice.accelMagnitude * rightDevice.accelMagnitude;
+        if (combinedMagnitude <= 6) {
+            #ifdef _WIN32
+            MessageBoxA(NULL, "Hit two controllers together.", "Validation", MB_OK);
+            #endif
+        }
+    }
 }
