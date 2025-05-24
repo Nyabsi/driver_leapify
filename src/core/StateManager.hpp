@@ -3,6 +3,7 @@
 #include <util/Singleton.hpp>
 #include <openvr_driver.h>
 
+#include <functional>
 #include <utility>
 #include <vector>
 #include <map>
