@@ -58,7 +58,7 @@ public:
 			if (device.roleHint == roleHint)
 				return std::make_pair(id, device);
 		}
-		return std::make_pair(-1, {});
+		return std::make_pair(-1, DeviceState());
 	}
 
 	bool ShouldWeBlockDevicePose(uint32_t deviceId) {
