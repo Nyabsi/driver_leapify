@@ -7,7 +7,6 @@
 
 #include <openvr_driver.h>
 #include <rcmp.hpp>
-#include <Windows.h>
 
 #include <glm/gtx/quaternion.hpp>
 
