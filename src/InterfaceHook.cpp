@@ -7,6 +7,7 @@
 
 #include <openvr_driver.h>
 #include <rcmp.hpp>
+#include <Windows.h>
 
 #include <glm/gtx/quaternion.hpp>
 
@@ -46,66 +47,133 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
            });
 
            rcmp::hook_indirect_function<void(*)(void* self, uint32_t unWhichDevice, const vr::DriverPose_t& newPose, uint32_t unPoseStructSize)>(vtable + 1 + vtable_offset, [this](auto orig, void* self, uint32_t unWhichDevice, const vr::DriverPose_t& newPose, uint32_t unPoseStructSize) -> void
-           {
-                    auto pose = newPose;
-                    auto props = vr::VRProperties()->TrackedDeviceToPropertyContainer(unWhichDevice);
-                    auto manufacturer = vr::VRProperties()->GetStringProperty(props, vr::ETrackedDeviceProperty::Prop_ManufacturerName_String);
-                    auto trackingSystem = vr::VRProperties()->GetStringProperty(props, vr::ETrackedDeviceProperty::Prop_TrackingSystemName_String);
-                    auto device_class = vr::VRProperties()->GetInt32Property(props, vr::ETrackedDeviceProperty::Prop_DeviceClass_Int32);
-                    auto role = vr::VRProperties()->GetInt32Property(props, vr::ETrackedDeviceProperty::Prop_ControllerRoleHint_Int32);
+               {
+                   auto pose = newPose;
 
-                    if (device_class == vr::TrackedDeviceClass_Controller && manufacturer != "Ultraleap")
-                    {
-                        if (vr::VRSettings()->GetBool("driver_leapify", "automaticControllerSwitching"))
-                        {
-                            ControllerState& state = StateManager::Get().getState(unWhichDevice);
+                   auto props = vr::VRProperties()->TrackedDeviceToPropertyContainer(unWhichDevice);
+                   auto manufacturer = vr::VRProperties()->GetStringProperty(props, vr::Prop_ManufacturerName_String);
+                   auto trackingSystem = vr::VRProperties()->GetStringProperty(props, vr::Prop_TrackingSystemName_String);
+                   auto device_class = vr::VRProperties()->GetInt32Property(props, vr::Prop_DeviceClass_Int32);
+                   auto role = vr::VRProperties()->GetInt32Property(props, vr::Prop_ControllerRoleHint_Int32);
 
-                            auto calculateVelocityMagnitude = [](const vr::DriverPose_t& pose)
-                                {
-                                    return pose.vecVelocity[0] * pose.vecVelocity[0] +
-                                        pose.vecVelocity[1] * pose.vecVelocity[1] +
-                                        pose.vecVelocity[2] * pose.vecVelocity[2];
-                                };
+                   if (device_class == vr::TrackedDeviceClass_Controller && manufacturer != "Ultraleap")
+                   {
+                       if (vr::VRSettings()->GetBool("driver_leapify", "automaticControllerSwitching"))
+                       {
+                           ControllerState& state = StateManager::Get().getState(unWhichDevice);
 
-                            if (state.m_velocity.update(calculateVelocityMagnitude(pose)) < 0.000030)
-                            {
-                                if (state.timestamp == -1)
-                                    state.timestamp = LeapGetNow();
+                           if (!state.isIdle)
+                           {
+                               float deltaVelocity[3] = {
+                                   newPose.vecVelocity[0] - state.lastVelocity[0],
+                                   newPose.vecVelocity[1] - state.lastVelocity[1],
+                                   newPose.vecVelocity[2] - state.lastVelocity[2]
+                               };
 
-                                if ((LeapGetNow() - state.timestamp) >= 5000000) // LeapGetNow is in micro seconds
-                                {
-                                    state.isIdle = true;
-                                    pose.deviceIsConnected = false;  
-                                }
-                            }
-                            else {
-                                state.timestamp = -1;
-                                state.isIdle = false;
-                            }
+                               auto calculateSquaredMagnitude = [](const float v[3]) {
+                                   return v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
+                                   };
 
-                            StateManager::Get().updateControllerState(unWhichDevice, state);
-                        }
+                               float accelerationMagnitude = calculateSquaredMagnitude(deltaVelocity);
 
-                        if (vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled") && vr::VRSettings()->GetBool("driver_leapify", "positionalDataPassthrough"))
-                        {
-                            pose = StateManager::Get().getLeapPose(static_cast<vr::ETrackedControllerRole>(role));
-                            pose.deviceIsConnected = newPose.deviceIsConnected;
-                        }
-                    }
+                               const float accelerationThreshold = 0.0060f;
+                               bool impactDetected = accelerationMagnitude > accelerationThreshold;
 
-                    orig(self, unWhichDevice, pose, unPoseStructSize);
-           });
+                               state.lastVelocity[0] = newPose.vecVelocity[0];
+                               state.lastVelocity[1] = newPose.vecVelocity[1];
+                               state.lastVelocity[2] = newPose.vecVelocity[2];
+
+                               if (impactDetected && state.touch && !state.trigger && !state.grip && !state.pad)
+                               {
+                                   state.isIdle = true;
+                               }
+                           }
+                           else
+                           {
+                               pose.deviceIsConnected = false;
+                           }
+                           state.role = role;
+                           StateManager::Get().updateControllerState(unWhichDevice, state);
+
+                       }
+
+                       if (vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled") &&
+                           vr::VRSettings()->GetBool("driver_leapify", "positionalDataPassthrough"))
+                       {
+                           pose = StateManager::Get().getLeapPose(static_cast<vr::ETrackedControllerRole>(role));
+                           pose.deviceIsConnected = newPose.deviceIsConnected;
+                       }
+                   }
+
+                   orig(self, unWhichDevice, pose, unPoseStructSize);
+               });
+
 
            m_IVRServerDriverHostHooked_006 = true;
-       }
+       } 
    }
 
-   if (interfaceName == "IVRDriverInput_003")
+   if (interfaceName == "IVRDriverInput_003" || interfaceName == "IVRDriverInput_004") // SteamVR 2.13.x+ has bumped interface
    {
        void** vtable = *((void***)interfacePtr);
 
        if (!m_IVRDriverInputHooked_003)
        {
+           rcmp::hook_indirect_function<vr::EVRInputError(void* self, vr::PropertyContainerHandle_t ulContainer, const char* pchName, vr::VRInputComponentHandle_t* pHandle)>(vtable + 0 + vtable_offset, [this](auto orig, void* self, vr::PropertyContainerHandle_t ulContainer, const char* pchName, vr::VRInputComponentHandle_t* pHandle) -> vr::EVRInputError
+               {
+                   vr::EVRInputError result;
+                   result = orig(self, ulContainer, pchName, pHandle);
+                   auto role = vr::VRProperties()->GetInt32Property(ulContainer, vr::ETrackedDeviceProperty::Prop_ControllerRoleHint_Int32);
+
+                   if (role == vr::TrackedControllerRole_LeftHand)
+                       StateManager::Get().addButtonHook(*pHandle, vr::TrackedControllerRole_LeftHand, std::string(pchName));
+                   if (role == vr::TrackedControllerRole_RightHand)
+                       StateManager::Get().addButtonHook(*pHandle, vr::TrackedControllerRole_RightHand, std::string(pchName));
+                   return result;
+               });
+
+           rcmp::hook_indirect_function<vr::EVRInputError(void* self, vr::VRInputComponentHandle_t ulComponent, bool bNewValue, double fTimeOffset)>(vtable + 1 + vtable_offset, [](auto orig, void* self, vr::VRInputComponentHandle_t ulComponent, bool bNewValue, double fTimeOffset) -> vr::EVRInputError
+               {
+                   auto button = StateManager::Get().getButton(ulComponent);
+
+                   for (auto& dev : StateManager::Get().getControllerStates()) {
+                       if (dev.second.role == button.role) {
+                           if (dev.second.isIdle && button.path.find("/click") != -1) {
+                               ControllerState& state = StateManager::Get().getState(dev.first);
+                               state.isIdle = false;
+                               state.role = 1;
+                               state.touch = false;
+                               StateManager::Get().updateControllerState(dev.first, state);
+                           }
+
+                           if (button.path == "/input/thumbstick/touch") {
+                               ControllerState& state = StateManager::Get().getState(dev.first);
+                               state.touch = bNewValue;
+                               StateManager::Get().updateControllerState(dev.first, state);
+                           }
+
+                           if (button.path == "/input/trigger/touch") {
+                               ControllerState& state = StateManager::Get().getState(dev.first);
+                               state.trigger = bNewValue;
+                               StateManager::Get().updateControllerState(dev.first, state);
+                           }
+
+                           if (button.path == "/input/grip/touch") {
+                               ControllerState& state = StateManager::Get().getState(dev.first);
+                               state.grip = bNewValue;
+                               StateManager::Get().updateControllerState(dev.first, state);
+                           }
+
+                           if (button.path == "/input/trackpad/touch") {
+                               ControllerState& state = StateManager::Get().getState(dev.first);
+                               state.pad = bNewValue;
+                               StateManager::Get().updateControllerState(dev.first, state);
+                           }
+                       }
+                   }
+
+                   return orig(self, ulComponent, bNewValue, fTimeOffset);
+               });
            rcmp::hook_indirect_function<vr::EVRInputError(void* self, vr::PropertyContainerHandle_t ulContainer, const char* pchName, const char* pchSkeletonPath, const char* pchBasePosePath, vr::EVRSkeletalTrackingLevel eSkeletalTrackingLevel, const vr::VRBoneTransform_t* pGripLimitTransforms, uint32_t unGripLimitTransformCount, vr::VRInputComponentHandle_t* pHandle)>(vtable + 5 + vtable_offset, [](auto orig, void* self, vr::PropertyContainerHandle_t ulContainer, const char* pchName, const char* pchSkeletonPath, const char* pchBasePosePath, vr::EVRSkeletalTrackingLevel eSkeletalTrackingLevel, const vr::VRBoneTransform_t* pGripLimitTransforms, uint32_t unGripLimitTransformCount, vr::VRInputComponentHandle_t* pHandle) -> vr::EVRInputError
            {
                    auto result = orig(self, ulContainer, pchName, pchSkeletonPath, pchBasePosePath, eSkeletalTrackingLevel, pGripLimitTransforms, unGripLimitTransformCount, pHandle);
@@ -119,6 +187,9 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
 
                    return result;
            });
+
+           //  state.timestamp = -1;
+           // state.isIdle = false;
            
            rcmp::hook_indirect_function<vr::EVRInputError(void* self, vr::VRInputComponentHandle_t ulComponent, vr::EVRSkeletalMotionRange eMotionRange, const vr::VRBoneTransform_t* pTransforms, uint32_t unTransformCount)>(vtable + 6 + vtable_offset, [](auto orig, void* self, vr::VRInputComponentHandle_t ulComponent, vr::EVRSkeletalMotionRange eMotionRange, const vr::VRBoneTransform_t* pTransforms, uint32_t unTransformCount) -> vr::EVRInputError
            {

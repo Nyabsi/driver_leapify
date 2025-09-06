@@ -11,12 +11,17 @@
 struct TransformHook {
 	vr::VRInputComponentHandle_t handle;
 	vr::ETrackedControllerRole role;
+	std::string path; // reserved
 };
 
 struct ControllerState {
 	bool isIdle{ false };
-	int64_t timestamp{ -1 };
-	SimpleKalmanFilter m_velocity{};
+	float lastVelocity[3] = { 0.0f, 0.0f, 0.0f };
+	int32_t role;
+	bool touch{ false };
+	bool grip{ false };
+	bool trigger{ false };
+	bool pad{ false };
 };
 
 class StateManager {
@@ -60,12 +65,41 @@ public:
 		return vr::TrackedControllerRole_Invalid;
 	}
 
+	void addButtonHook(vr::VRInputComponentHandle_t handle, vr::ETrackedControllerRole role, std::string path)
+	{
+		TransformHook hook{};
+		hook.handle = handle;
+		hook.role = role;
+		hook.path = path;
+
+		m_buttonHooks.push_back(hook);
+	}
+
+	TransformHook getButton(vr::VRInputComponentHandle_t handle)
+	{
+		for (auto& hook : m_buttonHooks)
+		{
+			if (hook.handle == handle)
+				return hook;
+		}
+
+		return {};
+	}
+
 	void clearTransformHooks() { m_transformHooks.clear(); }
 
 	void updateControllerState(int device, ControllerState newState) { m_controllerStates[device] = newState; }
 	std::map<int, ControllerState> getControllerStates() { return m_controllerStates; }
 	ControllerState& getState(int device) {
 		return m_controllerStates[device];
+	}
+
+	ControllerState& getStatePerRole(vr::ETrackedControllerRole role)
+	{
+		for (auto& dev : m_controllerStates) {
+			if (dev.second.role == role)
+				return dev.second;
+		}
 	}
 
 	vr::DriverPose_t getLeapPose(vr::ETrackedControllerRole role) const
@@ -88,6 +122,7 @@ private:
 	vr::VRBoneTransform_t* m_passThroughTransformLeft { nullptr };
 	vr::VRBoneTransform_t* m_passThroughTransformRight { nullptr };
 	std::vector<TransformHook> m_transformHooks { };
+	std::vector<TransformHook> m_buttonHooks{ };
 	std::map<int, ControllerState> m_controllerStates{ };
 	vr::DriverPose_t m_passthroughPoseLeft { };
 	vr::DriverPose_t m_passthroughPoseRight { };
