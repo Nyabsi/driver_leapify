@@ -84,7 +84,10 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
 
                                if (impactDetected && state.touch && !state.trigger && !state.grip && !state.pad)
                                {
-                                   state.isIdle = true;
+                                   for (auto& dev : StateManager::Get().getControllerStates()) {
+                                       dev.second.isIdle = true;
+                                       StateManager::Get().updateControllerState(dev.first, dev.second);
+                                   }
                                }
                            }
                            else
@@ -123,10 +126,12 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                    vr::EVRInputError result;
                    result = orig(self, ulContainer, pchName, pHandle);
                    auto role = vr::VRProperties()->GetInt32Property(ulContainer, vr::ETrackedDeviceProperty::Prop_ControllerRoleHint_Int32);
+                   auto manufacturer = vr::VRProperties()->GetStringProperty(ulContainer, vr::Prop_ManufacturerName_String);
 
-                   if (role == vr::TrackedControllerRole_LeftHand)
+
+                   if (role == vr::TrackedControllerRole_LeftHand && manufacturer != "Ultraleap")
                        StateManager::Get().addButtonHook(*pHandle, vr::TrackedControllerRole_LeftHand, std::string(pchName));
-                   if (role == vr::TrackedControllerRole_RightHand)
+                   if (role == vr::TrackedControllerRole_RightHand && manufacturer != "Ultraleap")
                        StateManager::Get().addButtonHook(*pHandle, vr::TrackedControllerRole_RightHand, std::string(pchName));
                    return result;
                });
@@ -138,14 +143,13 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                    for (auto& dev : StateManager::Get().getControllerStates()) {
                        if (dev.second.role == button.role) {
                            if (dev.second.isIdle && button.path.find("/click") != -1) {
-                               ControllerState& state = StateManager::Get().getState(dev.first);
-                               state.isIdle = false;
-                               state.role = 1;
-                               state.touch = false;
-                               StateManager::Get().updateControllerState(dev.first, state);
+                               for (auto& dev : StateManager::Get().getControllerStates()) {
+                                   dev.second.isIdle = false;
+                                   StateManager::Get().updateControllerState(dev.first, dev.second);
+                               }
                            }
 
-                           if (button.path == "/input/thumbstick/touch") {
+                           if (button.path == "/input/thumbstick/touch" || button.path == "/input/joystick/touch") {
                                ControllerState& state = StateManager::Get().getState(dev.first);
                                state.touch = bNewValue;
                                StateManager::Get().updateControllerState(dev.first, state);
