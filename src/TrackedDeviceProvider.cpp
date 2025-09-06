@@ -40,6 +40,19 @@ void TrackedDeviceProvider::RunFrame()
         right = m_LeapConnection.GetHand(vr::TrackedControllerRole_RightHand);
     }
 
+    // HACK: this is used to show the menu
+    auto calcLength = [](LEAP_VECTOR a, LEAP_VECTOR b) -> float
+        {
+            double dx = std::abs(a.x - b.x);
+            double dy = std::abs(a.y - b.y);
+            double dz = std::abs(a.z - b.z);
+
+            double index_tip_distance_squared = dx * dx + dy * dy + dz * dz;
+            return std::sqrt(index_tip_distance_squared);
+        };
+
+    left.menu = calcLength(left.index.distal.next_joint, right.index.distal.next_joint) < 20 && calcLength(left.thumb.distal.next_joint, right.thumb.distal.next_joint) < 20;
+
     m_Left.Update(left);
     m_Right.Update(right);
 }

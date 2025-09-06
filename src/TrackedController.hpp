@@ -118,7 +118,7 @@ private:
 	vr::VRInputComponentHandle_t m_skeletonHandle { };
     vr::VRInputComponentHandle_t m_triggerClick{ };
     vr::VRInputComponentHandle_t m_triggerValue{ };
-
+    vr::VRInputComponentHandle_t m_menuClick{ };
 	vr::VRBoneTransform_t m_boneTransform[31] { };
     std::array<glm::vec3, 20U> m_bonePositions;
     std::array<glm::quat, 20U> m_boneRotations;

@@ -118,7 +118,7 @@ vr::EVRInitError TrackedController::Activate(uint32_t unObjectId)
         vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceStandby_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_controller_status_off.png" : "{leapify}/icons//right_controller_status_off.png");
         vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceAlertLow_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_controller_status_ready_low.png" : "{leapify}/icons//right_controller_status_ready_low.png");
 
-        // vr::VRDriverInput()->CreateBooleanComponent(props, "/input/system/click", &DeviceController::get().getComponent(m_role == vr::TrackedControllerRole_LeftHand ? 0 : 1).override);
+        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/system/click", &m_menuClick);
         // vr::VRDriverInput()->CreateBooleanComponent(props, "/input/system/touch", &DeviceController::get().getComponent(m_role == vr::TrackedControllerRole_LeftHand ? 2 : 3).override);
         // vr::VRDriverInput()->CreateBooleanComponent(props, "/input/trigger/touch", &DeviceController::get().getComponent(m_role == vr::TrackedControllerRole_LeftHand ? 6 : 7).override);
 
@@ -294,6 +294,7 @@ void TrackedController::UpdatePose(LeapHand hand)
             }
 
             vr::VRDriverInput()->UpdateBooleanComponent(m_triggerClick, hand.pinch, offset);
+            vr::VRDriverInput()->UpdateBooleanComponent(m_menuClick, hand.menu, offset);
             vr::VRDriverInput()->UpdateScalarComponent(m_triggerValue, hand.pinch ? 1.0f : 0.0f, offset);
         }
         else {
