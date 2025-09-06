@@ -116,6 +116,9 @@ private:
 	uint32_t m_objectId { 999 };
 	vr::DriverPose_t m_pose { 0 };
 	vr::VRInputComponentHandle_t m_skeletonHandle { };
+    vr::VRInputComponentHandle_t m_triggerClick{ };
+    vr::VRInputComponentHandle_t m_triggerValue{ };
+
 	vr::VRBoneTransform_t m_boneTransform[31] { };
     std::array<glm::vec3, 20U> m_bonePositions;
     std::array<glm::quat, 20U> m_boneRotations;

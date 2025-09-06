@@ -27,6 +27,7 @@ struct LeapHand
 
 	int64_t timestamp { 0 };
 	LEAP_VECTOR accelerometer{ 0 };
+	bool pinch{ false };
 };
 
 class LeapConnection 

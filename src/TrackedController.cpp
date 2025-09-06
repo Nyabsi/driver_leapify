@@ -1,9 +1,8 @@
-#include <TrackedController.hpp>
+﻿#include <TrackedController.hpp>
 #include <StateManager.hpp>
 #include <Math.hpp>
 
 #include <cstring>
-#include <Windows.h>
 
 constexpr glm::mat4 identityMatrix = glm::mat4(1.0f);
 constexpr glm::vec4 zeroPoint = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
@@ -121,10 +120,10 @@ vr::EVRInitError TrackedController::Activate(uint32_t unObjectId)
 
         // vr::VRDriverInput()->CreateBooleanComponent(props, "/input/system/click", &DeviceController::get().getComponent(m_role == vr::TrackedControllerRole_LeftHand ? 0 : 1).override);
         // vr::VRDriverInput()->CreateBooleanComponent(props, "/input/system/touch", &DeviceController::get().getComponent(m_role == vr::TrackedControllerRole_LeftHand ? 2 : 3).override);
-
-        // vr::VRDriverInput()->CreateBooleanComponent(props, "/input/trigger/click", &DeviceController::get().getComponent(m_role == vr::TrackedControllerRole_LeftHand ? 4 : 5).override);
         // vr::VRDriverInput()->CreateBooleanComponent(props, "/input/trigger/touch", &DeviceController::get().getComponent(m_role == vr::TrackedControllerRole_LeftHand ? 6 : 7).override);
-        // vr::VRDriverInput()->CreateScalarComponent(props, "/input/trigger/value", &DeviceController::get().getComponent(m_role == vr::TrackedControllerRole_LeftHand ? 8 : 9).override, vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedOneSided);
+
+        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/trigger/click", &m_triggerClick);
+        vr::VRDriverInput()->CreateScalarComponent(props, "/input/trigger/value", &m_triggerValue, vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedOneSided);
 
         if (m_role == vr::TrackedControllerRole_LeftHand)
             vr::VRDriverInput()->CreateSkeletonComponent(props, "/input/skeleton/left", "/skeleton/hand/left", "/pose/raw", vr::VRSkeletalTracking_Full, nullptr, 0, &m_skeletonHandle);
@@ -293,6 +292,9 @@ void TrackedController::UpdatePose(LeapHand hand)
                 m_pose.poseIsValid = true;
                 m_pose.result = vr::TrackingResult_Running_OK;
             }
+
+            vr::VRDriverInput()->UpdateBooleanComponent(m_triggerClick, hand.pinch, offset);
+            vr::VRDriverInput()->UpdateScalarComponent(m_triggerValue, hand.pinch ? 1.0f : 0.0f, offset);
         }
         else {
             m_pose.poseIsValid = false;
