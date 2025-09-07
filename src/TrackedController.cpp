@@ -108,15 +108,15 @@ vr::EVRInitError TrackedController::Activate(uint32_t unObjectId)
         vr::VRProperties()->SetStringProperty(props, vr::Prop_ResourceRoot_String, "leapify");
         vr::VRProperties()->SetStringProperty(props, vr::Prop_AdditionalDeviceSettingsPath_String, "{leapify}/settings/settingsschema.vrsettings");
         vr::VRProperties()->SetStringProperty(props, vr::Prop_InputProfilePath_String, "{leapify}/input/index_controller_profile.json");
-        vr::VRProperties()->SetStringProperty(props, vr::Prop_RenderModelName_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}valve_controller_knu_1_0_left" : "{leapify}valve_controller_knu_1_0_right");
-        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceOff_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_controller_status_off.png" : "{leapify}/icons/right_controller_status_off.png");
-        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceSearching_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_controller_status_searching.gif" : "{leapify}/icons/right_controller_status_searching.gif");
-        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceSearchingAlert_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_controller_status_searching_alert.gif" : "{leapify}/icons//right_controller_status_searching_alert.gif");
-        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceReady_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_controller_status_ready.png" : "{leapify}/icons//right_controller_status_ready.png");
-        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceReadyAlert_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_controller_status_ready_alert.png" : "{leapify}/icons//right_controller_status_ready_alert.png");
-        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceNotReady_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_controller_status_error.png" : "{leapify}/icons//right_controller_status_error.png");
-        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceStandby_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_controller_status_off.png" : "{leapify}/icons//right_controller_status_off.png");
-        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceAlertLow_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_controller_status_ready_low.png" : "{leapify}/icons//right_controller_status_ready_low.png");
+        vr::VRProperties()->SetStringProperty(props, vr::Prop_RenderModelName_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}ultraleap_hand_left" : "{leapify}ultraleap_hand_right");
+        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceOff_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_hand_status_off.png" : "{leapify}/icons/right_hand_status_off.png");
+        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceSearching_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_hand_status_searching.gif" : "{leapify}/icons/right_hand_status_searching.gif");
+        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceSearchingAlert_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_hand_status_searching_alert.gif" : "{leapify}/icons//right_hand_status_searching_alert.gif");
+        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceReady_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_hand_status_ready.png" : "{leapify}/icons//right_hand_status_ready.png");
+        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceReadyAlert_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_hand_status_ready_alert.png" : "{leapify}/icons//right_hand_status_ready_alert.png");
+        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceNotReady_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_hand_status_error.png" : "{leapify}/icons//right_hand_status_error.png");
+        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceStandby_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_hand_status_off.png" : "{leapify}/icons//right_hand_status_off.png");
+        vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceAlertLow_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_hand_status_ready_low.png" : "{leapify}/icons//right_hand_status_ready_low.png");
 
         vr::VRDriverInput()->CreateBooleanComponent(props, "/input/system/click", &m_menuClick);
         // vr::VRDriverInput()->CreateBooleanComponent(props, "/input/system/touch", &DeviceController::get().getComponent(m_role == vr::TrackedControllerRole_LeftHand ? 2 : 3).override);
@@ -247,10 +247,10 @@ void TrackedController::UpdatePose(LeapHand hand)
 
                 rotation = glm::toQuat(matrix);
 
-                m_pose.qRotation.x = rotation.x;
-                m_pose.qRotation.y = rotation.y;
-                m_pose.qRotation.z = rotation.z;
-                m_pose.qRotation.w = rotation.w;
+                m_pose.qRotation.x = m_rotation.x;
+                m_pose.qRotation.y = m_rotation.y;
+                m_pose.qRotation.z = m_rotation.z;
+                m_pose.qRotation.w = m_rotation.w;
 
                 auto calculateOffsetDistanceZ = [&](LeapHand& hand)
                     {
@@ -284,10 +284,9 @@ void TrackedController::UpdatePose(LeapHand hand)
                 float offsetY = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? 0.001f * 0.0 : 0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffsetY");
                 float offsetZ = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? -0.001f * (calculateOffsetDistanceZ(hand)) : -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffsetZ");
 
-                glm::vec4 position = matrix * zeroPoint;
-                m_pose.vecPosition[0] = position.x + offsetX;
-                m_pose.vecPosition[1] = position.y + offsetY;
-                m_pose.vecPosition[2] = position.z + offsetZ;
+                m_pose.vecPosition[0] = m_position.x + offsetX;
+                m_pose.vecPosition[1] = m_position.y + offsetY;
+                m_pose.vecPosition[2] = m_position.z + offsetZ;
 
                 m_pose.poseIsValid = true;
                 m_pose.result = vr::TrackingResult_Running_OK;
@@ -319,6 +318,32 @@ void TrackedController::UpdateSkeletalPose(LeapHand hand)
 {
     if (vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled"))
     {
+        glm::vec3 root_position = {};
+        ConvertPosition(hand.palm.position, root_position);
+        glm::quat root_rotation = {};
+        ConvertRotation(hand.palm.orientation, root_rotation);
+        glm::vec3 wrist_position = {};
+        ConvertPosition(hand.arm.next_joint, wrist_position);
+        glm::quat wrist_rotation = {};
+        ConvertRotation(hand.palm.orientation, wrist_rotation);
+
+        m_boneTransform[SB_Root] = vr::VRBoneTransform_t{ { 0.0f, 0.0f, 0.0f }, {1.0f, 0.0f ,0.0f, 0.0f} };
+
+        glm::vec3 wrist_position_adjusted = glm::inverse(root_rotation) * (wrist_position - root_position);
+        glm::quat wrist_rotation_adjusted = glm::inverse(root_rotation) * wrist_rotation;
+
+        wrist_rotation_adjusted = glm::normalize(
+            glm::angleAxis(hand.role == vr::TrackedControllerRole_LeftHand ? -glm::half_pi<float>() : glm::half_pi<float>(), glm::vec3(0, 0, 1)) *
+            glm::angleAxis(glm::pi<float>(), glm::vec3(0, 1, 0))
+        ) * wrist_rotation_adjusted;
+
+        wrist_rotation_adjusted = glm::normalize(wrist_rotation_adjusted);
+
+        m_boneTransform[SB_Wrist] = vr::VRBoneTransform_t{
+            { wrist_position_adjusted.x, wrist_position_adjusted.y, wrist_position_adjusted.z },
+            { wrist_rotation_adjusted.w, wrist_rotation_adjusted.x, wrist_rotation_adjusted.y, wrist_rotation_adjusted.z }
+        };
+
         for (size_t i = 0U; i < 5; i++)
         {
             size_t index = GetFingerBoneIndex(i);

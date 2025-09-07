@@ -2,7 +2,6 @@
 
 #include <openvr_driver.h>
 #include <LeapConnection.hpp>
-#include <LowPassFilter.hpp>
 
 #include <glm/gtx/quaternion.hpp>
 
@@ -120,6 +119,8 @@ private:
     vr::VRInputComponentHandle_t m_triggerValue{ };
     vr::VRInputComponentHandle_t m_menuClick{ };
 	vr::VRBoneTransform_t m_boneTransform[31] { };
+    glm::quat headRotation;
+    vr::HmdVector3_t vVelocity;
     std::array<glm::vec3, 20U> m_bonePositions;
     std::array<glm::quat, 20U> m_boneRotations;
     glm::vec3 m_position;

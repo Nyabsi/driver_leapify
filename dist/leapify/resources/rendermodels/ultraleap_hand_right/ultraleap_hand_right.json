@@ -1,0 +1,35 @@
+{
+  "components": {
+    "raw": {
+      "filename": "gnomon.obj",
+      "component_local": {
+        "origin": [0.0, 0.0, 0.0],
+        "rotate_xyz": [0.0, 0.0, 0.0]
+      }
+    },
+    "base": {
+      "component_local": {
+        "origin": [0.0, 0.0, 0.0],
+        "rotate_xyz": [0.0, 0.0, 0.0]
+      }
+    },
+    "handgrip": {
+      "component_local": {
+        "origin": [0.0, 0.0, 0.0],
+        "rotate_xyz": [0.0, 80.0, 0.0]
+      }
+    },
+    "grip": {
+      "component_local": {
+        "origin": [0.0, 0.0, 0.0],
+        "rotate_xyz": [-60.0, 0.0, 0.0]
+      }
+    },
+    "tip": {
+      "component_local": {
+        "origin": [0.0, 0.0, 0.0],
+        "rotate_xyz": [-60.0, 0.0, 0.0]
+      }
+    }
+  }
+}

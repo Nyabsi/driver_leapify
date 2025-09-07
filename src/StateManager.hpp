@@ -6,8 +6,6 @@
 #include <vector>
 #include <map>
 
-#include <SimpleKalmanFilter.hpp>
-
 struct TransformHook {
 	vr::VRInputComponentHandle_t handle;
 	vr::ETrackedControllerRole role;
