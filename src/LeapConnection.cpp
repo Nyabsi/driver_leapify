@@ -99,7 +99,6 @@ void LeapConnection::Poll()
 						data.palm = hand.palm;
 						data.arm = hand.arm;
 						data.accelerometer = m_accelerometer;
-						data.pinch = hand.pinch_strength > 0.75f;
 
 						if (data.role == vr::TrackedControllerRole_LeftHand)
 						{

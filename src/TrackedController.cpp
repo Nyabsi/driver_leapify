@@ -292,18 +292,31 @@ void TrackedController::UpdatePose(LeapHand hand)
                 m_pose.result = vr::TrackingResult_Running_OK;
             }
 
-            vr::VRDriverInput()->UpdateBooleanComponent(m_triggerClick, hand.pinch, offset);
+            auto calcLength = [](LEAP_VECTOR a, LEAP_VECTOR b) -> float
+                {
+                    double dx = std::abs(a.x - b.x);
+                    double dy = std::abs(a.y - b.y);
+                    double dz = std::abs(a.z - b.z);
+
+                    double index_tip_distance_squared = dx * dx + dy * dy + dz * dz;
+                    return std::sqrt(index_tip_distance_squared);
+                };
+
+            bool pinch = calcLength(hand.thumb.distal.next_joint, hand.index.distal.next_joint) < 20;
+
             vr::VRDriverInput()->UpdateBooleanComponent(m_menuClick, hand.menu, offset);
-            vr::VRDriverInput()->UpdateScalarComponent(m_triggerValue, hand.pinch ? 1.0f : 0.0f, offset);
+
+            vr::VRDriverInput()->UpdateBooleanComponent(m_triggerClick, pinch, offset);
+            vr::VRDriverInput()->UpdateScalarComponent(m_triggerValue, pinch ? 1.0f : 0.0f, offset);
         }
         else {
-            m_pose.poseIsValid = false;
-            m_pose.result = vr::TrackingResult_Running_OutOfRange;
+            // m_pose.poseIsValid = false;
+            // m_pose.result = vr::TrackingResult_Running_OutOfRange;
+            // out of range reporting makes an degraded UX
+            m_pose.poseIsValid = true;
+            m_pose.result = vr::TrackingResult_Running_OK;
         }
 
-        
-
-        //m_pose.poseTimeOffset = 0;
         vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
     }
     else
@@ -332,12 +345,8 @@ void TrackedController::UpdateSkeletalPose(LeapHand hand)
         glm::vec3 wrist_position_adjusted = glm::inverse(root_rotation) * (wrist_position - root_position);
         glm::quat wrist_rotation_adjusted = glm::inverse(root_rotation) * wrist_rotation;
 
-        wrist_rotation_adjusted = glm::normalize(
-            glm::angleAxis(hand.role == vr::TrackedControllerRole_LeftHand ? -glm::half_pi<float>() : glm::half_pi<float>(), glm::vec3(0, 0, 1)) *
-            glm::angleAxis(glm::pi<float>(), glm::vec3(0, 1, 0))
-        ) * wrist_rotation_adjusted;
-
-        wrist_rotation_adjusted = glm::normalize(wrist_rotation_adjusted);
+        wrist_rotation_adjusted = (glm::angleAxis(hand.role == vr::TrackedControllerRole_LeftHand ? -glm::half_pi<float>() : glm::half_pi<float>(), glm::vec3(0, 0, 1)) *
+            glm::angleAxis(glm::pi<float>(), glm::vec3(0, 1, 0))) * wrist_rotation_adjusted;
 
         m_boneTransform[SB_Wrist] = vr::VRBoneTransform_t{
             { wrist_position_adjusted.x, wrist_position_adjusted.y, wrist_position_adjusted.z },
@@ -396,8 +405,10 @@ void TrackedController::UpdateSkeletalPose(LeapHand hand)
 
         StateManager::Get().setLeapTransform(m_boneTransform, m_role);
 
-        if (!vr::VRSettings()->GetBool("driver_leapify", "skeletalDataPassthrough"))
+        if (!vr::VRSettings()->GetBool("driver_leapify", "skeletalDataPassthrough")) {
             vr::VRDriverInput()->UpdateSkeletonComponent(m_skeletonHandle, vr::VRSkeletalMotionRange_WithoutController, m_boneTransform, SB_Count);
+            vr::VRDriverInput()->UpdateSkeletonComponent(m_skeletonHandle, vr::VRSkeletalMotionRange_WithController, m_boneTransform, SB_Count);
+        }
     }
 }
 
