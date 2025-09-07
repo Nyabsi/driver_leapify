@@ -313,7 +313,7 @@ void TrackedController::UpdatePose(LeapHand hand)
             // m_pose.poseIsValid = false;
             // m_pose.result = vr::TrackingResult_Running_OutOfRange;
             // out of range reporting makes an degraded UX
-            m_pose.poseIsValid = true;
+            m_pose.poseIsValid = false;
             m_pose.result = vr::TrackingResult_Running_OK;
         }
 
