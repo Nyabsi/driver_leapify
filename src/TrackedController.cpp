@@ -9,11 +9,6 @@ constexpr glm::vec4 zeroPoint = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 constexpr float pi = glm::pi<float>();
 constexpr float piHalf = pi * 0.5f;
 
-const glm::mat4 wristOffsetLeft = glm::inverse(glm::translate(identityMatrix, glm::vec3(-0.0445230342f, 0.0301547553f, 0.16438961f)) * glm::toMat4(glm::quat(1.50656376e-07f, -1.77612698e-08f, 0.927827835f, -0.373008907f)));
-const glm::mat4 wristOffsetRight = glm::inverse(glm::translate(identityMatrix, glm::vec3(0.0445230342f, 0.0301547553f, 0.16438961f)) * glm::toMat4(glm::quat(1.50656376e-07f, -1.77612698e-08f, -0.927827835f, 0.373008907f)));
-const glm::quat skeletonOffsetLeft = glm::quat(glm::vec3(pi, 0.f, piHalf));
-const glm::quat skeletonOffsetRight = glm::quat(glm::vec3(pi, 0.f, -piHalf));
-const glm::quat thumbOffset = glm::quat(glm::vec3(-piHalf * 0.5, 0.f, 0.f)) * glm::quat(glm::vec3(-piHalf, piHalf, -piHalf));
 const glm::quat metacarpalOffset = glm::quat(glm::vec3(-piHalf, piHalf, 0.f));
 const glm::quat mirroringOffset = glm::quat(glm::vec3(pi, 0.f, 0.f));
 
@@ -239,13 +234,6 @@ void TrackedController::UpdatePose(LeapHand hand)
 
                 glm::quat root = headRotation * glm::quat(glm::radians(glm::vec3(vr::VRSettings()->GetFloat("driver_leapify", "rotationOffsetX"), vr::VRSettings()->GetFloat("driver_leapify", "rotationOffsetY"), vr::VRSettings()->GetFloat("driver_leapify", "rotationOffsetZ"))));
                 ConvertQuaternion(root, m_pose.qWorldFromDriverRotation);
-
-                glm::quat rotation = m_rotation * (m_role == vr::TrackedControllerRole_LeftHand ? skeletonOffsetLeft : skeletonOffsetRight);
-
-                glm::mat4 matrix = glm::translate(identityMatrix, m_position) * glm::toMat4(rotation);
-                matrix *= (m_role == vr::TrackedControllerRole_LeftHand ? wristOffsetLeft : wristOffsetRight);
-
-                rotation = glm::toQuat(matrix);
 
                 m_pose.qRotation.x = m_rotation.x;
                 m_pose.qRotation.y = m_rotation.y;
