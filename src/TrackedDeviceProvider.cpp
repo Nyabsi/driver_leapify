@@ -52,18 +52,16 @@ void TrackedDeviceProvider::RunFrame()
         };
 
         // only update menu for left hand
-        l.gestures.menu = 
+        l.gestures.menu =
             abD(l.index.distal.next_joint, r.index.distal.next_joint) < 15 &&
             abD(l.thumb.distal.next_joint, r.thumb.distal.next_joint) < 15 &&
             abD(l.middle.distal.next_joint, r.middle.distal.next_joint) >= 45 &&
-            abD(l.ring.distal.next_joint, r.ring.distal.next_joint) >= 45 &&
-            abD(l.pinky.distal.next_joint, r.pinky.distal.next_joint) >= 45;
+            abD(l.ring.distal.next_joint, r.ring.distal.next_joint) >= 45 && 
+            abD(l.pinky.distal.next_joint, r.pinky.distal.next_joint) >= 45 &&
+            l.index.is_extended && l.thumb.is_extended && r.index.is_extended && r.thumb.is_extended;
 
         l.gestures.index = abD(l.thumb.distal.next_joint, l.index.distal.next_joint) < 15 && abD(l.thumb.distal.next_joint, l.middle.distal.next_joint) >= 25;
-        r.gestures.index = abD(r.thumb.distal.next_joint, r.index.distal.next_joint) < 15 && abD(l.thumb.distal.next_joint, l.middle.distal.next_joint) >= 25;
-
-        l.gestures.middle = abD(l.thumb.distal.next_joint, l.middle.distal.next_joint) < 15 && abD(l.thumb.distal.next_joint, l.index.distal.next_joint) >= 25;
-        r.gestures.middle = abD(r.thumb.distal.next_joint, r.middle.distal.next_joint) < 15 && abD(r.thumb.distal.next_joint, r.index.distal.next_joint) >= 25;
+        r.gestures.index = abD(r.thumb.distal.next_joint, r.index.distal.next_joint) < 15 && abD(r.thumb.distal.next_joint, r.middle.distal.next_joint) >= 25;
     };
 
     processInputForHands(left, right);
