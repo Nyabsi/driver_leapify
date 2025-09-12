@@ -98,7 +98,6 @@ void LeapConnection::Poll()
 						memcpy(&data.digits, &hand.digits, sizeof(data.digits));
 						data.palm = hand.palm;
 						data.arm = hand.arm;
-						data.accelerometer = m_accelerometer;
 
 						if (data.role == vr::TrackedControllerRole_LeftHand)
 						{

@@ -12,6 +12,7 @@
 struct LeapHand
 {
 	vr::ETrackedControllerRole role { vr::TrackedControllerRole_Invalid };
+
 	union {
 		struct {
 			LEAP_DIGIT thumb;
@@ -22,12 +23,18 @@ struct LeapHand
 		};
 		LEAP_DIGIT digits[5] { 0 };
 	};
+
 	LEAP_PALM palm { 0 };
 	LEAP_BONE arm { 0 };
-
 	int64_t timestamp { 0 };
-	LEAP_VECTOR accelerometer{ 0 };
-	bool menu{ false };
+
+	struct {
+		bool menu { false };
+		bool index { false };
+		bool middle { false };
+		bool ring { false };
+		bool pinky { false };
+	} gestures;
 };
 
 class LeapConnection 

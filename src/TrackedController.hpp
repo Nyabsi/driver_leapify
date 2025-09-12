@@ -102,12 +102,12 @@ public:
 private:
 	void UpdatePose(LeapHand hand);
 	void UpdateSkeletalPose(LeapHand hand);
+    void UpdateInput(LeapHand hand);
 
 	vr::ETrackedControllerRole m_role { vr::ETrackedControllerRole::TrackedControllerRole_Invalid };
 	uint32_t m_objectId { 999 };
 	vr::DriverPose_t m_pose { 0 };
 	vr::VRInputComponentHandle_t m_skeletonHandle { };
-    vr::VRInputComponentHandle_t m_triggerClick{ };
     vr::VRInputComponentHandle_t m_triggerValue{ };
     vr::VRInputComponentHandle_t m_menuClick{ };
 	vr::VRBoneTransform_t m_boneTransform[31] { };

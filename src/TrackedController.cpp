@@ -102,10 +102,6 @@ vr::EVRInitError TrackedController::Activate(uint32_t unObjectId)
         vr::VRProperties()->SetStringProperty(props, vr::Prop_NamedIconPathDeviceAlertLow_String, m_role == vr::TrackedControllerRole_LeftHand ? "{leapify}/icons/left_hand_status_ready_low.png" : "{leapify}/icons//right_hand_status_ready_low.png");
 
         vr::VRDriverInput()->CreateBooleanComponent(props, "/input/system/click", &m_menuClick);
-        // vr::VRDriverInput()->CreateBooleanComponent(props, "/input/system/touch", &DeviceController::get().getComponent(m_role == vr::TrackedControllerRole_LeftHand ? 2 : 3).override);
-        // vr::VRDriverInput()->CreateBooleanComponent(props, "/input/trigger/touch", &DeviceController::get().getComponent(m_role == vr::TrackedControllerRole_LeftHand ? 6 : 7).override);
-
-        vr::VRDriverInput()->CreateBooleanComponent(props, "/input/trigger/click", &m_triggerClick);
         vr::VRDriverInput()->CreateScalarComponent(props, "/input/trigger/value", &m_triggerValue, vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedOneSided);
 
         if (m_role == vr::TrackedControllerRole_LeftHand)
@@ -144,109 +140,89 @@ vr::DriverPose_t TrackedController::GetPose()
 
 void TrackedController::Update(LeapHand hand)
 {
+    // TODO: settings manager
+    if (!vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled")) {
+        m_pose.deviceIsConnected = false;
+        m_pose.poseIsValid = false;
+        vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
+        return;
+    }
+
     UpdatePose(hand);
     UpdateSkeletalPose(hand);
+    UpdateInput(hand);
 }
 
 void TrackedController::UpdatePose(LeapHand hand)
 {
-    if (vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled"))
+    m_isControllerConnected = false;
+
+    if (vr::VRSettings()->GetBool("driver_leapify", "skeletalDataPassthrough") || vr::VRSettings()->GetBool("driver_leapify", "positionalDataPassthrough"))
     {
-        m_isControllerConnected = false;
-
-        if (vr::VRSettings()->GetBool("driver_leapify", "skeletalDataPassthrough") || vr::VRSettings()->GetBool("driver_leapify", "positionalDataPassthrough"))
-        {
-            m_pose.deviceIsConnected = false;
-        }
-        else
-        {
-            if (vr::VRSettings()->GetBool("driver_leapify", "automaticControllerSwitching"))
-            {
-                auto const states = StateManager::Get().getControllerStates();
-
-                bool flag = false;
-                for (auto& state : states)
-                {
-                    if (state.second.isIdle == false)
-                    {
-                        flag = true;
-                        break;
-                    }
-                }
-
-                m_isControllerConnected = flag;
-                m_pose.deviceIsConnected = !m_isControllerConnected;
-            }
-            else {
-                m_pose.deviceIsConnected = true;
-            }
-        }
-
-        if (hand.role != vr::TrackedControllerRole_Invalid && !m_isControllerConnected)
-        {
-            float offset = -((static_cast<float>(LeapGetNow() - hand.timestamp) / 1000000));
-
-            vr::TrackedDevicePose_t pose;
-            vr::VRServerDriverHost()->GetRawTrackedDevicePoses(offset, & pose, 1);
-
-            if (pose.bPoseIsValid)
-            {
-                for (size_t i = 0U; i < 3; i++)
-                    m_pose.vecWorldFromDriverTranslation[i] = pose.mDeviceToAbsoluteTracking.m[i][3];
-
-                glm::mat4 hmdMatrix(1.0f);
-                ConvertMatrix(pose.mDeviceToAbsoluteTracking, hmdMatrix);
-                const glm::quat headRotation = glm::quat_cast(hmdMatrix);
-
-                glm::quat root = headRotation *
-                    glm::angleAxis(glm::pi<float>(), glm::vec3(0, 0, 1)) *
-                    glm::angleAxis(-glm::half_pi<float>(), glm::vec3(1, 0, 0));
-                
-                m_pose.qDriverFromHeadRotation.w = 1;
-                m_pose.qWorldFromDriverRotation = { root.w, root.x, root.y, root.z };
-                m_pose.qRotation = { hand.palm.orientation.w, hand.palm.orientation.x, hand.palm.orientation.y, hand.palm.orientation.z };
-
-                m_pose.vecPosition[0] = hand.arm.next_joint.x * 0.001f;
-                m_pose.vecPosition[1] = hand.arm.next_joint.y * 0.001f;
-                m_pose.vecPosition[2] = hand.arm.next_joint.z * 0.001f;
-
-                m_pose.poseIsValid = true;
-                m_pose.result = vr::TrackingResult_Running_OK;
-            }
-
-            auto calcLength = [](LEAP_VECTOR a, LEAP_VECTOR b) -> float
-                {
-                    double dx = std::abs(a.x - b.x);
-                    double dy = std::abs(a.y - b.y);
-                    double dz = std::abs(a.z - b.z);
-
-                    double index_tip_distance_squared = dx * dx + dy * dy + dz * dz;
-                    return std::sqrt(index_tip_distance_squared);
-                };
-
-            bool pinch = calcLength(hand.thumb.distal.next_joint, hand.index.distal.next_joint) < 20;
-
-            vr::VRDriverInput()->UpdateBooleanComponent(m_menuClick, hand.menu, offset);
-
-            vr::VRDriverInput()->UpdateBooleanComponent(m_triggerClick, pinch, offset);
-            vr::VRDriverInput()->UpdateScalarComponent(m_triggerValue, pinch ? 1.0f : 0.0f, offset);
-        }
-        else {
-            // m_pose.poseIsValid = false;
-            // m_pose.result = vr::TrackingResult_Running_OutOfRange;
-            // out of range reporting makes an degraded UX
-            m_pose.poseIsValid = false;
-            m_pose.result = vr::TrackingResult_Running_OK;
-        }
-
-        vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
+        m_pose.deviceIsConnected = false;
     }
     else
     {
-        m_pose.deviceIsConnected = false;
-        m_pose.poseIsValid = false;
-        vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
+        if (vr::VRSettings()->GetBool("driver_leapify", "automaticControllerSwitching"))
+        {
+            auto const states = StateManager::Get().getControllerStates();
+
+            bool flag = false;
+            for (auto& state : states)
+            {
+                if (state.second.isIdle == false)
+                {
+                    flag = true;
+                    break;
+                }
+            }
+
+            m_isControllerConnected = flag;
+            m_pose.deviceIsConnected = !m_isControllerConnected;
+        }
+        else {
+            m_pose.deviceIsConnected = true;
+        }
     }
+
+    if (hand.role != vr::TrackedControllerRole_Invalid && !m_isControllerConnected)
+    {
+        float offset = -((static_cast<float>(LeapGetNow() - hand.timestamp) / 1000000));
+
+        vr::TrackedDevicePose_t pose;
+        vr::VRServerDriverHost()->GetRawTrackedDevicePoses(offset, &pose, 1);
+
+        if (pose.bPoseIsValid)
+        {
+            for (size_t i = 0U; i < 3; i++)
+                m_pose.vecWorldFromDriverTranslation[i] = pose.mDeviceToAbsoluteTracking.m[i][3];
+
+            glm::mat4 hmdMatrix(1.0f);
+            ConvertMatrix(pose.mDeviceToAbsoluteTracking, hmdMatrix);
+            const glm::quat headRotation = glm::quat_cast(hmdMatrix);
+
+            glm::quat root = headRotation *
+                glm::angleAxis(glm::pi<float>(), glm::vec3(0, 0, 1)) *
+                glm::angleAxis(-glm::half_pi<float>(), glm::vec3(1, 0, 0));
+
+            m_pose.qDriverFromHeadRotation.w = 1;
+            m_pose.qWorldFromDriverRotation = { root.w, root.x, root.y, root.z };
+            m_pose.qRotation = { hand.palm.orientation.w, hand.palm.orientation.x, hand.palm.orientation.y, hand.palm.orientation.z };
+
+            m_pose.vecPosition[0] = hand.arm.next_joint.x * 0.001f;
+            m_pose.vecPosition[1] = hand.arm.next_joint.y * 0.001f;
+            m_pose.vecPosition[2] = hand.arm.next_joint.z * 0.001f;
+
+            m_pose.poseIsValid = true;
+            m_pose.result = vr::TrackingResult_Running_OK;
+        }
+    }
+    else {
+        m_pose.poseIsValid = true;
+        m_pose.result = vr::TrackingResult_Running_OutOfRange;
+    }
+
+    vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_objectId, GetPose(), sizeof(vr::DriverPose_t));
 }
 
 void TrackedController::UpdateSkeletalPose(LeapHand hand)
@@ -389,7 +365,7 @@ void TrackedController::UpdateSkeletalPose(LeapHand hand)
             {auxPos.x, auxPos.y, auxPos.z},
             {auxRot.w, auxRot.x, auxRot.y, auxRot.z}
         };
-        };
+    };
 
     SetAuxBone(SB_Aux_Thumb, SB_Thumb2);
     SetAuxBone(SB_Aux_IndexFinger, SB_IndexFinger3);
@@ -403,4 +379,12 @@ void TrackedController::UpdateSkeletalPose(LeapHand hand)
         vr::VRDriverInput()->UpdateSkeletonComponent(m_skeletonHandle, vr::VRSkeletalMotionRange_WithoutController, m_boneTransform, SB_Count);
         vr::VRDriverInput()->UpdateSkeletonComponent(m_skeletonHandle, vr::VRSkeletalMotionRange_WithController, m_boneTransform, SB_Count);
     }
+}
+
+void TrackedController::UpdateInput(LeapHand hand)
+{
+    float offset = -((static_cast<float>(LeapGetNow() - hand.timestamp) / 1000000));
+
+    vr::VRDriverInput()->UpdateBooleanComponent(m_menuClick, hand.gestures.menu, offset);
+    vr::VRDriverInput()->UpdateScalarComponent(m_triggerValue, hand.gestures.index ? 1.0f : 0.0f, offset);
 }

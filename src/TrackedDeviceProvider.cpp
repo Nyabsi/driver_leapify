@@ -40,23 +40,33 @@ void TrackedDeviceProvider::RunFrame()
         right = m_LeapConnection.GetHand(vr::TrackedControllerRole_RightHand);
     }
 
-    // HACK: this is used to show the menu
-    auto calcLength = [](LEAP_VECTOR a, LEAP_VECTOR b) -> float
-        {
+    auto processInputForHands = [](LeapHand& l, LeapHand& r) {
+
+        auto abD = [](LEAP_VECTOR a, LEAP_VECTOR b) -> float {
+            
             double dx = std::abs(a.x - b.x);
             double dy = std::abs(a.y - b.y);
             double dz = std::abs(a.z - b.z);
 
-            double index_tip_distance_squared = dx * dx + dy * dy + dz * dz;
-            return std::sqrt(index_tip_distance_squared);
+            return std::sqrt(dx * dx + dy * dy + dz * dz);
         };
 
-    left.menu = calcLength(left.index.distal.next_joint, right.index.distal.next_joint) < 20 && 
-        calcLength(left.thumb.distal.next_joint, right.thumb.distal.next_joint) < 20 && 
-        // seisok
-        calcLength(left.middle.distal.next_joint, right.middle.distal.next_joint) >= 45 &&
-        calcLength(left.ring.distal.next_joint, right.ring.distal.next_joint) >= 45 &&
-        calcLength(left.pinky.distal.next_joint, right.pinky.distal.next_joint) >= 45;
+        // only update menu for left hand
+        l.gestures.menu = 
+            abD(l.index.distal.next_joint, r.index.distal.next_joint) < 15 &&
+            abD(l.thumb.distal.next_joint, r.thumb.distal.next_joint) < 15 &&
+            abD(l.middle.distal.next_joint, r.middle.distal.next_joint) >= 45 &&
+            abD(l.ring.distal.next_joint, r.ring.distal.next_joint) >= 45 &&
+            abD(l.pinky.distal.next_joint, r.pinky.distal.next_joint) >= 45;
+
+        l.gestures.index = abD(l.thumb.distal.next_joint, l.index.distal.next_joint) < 15 && abD(l.thumb.distal.next_joint, l.middle.distal.next_joint) >= 25;
+        r.gestures.index = abD(r.thumb.distal.next_joint, r.index.distal.next_joint) < 15 && abD(l.thumb.distal.next_joint, l.middle.distal.next_joint) >= 25;
+
+        l.gestures.middle = abD(l.thumb.distal.next_joint, l.middle.distal.next_joint) < 15 && abD(l.thumb.distal.next_joint, l.index.distal.next_joint) >= 25;
+        r.gestures.middle = abD(r.thumb.distal.next_joint, r.middle.distal.next_joint) < 15 && abD(r.thumb.distal.next_joint, r.index.distal.next_joint) >= 25;
+    };
+
+    processInputForHands(left, right);
 
     m_Left.Update(left);
     m_Right.Update(right);
