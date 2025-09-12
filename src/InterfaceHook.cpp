@@ -75,7 +75,7 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
 
                                float accelerationMagnitude = calculateSquaredMagnitude(deltaVelocity);
 
-                               const float accelerationThreshold = 0.0060f;
+                               const float accelerationThreshold = 0.0120f;
                                bool impactDetected = accelerationMagnitude > accelerationThreshold;
 
                                state.lastVelocity[0] = newPose.vecVelocity[0];
