@@ -51,7 +51,12 @@ void TrackedDeviceProvider::RunFrame()
             return std::sqrt(index_tip_distance_squared);
         };
 
-    left.menu = calcLength(left.index.distal.next_joint, right.index.distal.next_joint) < 20 && calcLength(left.thumb.distal.next_joint, right.thumb.distal.next_joint) < 20 && calcLength(left.middle.distal.next_joint, right.middle.distal.next_joint) > 40 && calcLength(left.ring.distal.next_joint, right.ring.distal.next_joint) > 40;
+    left.menu = calcLength(left.index.distal.next_joint, right.index.distal.next_joint) < 20 && 
+        calcLength(left.thumb.distal.next_joint, right.thumb.distal.next_joint) < 20 && 
+        // seisok
+        calcLength(left.middle.distal.next_joint, right.middle.distal.next_joint) >= 45 &&
+        calcLength(left.ring.distal.next_joint, right.ring.distal.next_joint) >= 45 &&
+        calcLength(left.pinky.distal.next_joint, right.pinky.distal.next_joint) >= 45;
 
     m_Left.Update(left);
     m_Right.Update(right);

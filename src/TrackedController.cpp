@@ -163,17 +163,16 @@ void TrackedController::Update(LeapHand hand)
 {
     delayFromTransformation = LeapGetNow();
 
-    ConvertPosition(hand.arm.next_joint, m_position);
-    ConvertRotation(hand.palm.orientation, m_rotation);
-    m_rotation = glm::normalize(m_rotation);
+    ConvertTransform(hand.arm.next_joint, m_position);
+    ConvertQuaternion(hand.palm.orientation, m_rotation);
 
     for (size_t i = 0; i < 5; i++)  
     {
         for (size_t j = 0; j < 4; j++)
         {
             size_t index = i * 4 + j;
-            ConvertPosition(hand.digits[i].bones[j].prev_joint, m_bonePositions[index]);
-            ConvertRotation(hand.digits[i].bones[j].rotation, m_boneRotations[index]);
+            ConvertTransform(hand.digits[i].bones[j].prev_joint, m_bonePositions[index]);
+            ConvertQuaternion(hand.digits[i].bones[j].rotation, m_boneRotations[index]);
         }
     }
 
@@ -237,8 +236,13 @@ void TrackedController::UpdatePose(LeapHand hand)
 
                 m_pose.qDriverFromHeadRotation.w = 1;
 
-                glm::quat root = headRotation * glm::quat(glm::radians(glm::vec3(vr::VRSettings()->GetFloat("driver_leapify", "rotationOffsetX"), vr::VRSettings()->GetFloat("driver_leapify", "rotationOffsetY"), vr::VRSettings()->GetFloat("driver_leapify", "rotationOffsetZ"))));
+                glm::quat root = headRotation *
+                    glm::angleAxis(glm::pi<float>(), glm::vec3(0, 0, 1)) *
+                    glm::angleAxis(-glm::half_pi<float>(), glm::vec3(1, 0, 0));
+                
                 ConvertQuaternion(root, m_pose.qWorldFromDriverRotation);
+                // * glm::quat(glm::radians(glm::vec3(vr::VRSettings()->GetFloat("driver_leapify", "rotationOffsetX"), vr::VRSettings()->GetFloat("driver_leapify", "rotationOffsetY"), vr::VRSettings()->GetFloat("driver_leapify", "rotationOffsetZ"))));
+                // ConvertQuaternion(root, m_pose.qWorldFromDriverRotation);
 
                 glm::quat rotation = m_rotation * (m_role == vr::TrackedControllerRole_LeftHand ? skeletonOffsetLeft : skeletonOffsetRight);
 
@@ -284,9 +288,9 @@ void TrackedController::UpdatePose(LeapHand hand)
                 float offsetY = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? 0.001f * 0.0 : 0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffsetY");
                 float offsetZ = vr::VRSettings()->GetBool("driver_leapify", "automaticHandOffset") ? -0.001f * (calculateOffsetDistanceZ(hand)) : -0.001f * vr::VRSettings()->GetFloat("driver_leapify", "manualHandOffsetZ");
 
-                m_pose.vecPosition[0] = m_position.x + offsetX;
-                m_pose.vecPosition[1] = m_position.y + offsetY;
-                m_pose.vecPosition[2] = m_position.z + offsetZ;
+                m_pose.vecPosition[0] = m_position.x; // +offsetX;
+                m_pose.vecPosition[1] = m_position.y; // +offsetY;
+                m_pose.vecPosition[2] = m_position.z; // +offsetZ;
 
                 m_pose.poseIsValid = true;
                 m_pose.result = vr::TrackingResult_Running_OK;
@@ -332,13 +336,18 @@ void TrackedController::UpdateSkeletalPose(LeapHand hand)
     if (vr::VRSettings()->GetBool("driver_leapify", "handTrackingEnabled"))
     {
         glm::vec3 root_position = {};
-        ConvertPosition(hand.palm.position, root_position);
+        ConvertTransform(hand.palm.position, root_position);
+
         glm::quat root_rotation = {};
-        ConvertRotation(hand.palm.orientation, root_rotation);
+        ConvertQuaternion(hand.palm.orientation, root_rotation);
+        root_rotation = glm::normalize(root_rotation);
+
         glm::vec3 wrist_position = {};
-        ConvertPosition(hand.arm.next_joint, wrist_position);
+        ConvertTransform(hand.arm.next_joint, wrist_position);
+
         glm::quat wrist_rotation = {};
-        ConvertRotation(hand.palm.orientation, wrist_rotation);
+        ConvertQuaternion(hand.palm.orientation, wrist_rotation);
+        wrist_rotation = glm::normalize(wrist_rotation);
 
         m_boneTransform[SB_Root] = vr::VRBoneTransform_t{ { 0.0f, 0.0f, 0.0f }, {1.0f, 0.0f ,0.0f, 0.0f} };
 
