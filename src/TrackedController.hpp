@@ -103,14 +103,6 @@ private:
 	void UpdatePose(LeapHand hand);
 	void UpdateSkeletalPose(LeapHand hand);
 
-    size_t GetFingerBoneIndex(size_t id);
-	void GetFingerBoneLocalRotation(LeapHand hand, size_t p_finger, size_t p_bone, glm::quat& l_result, bool p_ignoreMeta);
-	void GetFingerBoneLocalPosition(LeapHand hand, size_t p_finger, size_t p_bone, glm::vec3& l_result, bool p_ignoreMeta);
-    void ChangeBoneOrientation(glm::quat& p_rot);
-    void ChangeBonePosition(glm::vec3& p_pos);
-    void FixMetacarpalBone(glm::quat& p_rot);
-    void ChangeAuxTransformation(glm::vec3& p_pos, glm::quat& p_rot);
-
 	vr::ETrackedControllerRole m_role { vr::ETrackedControllerRole::TrackedControllerRole_Invalid };
 	uint32_t m_objectId { 999 };
 	vr::DriverPose_t m_pose { 0 };
@@ -120,14 +112,5 @@ private:
     vr::VRInputComponentHandle_t m_menuClick{ };
 	vr::VRBoneTransform_t m_boneTransform[31] { };
     glm::quat headRotation;
-    vr::HmdVector3_t vVelocity;
-    std::array<glm::vec3, 20U> m_bonePositions;
-    std::array<glm::quat, 20U> m_boneRotations;
-    glm::vec3 m_position;
-    glm::quat m_rotation;
     bool m_isControllerConnected { };
-    float m_previousOffset { };
-    float m_previousOffsetY {};
-    float m_previousOffsetX{};
-    int64_t delayFromTransformation{};
 };
