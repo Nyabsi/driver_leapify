@@ -40,6 +40,7 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
         
            rcmp::hook_indirect_function<bool(void* self, const char *pchDeviceSerialNumber, vr::ETrackedDeviceClass eDeviceClass, vr::ITrackedDeviceServerDriver *pDriver)>(vtable + 0 + vtable_offset, [this](auto orig, void* self, const char *pchDeviceSerialNumber, vr::ETrackedDeviceClass eDeviceClass, vr::ITrackedDeviceServerDriver *pDriver) -> bool {
                     std::string pchSerial(pchDeviceSerialNumber);
+                    // Prevent Pimax Hand Tracking driver from loading forcefully
                     if (pchSerial != "LMHAND-0000" && pchSerial != "LMHAND-0001")
                         return orig(self, pchDeviceSerialNumber, eDeviceClass, pDriver);
                    return false;
@@ -177,6 +178,7 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
 
                    return orig(self, ulComponent, bNewValue, fTimeOffset);
                });
+           
            rcmp::hook_indirect_function<vr::EVRInputError(void* self, vr::PropertyContainerHandle_t ulContainer, const char* pchName, const char* pchSkeletonPath, const char* pchBasePosePath, vr::EVRSkeletalTrackingLevel eSkeletalTrackingLevel, const vr::VRBoneTransform_t* pGripLimitTransforms, uint32_t unGripLimitTransformCount, vr::VRInputComponentHandle_t* pHandle)>(vtable + 5 + vtable_offset, [](auto orig, void* self, vr::PropertyContainerHandle_t ulContainer, const char* pchName, const char* pchSkeletonPath, const char* pchBasePosePath, vr::EVRSkeletalTrackingLevel eSkeletalTrackingLevel, const vr::VRBoneTransform_t* pGripLimitTransforms, uint32_t unGripLimitTransformCount, vr::VRInputComponentHandle_t* pHandle) -> vr::EVRInputError
            {
                    auto result = orig(self, ulContainer, pchName, pchSkeletonPath, pchBasePosePath, eSkeletalTrackingLevel, pGripLimitTransforms, unGripLimitTransformCount, pHandle);
@@ -191,9 +193,6 @@ void InterfaceHook::GetGenericInterface(void* interfacePtr, const char* pchInter
                    return result;
            });
 
-           //  state.timestamp = -1;
-           // state.isIdle = false;
-           
            rcmp::hook_indirect_function<vr::EVRInputError(void* self, vr::VRInputComponentHandle_t ulComponent, vr::EVRSkeletalMotionRange eMotionRange, const vr::VRBoneTransform_t* pTransforms, uint32_t unTransformCount)>(vtable + 6 + vtable_offset, [](auto orig, void* self, vr::VRInputComponentHandle_t ulComponent, vr::EVRSkeletalMotionRange eMotionRange, const vr::VRBoneTransform_t* pTransforms, uint32_t unTransformCount) -> vr::EVRInputError
            {
                    auto role = StateManager::Get().getTransformHookRole(ulComponent);
